@@ -1,0 +1,15 @@
+android {
+    defaultConfig {
+        applicationId "cc.aoeiuv020.demo"
+    }
+    productFlavors {
+        demo {
+            applicationIdSuffix ".demo"
+            dimension "tier"
+        }
+    }
+}
+
+dependencies {
+    implementation "com.android.support.constraint:constraint-layout:$constraint_layout_version"
+}
