@@ -1,6 +1,9 @@
 android {
     defaultConfig {
         applicationId "cc.aoeiuv020.demo"
+        ndk {
+            abiFilters "armeabi", "armeabi-v7a", "x86"
+        }
     }
     productFlavors {
         demo {
@@ -12,4 +15,5 @@ android {
 
 dependencies {
     implementation "com.android.support.constraint:constraint-layout:$constraint_layout_version"
+    implementation files('libs/BaiduLBS_Android.jar')
 }

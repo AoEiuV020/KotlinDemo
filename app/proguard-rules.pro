@@ -1,4 +1,9 @@
 
+# 百度地图，http://lbsyun.baidu.com/index.php?title=androidsdk/guide/create-project/androidstudio
+-keep class com.baidu.** {*;}
+-keep class mapsdkvi.com.** {*;}
+-dontwarn com.baidu.**
+
 #apk 包内所有 class 的内部结构
 -dump class_files.txt
 #未混淆的类和成员
