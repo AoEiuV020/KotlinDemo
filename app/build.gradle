@@ -4,7 +4,7 @@ android {
     }
     productFlavors {
         demo {
-            applicationIdSuffix ".demo"
+            applicationIdSuffix ".map"
             dimension "tier"
         }
     }
