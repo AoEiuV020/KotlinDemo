@@ -16,4 +16,5 @@ android {
 dependencies {
     implementation "com.android.support.constraint:constraint-layout:$constraint_layout_version"
     implementation files('libs/BaiduLBS_Android.jar')
+    implementation 'com.google.android.gms:play-services-maps:15.0.1'
 }

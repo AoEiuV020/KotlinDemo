@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.baidu.location.BDAbstractLocationListener;
@@ -27,6 +28,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "MainActivity";
 
+    private Switch mChinaCheckBox;
     private TextView mLocationTextView;
     private LocationClient mLocationClient;                 // 声明LocationClient类
     private double mLongitude;
@@ -75,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.map_btn).setOnClickListener(this);
         findViewById(R.id.image_btn).setOnClickListener(this);
         findViewById(R.id.poi_btn).setOnClickListener(this);
+        mChinaCheckBox = findViewById(R.id.china_cb);
         mLocationTextView = findViewById(R.id.location_tv);
         mLocationClient = new LocationClient(this);
         mLocationClient.registerLocationListener(mMyLocationListener); // 注册监听函数
@@ -95,7 +98,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mLocationClient.start();
                 break;
             case R.id.map_btn:
-                Intent intent = new Intent(this, BaiduMapActivity.class);
+                Class clazz;
+                if (mChinaCheckBox.isChecked()) {
+                    clazz = BaiduMapActivity.class;
+                } else {
+                    clazz = MapsActivity.class;
+                }
+                Intent intent = new Intent(this, clazz);
                 startActivity(intent);
                 break;
             case R.id.image_btn:
