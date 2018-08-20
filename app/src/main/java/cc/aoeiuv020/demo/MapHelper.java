@@ -4,9 +4,12 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.RequiresPermission;
 
+import java.util.List;
+
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static cc.aoeiuv020.demo.MapHelper.MapType.BAIDU;
 
+@SuppressWarnings("WeakerAccess")
 public abstract class MapHelper {
 
     private static MapType type = BAIDU;
@@ -35,8 +38,29 @@ public abstract class MapHelper {
     }
 
     @RequiresPermission(ACCESS_FINE_LOCATION)
-    abstract public void currentLatLng(OnSuccessListener<LatLng> onSuccessListener,
-                                       OnErrorListener onErrorListener);
+    abstract public void requestLatLng(OnSuccessListener<LatLng> onSuccessListener,
+                                       OnErrorListener onErrorListener) throws SecurityException;
+
+    public void requestPlaceList(final OnSuccessListener<List<Place>> onSuccessListener,
+                                 final OnErrorListener onErrorListener) throws SecurityException {
+        requestLatLng(new OnSuccessListener<LatLng>() {
+            @Override
+            public void onSuccess(LatLng latLng) {
+                requestPlaceList(latLng, onSuccessListener, onErrorListener);
+            }
+        }, onErrorListener);
+    }
+
+    /**
+     * 请求周边位置信息，
+     *
+     * @param latLng            经纬度，不可空，
+     * @param onSuccessListener 成功回调，可空，
+     * @param onErrorListener   失败回调，可空，
+     */
+    abstract public void requestPlaceList(LatLng latLng,
+                                          OnSuccessListener<List<Place>> onSuccessListener,
+                                          OnErrorListener onErrorListener);
 
     public enum MapType {
         BAIDU, GOOGLE
@@ -50,7 +74,6 @@ public abstract class MapHelper {
         void onError(Throwable t);
     }
 
-    @SuppressWarnings("WeakerAccess")
     public static class LatLng {
         private double latitude;
         private double longitude;
@@ -66,6 +89,30 @@ public abstract class MapHelper {
 
         public double getLongitude() {
             return longitude;
+        }
+    }
+
+    public static class Place {
+        private String name;
+        private String address;
+        private LatLng latLng;
+
+        public Place(String name, String address, LatLng latLng) {
+            this.name = name;
+            this.address = address;
+            this.latLng = latLng;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getAddress() {
+            return address;
+        }
+
+        public LatLng getLatLng() {
+            return latLng;
         }
     }
 }
