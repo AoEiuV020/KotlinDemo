@@ -15,6 +15,8 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.PlaceDetectionClient;
 import com.google.android.gms.location.places.PlaceLikelihoodBufferResponse;
 import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -48,6 +50,14 @@ public class GoogleMapHelper extends MapHelper {
             }
         }
         return INSTANCE;
+    }
+
+    @Override
+    public String getStaticImage(LatLng latLng) {
+        return "http://maps.googleapis.com/maps/api/staticmap?" +
+                "center=" + latLng.getLatitude() + "," + latLng.getLongitude() +
+                "&size=640x480&markers=color:blue%7Clabel:S%7C62.107733,-145.541936" +
+                "&zoom=15";
     }
 
     @Override
@@ -163,6 +173,8 @@ public class GoogleMapHelper extends MapHelper {
     private class GoogleMapPicker extends Picker implements OnMapReadyCallback {
         private MapView mapView;
         private Context context;
+        private GoogleMap googleMap;
+        private OnMapReadyListener onMapReadyListener;
 
         private GoogleMapPicker(Context context) {
             this.context = context;
@@ -177,8 +189,9 @@ public class GoogleMapHelper extends MapHelper {
         }
 
         @Override
-        public void attack(FrameLayout container) {
+        public void attack(FrameLayout container, OnMapReadyListener listener) {
             Log.d(TAG, "attack: ");
+            this.onMapReadyListener = listener;
             createMapView();
             FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             container.addView(mapView, params);
@@ -186,8 +199,72 @@ public class GoogleMapHelper extends MapHelper {
         }
 
         @Override
-        public void onMapReady(GoogleMap googleMap) {
+        public void moveMap(LatLng latLng, boolean anim) {
+            if (googleMap == null) {
+                Log.e(TAG, "moveMap: 移动地图失败，", new RuntimeException("谷歌地图还没准备好，"));
+                return;
+            }
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(
+                    new com.google.android.gms.maps.model.LatLng(latLng.getLatitude(), latLng.getLongitude()),
+                    15f);
+            if (anim) {
+                googleMap.animateCamera(cameraUpdate);
+            } else {
+                googleMap.moveCamera(cameraUpdate);
+            }
+        }
+
+        @Override
+        public void onMapReady(final GoogleMap googleMap) {
             Log.d(TAG, "onMapReady() called with: googleMap = [" + googleMap + "]");
+            this.googleMap = googleMap;
+            googleMap.setOnCameraMoveStartedListener(new GoogleMap.OnCameraMoveStartedListener() {
+                @Override
+                public void onCameraMoveStarted(int reason) {
+                    if (REASON_GESTURE != reason) {
+                        // 不是用户拖出来的事件无视，
+                        Log.d(TAG, "onCameraMoveStarted() called with: i = [" + reason + "]");
+                        return;
+                    }
+                    MapStatus mapStatus = new MapStatus();
+                    com.google.android.gms.maps.model.LatLng target = googleMap.getCameraPosition().target;
+                    mapStatus.target = new LatLng(target.latitude, target.longitude);
+                    onMapStatusChangeListener.onMapStatusChangeStart(mapStatus);
+                }
+            });
+            googleMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
+                @Override
+                public void onCameraMove() {
+                    MapStatus mapStatus = new MapStatus();
+                    com.google.android.gms.maps.model.LatLng target = googleMap.getCameraPosition().target;
+                    mapStatus.target = new LatLng(target.latitude, target.longitude);
+                    onMapStatusChangeListener.onMapStatusChange(mapStatus);
+                }
+            });
+            googleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+                @Override
+                public void onCameraIdle() {
+                    MapStatus mapStatus = new MapStatus();
+                    com.google.android.gms.maps.model.LatLng target = googleMap.getCameraPosition().target;
+                    mapStatus.target = new LatLng(target.latitude, target.longitude);
+                    onMapStatusChangeListener.onMapStatusChangeFinish(mapStatus);
+
+                }
+            });
+/*
+            googleMap.setOnCameraMoveCanceledListener(new GoogleMap.OnCameraMoveCanceledListener() {
+                @Override
+                public void onCameraMoveCanceled() {
+                    MapStatus mapStatus = new MapStatus();
+                    com.google.android.gms.maps.model.LatLng target = googleMap.getCameraPosition().target;
+                    mapStatus.target = new LatLng(target.latitude, target.longitude);
+                    onMapStatusChangeListener.onMapStatusChangeFinish(mapStatus);
+                }
+            });
+*/
+            if (onMapReadyListener != null) {
+                onMapReadyListener.ready();
+            }
         }
 
         @Override

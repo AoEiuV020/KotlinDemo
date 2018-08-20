@@ -10,12 +10,11 @@ import android.widget.FrameLayout;
 
 import java.util.List;
 
-import static cc.aoeiuv020.demo.MapHelper.MapType.BAIDU;
 
 @SuppressWarnings("WeakerAccess")
 public abstract class MapHelper {
     private static final String TAG = "MapHelper";
-    private static MapType sMapType = BAIDU;
+    private static MapType sMapType = MapType.BAIDU;
     @SuppressLint("StaticFieldLeak")
     private static Context context;
 
@@ -94,12 +93,56 @@ public abstract class MapHelper {
 
     abstract public Picker getPicker(Context context);
 
+    abstract public String getStaticImage(LatLng latLng);
+
+    public enum MapType {
+        BAIDU, GOOGLE
+    }
+
+    /**
+     * 转换所有地图sdk中拖动地图的监听，
+     * <p>
+     * TODO: 暂不完全，只转换了用到的部分，也就是拖动目的地经纬度，
+     */
+    public interface OnMapStatusChangeListener {
+        // 改变开始
+        void onMapStatusChangeStart(MapStatus mapStatus);
+
+        void onMapStatusChange(MapStatus mapStatus);
+
+        void onMapStatusChangeFinish(MapStatus mapStatus);
+    }
+
+    public interface OnMapReadyListener {
+        void ready();
+    }
+
+    public interface OnSuccessListener<T> {
+        void onSuccess(T t);
+    }
+
+    public interface OnErrorListener {
+        void onError(Throwable t);
+    }
+
     /**
      * 子类继承封装选择位置视图相关一切，
      */
     public static abstract class Picker implements LifecycleObserver {
+        protected OnMapStatusChangeListener onMapStatusChangeListener;
 
-        public abstract void attack(FrameLayout container);
+        public abstract void attack(FrameLayout container, OnMapReadyListener listener);
+
+        public void setOnMapStatusChangeListener(OnMapStatusChangeListener listener) {
+            this.onMapStatusChangeListener = listener;
+        }
+
+        public void moveMap(LatLng latLng) {
+            // 默认不要动画，闪现过去，
+            moveMap(latLng, false);
+        }
+
+        public abstract void moveMap(LatLng latLng, boolean anim);
 
         @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
         void create() {
@@ -137,36 +180,6 @@ public abstract class MapHelper {
         }
     }
 
-    public enum MapType {
-        BAIDU, GOOGLE
-    }
-
-    public interface OnSuccessListener<T> {
-        void onSuccess(T t);
-    }
-
-    public interface OnErrorListener {
-        void onError(Throwable t);
-    }
-
-    public static class LatLng {
-        private double latitude;
-        private double longitude;
-
-        public LatLng(double latitude, double longitude) {
-            this.latitude = latitude;
-            this.longitude = longitude;
-        }
-
-        public double getLatitude() {
-            return latitude;
-        }
-
-        public double getLongitude() {
-            return longitude;
-        }
-    }
-
     public static class Place {
         private String name;
         private String address;
@@ -188,6 +201,43 @@ public abstract class MapHelper {
 
         public LatLng getLatLng() {
             return latLng;
+        }
+    }
+
+    public static class LatLng {
+        private double latitude;
+        private double longitude;
+
+        public LatLng(double latitude, double longitude) {
+            this.latitude = latitude;
+            this.longitude = longitude;
+        }
+
+        public double getLatitude() {
+            return latitude;
+        }
+
+        public double getLongitude() {
+            return longitude;
+        }
+
+        @Override
+        public String toString() {
+            return "LatLng{" +
+                    "latitude=" + latitude +
+                    ", longitude=" + longitude +
+                    '}';
+        }
+    }
+
+    public static class MapStatus {
+        public LatLng target;
+
+        @Override
+        public String toString() {
+            return "MapStatus{" +
+                    "target=" + target +
+                    '}';
         }
     }
 }

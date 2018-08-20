@@ -3,15 +3,20 @@ package cc.aoeiuv020.demo;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.SDKInitializer;
+import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.MapStatusUpdate;
+import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.UiSettings;
 import com.baidu.mapapi.search.core.PoiInfo;
 import com.baidu.mapapi.search.geocode.GeoCodeResult;
 import com.baidu.mapapi.search.geocode.GeoCoder;
@@ -29,7 +34,7 @@ public class BaiduMapHelper extends MapHelper {
     private static BaiduMapHelper INSTANCE;
     private Context context;
     private LocationClient locationClient;
-    private BDAbstractLocationListener locationListener;
+    private BDLocationListener locationListener;
 
     private BaiduMapHelper(Context context) {
         this.context = context;
@@ -49,6 +54,17 @@ public class BaiduMapHelper extends MapHelper {
         return INSTANCE;
     }
 
+    @Override
+    public String getStaticImage(LatLng latLng) {
+        return "http://api.map.baidu.com/staticimage?width=640&height=480&center="
+                + latLng.getLongitude()
+                + ","
+                + latLng.getLatitude()
+                + "&zoom=15";// 此处需要特别注意，拼接url的时候纬度在前经度在后  = =跟google是反着的
+
+    }
+
+    @SuppressWarnings("deprecation")
     private void requestLocationOnce(final OnSuccessListener<BDLocation> onSuccessListener, final OnErrorListener onErrorListener) {
         LocationClientOption option = new LocationClientOption();
         option.setLocationMode(LocationClientOption.LocationMode.Battery_Saving);           // 设置定位模式
@@ -57,8 +73,9 @@ public class BaiduMapHelper extends MapHelper {
         option.setIsNeedAddress(true);
         option.setNeedDeviceDirect(false);
         locationClient.setLocOption(option);
-        locationListener = new BDAbstractLocationListener() {
+        locationListener = new BDLocationListener() {
             @Override
+            @SuppressWarnings("deprecation")
             public void onReceiveLocation(BDLocation location) {
                 // 只定位一次就停止，
                 locationClient.unRegisterLocationListener(this);
@@ -76,7 +93,7 @@ public class BaiduMapHelper extends MapHelper {
                         && resultCode != BDLocation.TypeOffLineLocation && resultCode != BDLocation.TypeNetWorkLocation) {
                     Log.d(TAG, "百度定位失败");
                     if (onErrorListener != null) {
-                        onErrorListener.onError(new RuntimeException("百度定位失败: " + location.getLocTypeDescription()));
+                        onErrorListener.onError(new RuntimeException("百度定位失败: " + location.getLocationDescribe()));
                     }
                     return;
                 }
@@ -192,7 +209,7 @@ public class BaiduMapHelper extends MapHelper {
         return new BaiduMapPicker(context);
     }
 
-    private class BaiduMapPicker extends Picker {
+    private class BaiduMapPicker extends Picker implements BaiduMap.OnMapStatusChangeListener {
         private MapView mapView;
         private Context context;
 
@@ -208,12 +225,64 @@ public class BaiduMapHelper extends MapHelper {
             }
         }
 
+        private BaiduMap mBaiduMap;
+
         @Override
-        public void attack(FrameLayout container) {
+        public void attack(FrameLayout container, OnMapReadyListener listener) {
             Log.d(TAG, "attack: ");
             createMapView();
             FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             container.addView(mapView, params);
+            init();
+            if (listener != null) {
+                listener.ready();
+            }
+        }
+
+        private void init() {
+            mBaiduMap = mapView.getMap();
+            UiSettings settings = mBaiduMap.getUiSettings();
+            settings.setOverlookingGesturesEnabled(false);
+            settings.setRotateGesturesEnabled(false);
+            mapView.getChildAt(1).setVisibility(View.GONE);
+            mapView.showZoomControls(false);
+            mBaiduMap.setOnMapStatusChangeListener(this);
+        }
+
+        @Override
+        public void moveMap(LatLng latLng, boolean anim) {
+            moveMap(latLng.getLatitude(), latLng.getLongitude(), anim);
+        }
+
+        /**
+         * @param x    lat,
+         * @param y    lng,
+         * @param anim 移动过程是否显示动画，
+         */
+        private void moveMap(double x, double y, boolean anim) {
+            //  LogUtils.e("x  " + x + "  y  " + y);
+            // TODO: 干嘛要大于0.1,0.1，人家刚好穿过0,0会怎样，
+            if (mBaiduMap != null && x > 0.1 && y > 0.1) {
+                //设定中心点坐标
+                com.baidu.mapapi.model.LatLng cenpt = new com.baidu.mapapi.model.LatLng(x, y);
+                //定义地图状态
+                com.baidu.mapapi.map.MapStatus mMapStatus = new com.baidu.mapapi.map.MapStatus.Builder()
+                        //要移动的点
+                        .target(cenpt)
+                        //放大地图到20倍
+                        .zoom(16)
+                        .build();
+                // 定义MapStatusUpdate对象，以便描述地图状态将要发生的变化
+                MapStatusUpdate mMapStatusUpdate = MapStatusUpdateFactory.newMapStatus(mMapStatus);
+                // 改变地图状态,
+                if (anim) {
+                    mBaiduMap.animateMapStatus(mMapStatusUpdate);
+                } else {
+                    mBaiduMap.setMapStatus(mMapStatusUpdate);
+                }
+            } else {
+                Log.d(TAG, String.format(Locale.CHINA, "moveMap: 数据异常<%f, %f, %s>", x, y, mBaiduMap));
+            }
         }
 
         @Override
@@ -238,6 +307,34 @@ public class BaiduMapHelper extends MapHelper {
         void destroy() {
             super.destroy();
             mapView.onDestroy();
+        }
+
+        @Override
+        public void onMapStatusChangeStart(com.baidu.mapapi.map.MapStatus bdMapStatus) {
+            MapStatus mapStatus = new MapStatus();
+            mapStatus.target = new LatLng(bdMapStatus.target.latitude, bdMapStatus.target.longitude);
+            onMapStatusChangeListener.onMapStatusChangeStart(mapStatus);
+        }
+
+        // 低版本百度地图没有这个方法，
+//        @Override
+        public void onMapStatusChangeStart(com.baidu.mapapi.map.MapStatus bdMapStatus, int i) {
+
+        }
+
+        @Override
+        public void onMapStatusChange(com.baidu.mapapi.map.MapStatus bdMapStatus) {
+            MapStatus mapStatus = new MapStatus();
+            mapStatus.target = new LatLng(bdMapStatus.target.latitude, bdMapStatus.target.longitude);
+            onMapStatusChangeListener.onMapStatusChange(mapStatus);
+        }
+
+        @Override
+        public void onMapStatusChangeFinish(com.baidu.mapapi.map.MapStatus bdMapStatus) {
+            MapStatus mapStatus = new MapStatus();
+            mapStatus.target = new LatLng(bdMapStatus.target.latitude, bdMapStatus.target.longitude);
+            onMapStatusChangeListener.onMapStatusChangeFinish(mapStatus);
+
         }
     }
 }

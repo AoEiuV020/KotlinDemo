@@ -4,9 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 public class MapPickerActivity extends AppCompatActivity {
+    private static final String TAG = "MapPickerActivity";
     private static final String MAP_TYPE_KEY = "mapType";
     private MapHelper mapHelper;
     private MapHelper.Picker picker;
@@ -54,6 +57,37 @@ public class MapPickerActivity extends AppCompatActivity {
         picker = mapHelper.getPicker(this);
         getLifecycle().addObserver(picker);
         FrameLayout container = findViewById(R.id.map_view_container);
-        picker.attack(container);
+        picker.attack(container, new MapHelper.OnMapReadyListener() {
+            @Override
+            public void ready() {
+                mapHelper.requestLatLng(new MapHelper.OnSuccessListener<MapHelper.LatLng>() {
+                    @Override
+                    public void onSuccess(MapHelper.LatLng latLng) {
+                        picker.moveMap(latLng);
+                    }
+                }, new MapHelper.OnErrorListener() {
+                    @Override
+                    public void onError(Throwable t) {
+                        Toast.makeText(MapPickerActivity.this, "自动定位失败", Toast.LENGTH_LONG)
+                                .show();
+                    }
+                });
+            }
+        });
+        picker.setOnMapStatusChangeListener(new MapHelper.OnMapStatusChangeListener() {
+            @Override
+            public void onMapStatusChangeStart(MapHelper.MapStatus mapStatus) {
+            }
+
+            @Override
+            public void onMapStatusChange(MapHelper.MapStatus mapStatus) {
+            }
+
+            @Override
+            public void onMapStatusChangeFinish(MapHelper.MapStatus mapStatus) {
+                Log.d(TAG, "onMapStatusChangeFinish() called with: mapStatus = [" + mapStatus + "]");
+            }
+        });
+
     }
 }
