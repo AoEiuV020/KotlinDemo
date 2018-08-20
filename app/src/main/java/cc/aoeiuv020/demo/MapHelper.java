@@ -52,7 +52,7 @@ public abstract class MapHelper {
      * @throws SecurityException 没有位置权限，
      */
     abstract public void requestLatLng(OnSuccessListener<LatLng> onSuccessListener,
-                                       OnErrorListener onErrorListener) throws SecurityException;
+                                       OnErrorListener onErrorListener);
 
     /**
      * 请求周边位置信息，
@@ -60,8 +60,8 @@ public abstract class MapHelper {
      * @param onSuccessListener 成功回调，可空，
      * @param onErrorListener   失败回调，可空，
      */
-    public void requestPlaceList(final OnSuccessListener<List<Place>> onSuccessListener,
-                                 final OnErrorListener onErrorListener) throws SecurityException {
+    public final void requestPlaceList(final OnSuccessListener<List<Place>> onSuccessListener,
+                                       final OnErrorListener onErrorListener) throws SecurityException {
         requestLatLng(new OnSuccessListener<LatLng>() {
             @Override
             public void onSuccess(LatLng latLng) {
@@ -80,6 +80,17 @@ public abstract class MapHelper {
     abstract public void requestPlaceList(LatLng latLng,
                                           OnSuccessListener<List<Place>> onSuccessListener,
                                           OnErrorListener onErrorListener);
+
+    /**
+     * TODO: 城市名称字符串不能保证和百度的一致，语言和是否包含“市”字样都没测试，
+     *
+     * @param latLng            经纬度，不可空，
+     * @param onSuccessListener 成功回调，可空，
+     * @param onErrorListener   失败回调，可空，
+     */
+    abstract public void requestCityName(LatLng latLng,
+                                         OnSuccessListener<String> onSuccessListener,
+                                         OnErrorListener onErrorListener);
 
     abstract public Picker getPicker(Context context);
 

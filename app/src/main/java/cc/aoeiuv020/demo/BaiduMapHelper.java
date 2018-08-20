@@ -21,6 +21,7 @@ import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class BaiduMapHelper extends MapHelper {
     private static final String TAG = "BaiduMapHelper";
@@ -48,8 +49,7 @@ public class BaiduMapHelper extends MapHelper {
         return INSTANCE;
     }
 
-    @Override
-    public void requestLatLng(final OnSuccessListener<LatLng> onSuccessListener, final OnErrorListener onErrorListener) {
+    private void requestLocationOnce(final OnSuccessListener<BDLocation> onSuccessListener, final OnErrorListener onErrorListener) {
         LocationClientOption option = new LocationClientOption();
         option.setLocationMode(LocationClientOption.LocationMode.Battery_Saving);           // 设置定位模式
         option.setCoorType("bd09ll");                                  // 返回的定位结果是百度经纬度,默认值gcj02
@@ -82,9 +82,8 @@ public class BaiduMapHelper extends MapHelper {
                 }
 
                 // 百度定位成功
-                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
                 if (onSuccessListener != null) {
-                    onSuccessListener.onSuccess(latLng);
+                    onSuccessListener.onSuccess(location);
                 }
             }
 
@@ -94,7 +93,19 @@ public class BaiduMapHelper extends MapHelper {
     }
 
     @Override
-    public void requestPlaceList(LatLng latLng, final OnSuccessListener<List<Place>> onSuccessListener, final OnErrorListener onErrorListener) {
+    public void requestLatLng(final OnSuccessListener<LatLng> onSuccessListener, final OnErrorListener onErrorListener) {
+        requestLocationOnce(new OnSuccessListener<BDLocation>() {
+            @Override
+            public void onSuccess(BDLocation location) {
+                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                onSuccessListener.onSuccess(latLng);
+            }
+        }, onErrorListener);
+    }
+
+    private void requestPoiList(LatLng latLng,
+                                final OnSuccessListener<List<PoiInfo>> onSuccessListener,
+                                final OnErrorListener onErrorListener) {
         GeoCoder geoSearch = GeoCoder.newInstance();
         geoSearch.setOnGetGeoCodeResultListener(new OnGetGeoCoderResultListener() {
             @Override
@@ -113,6 +124,25 @@ public class BaiduMapHelper extends MapHelper {
                     }
                     return;
                 }
+                if (onSuccessListener != null) {
+                    onSuccessListener.onSuccess(poiList);
+                }
+            }
+        });
+        /* 加载定位数据 */
+        com.baidu.mapapi.model.LatLng bdLatLng = new com.baidu.mapapi.model.LatLng(latLng.getLatitude(), latLng.getLongitude());
+        ReverseGeoCodeOption reverseGeoCodeOption = new ReverseGeoCodeOption();
+        reverseGeoCodeOption.location(bdLatLng);
+        geoSearch.reverseGeoCode(reverseGeoCodeOption);
+    }
+
+    @Override
+    public void requestPlaceList(LatLng latLng,
+                                 final OnSuccessListener<List<Place>> onSuccessListener,
+                                 final OnErrorListener onErrorListener) {
+        requestPoiList(latLng, new OnSuccessListener<List<PoiInfo>>() {
+            @Override
+            public void onSuccess(List<PoiInfo> poiList) {
                 List<Place> placeList = new ArrayList<>(poiList.size());
                 for (PoiInfo poi : poiList) {
                     // 以防万一避免空指针，
@@ -125,13 +155,36 @@ public class BaiduMapHelper extends MapHelper {
                 if (onSuccessListener != null) {
                     onSuccessListener.onSuccess(placeList);
                 }
+
             }
-        });
-        /* 加载定位数据 */
-        com.baidu.mapapi.model.LatLng bdLatLng = new com.baidu.mapapi.model.LatLng(latLng.getLatitude(), latLng.getLongitude());
-        ReverseGeoCodeOption reverseGeoCodeOption = new ReverseGeoCodeOption();
-        reverseGeoCodeOption.location(bdLatLng);
-        geoSearch.reverseGeoCode(reverseGeoCodeOption);
+        }, onErrorListener);
+    }
+
+    @Override
+    public void requestCityName(final LatLng latLng,
+                                final OnSuccessListener<String> onSuccessListener,
+                                final OnErrorListener onErrorListener) {
+        requestPoiList(latLng, new OnSuccessListener<List<PoiInfo>>() {
+            @Override
+            public void onSuccess(List<PoiInfo> poiList) {
+                String city = null;
+                for (PoiInfo poi : poiList) {
+                    city = poi.city;
+                    if (city != null) {
+                        break;
+                    }
+                }
+                if (city == null) {
+                    if (onErrorListener != null) {
+                        onErrorListener.onError(new RuntimeException(
+                                String.format(Locale.CHINA, "地址<%f, %f>找不到城市名，",
+                                        latLng.getLatitude(), latLng.getLongitude())));
+                    }
+                    return;
+                }
+                onSuccessListener.onSuccess(city);
+            }
+        }, onErrorListener);
     }
 
     @Override

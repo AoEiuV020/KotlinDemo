@@ -2,6 +2,8 @@ package cc.aoeiuv020.demo;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -19,6 +21,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,8 +88,14 @@ public class GoogleMapHelper extends MapHelper {
         currentPlace.addOnCompleteListener(new OnCompleteListener<PlaceLikelihoodBufferResponse>() {
             @Override
             public void onComplete(@NonNull Task<PlaceLikelihoodBufferResponse> task) {
+                if (!task.isSuccessful()) {
+                    if (onErrorListener != null) {
+                        onErrorListener.onError(new RuntimeException("获取周边位置失败,", task.getException()));
+                    }
+                    return;
+                }
                 PlaceLikelihoodBufferResponse placeLikelihoods = task.getResult();
-                if (!task.isSuccessful() || placeLikelihoods == null) {
+                if (placeLikelihoods == null) {
                     if (onErrorListener != null) {
                         onErrorListener.onError(new RuntimeException("获取周边位置失败,", task.getException()));
                     }
@@ -107,6 +116,42 @@ public class GoogleMapHelper extends MapHelper {
                 }
             }
         });
+    }
+
+    @Override
+    public void requestCityName(LatLng latLng, final OnSuccessListener<String> onSuccessListener, final OnErrorListener onErrorListener) {
+        Geocoder geocoder = new Geocoder(context);
+        List<Address> addressList;
+        try {
+            addressList = geocoder.getFromLocation(latLng.getLatitude(), latLng.getLongitude(), 1);
+        } catch (IOException e) {
+            if (onErrorListener != null) {
+                onErrorListener.onError(new RuntimeException("获取位置失败,", e));
+            }
+            return;
+        }
+        if (addressList == null || addressList.isEmpty()) {
+            if (onErrorListener != null) {
+                onErrorListener.onError(new RuntimeException("获取位置失败,"));
+            }
+            return;
+        }
+        /*
+            Address[addressLines=[0:"中国广东省深圳市宝安区五和大道 邮政编码: 518000"],
+            feature=五和大道,admin=广东省,sub-admin=null,locality=深圳市,thoroughfare=五和大道,
+            postalCode=518000,countryCode=CN,countryName=中国,hasLatitude=true,latitude=22.6032427,
+            hasLongitude=true,longitude=114.05754379999999,phone=null,url=null,extras=null]
+         */
+        Address address = addressList.get(0);
+        if (address == null || address.getLocality() == null) {
+            if (onErrorListener != null) {
+                onErrorListener.onError(new RuntimeException("获取位置失败,"));
+            }
+            return;
+        }
+        if (onSuccessListener != null) {
+            onSuccessListener.onSuccess(address.getLocality());
+        }
     }
 
     @Override

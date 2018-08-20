@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private Switch mChinaCheckBox;
     private TextView mLocationTextView;
+    private TextView mCityTextView;
     private MapHelper.LatLng mLatLng;
 
     @Override
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
         mLocationTextView = findViewById(R.id.location_tv);
+        mCityTextView = findViewById(R.id.city_tv);
     }
 
     @Override
@@ -68,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void onSuccess(MapHelper.LatLng latLng) {
                         mLatLng = latLng;
-                        String location = "定位信息  mLongitude:" + mLatLng.getLongitude() + "  mLatitude:" + mLatLng.getLatitude();
+                        String location = String.format("%s,%s", mLatLng.getLatitude(), mLatLng.getLongitude());
                         mLocationTextView.setText(location);
                         Log.d(TAG, location);
                     }
@@ -112,6 +114,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 });
                 break;
             case R.id.city_btn:
+                MapHelper.getInstance().requestCityName(mLatLng, new MapHelper.OnSuccessListener<String>() {
+                    @Override
+                    public void onSuccess(String s) {
+                        mCityTextView.setText(s);
+                    }
+                }, new MapHelper.OnErrorListener() {
+                    @Override
+                    public void onError(Throwable t) {
+                        t.printStackTrace();
+                    }
+                });
                 break;
         }
     }
