@@ -4,12 +4,18 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.location.Location;
 import android.support.annotation.NonNull;
+import android.util.Log;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.PlaceDetectionClient;
 import com.google.android.gms.location.places.PlaceLikelihoodBufferResponse;
 import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
@@ -18,6 +24,7 @@ import java.util.List;
 
 
 public class GoogleMapHelper extends MapHelper {
+    private static final String TAG = "GoogleMapHelper";
     @SuppressLint("StaticFieldLeak")
     private static GoogleMapHelper INSTANCE;
     private Context context;
@@ -101,4 +108,79 @@ public class GoogleMapHelper extends MapHelper {
             }
         });
     }
+
+    @Override
+    public Picker getPicker(Context context) {
+        return new GoogleMapPicker(context);
+    }
+
+
+    private class GoogleMapPicker extends Picker implements OnMapReadyCallback {
+        private MapView mapView;
+        private Context context;
+
+        private GoogleMapPicker(Context context) {
+            this.context = context;
+        }
+
+        private void createMapView() {
+            if (mapView == null) {
+                mapView = new MapView(context);
+                mapView.setClickable(true);
+                mapView.setFocusable(true);
+            }
+        }
+
+        @Override
+        public void attack(FrameLayout container) {
+            Log.d(TAG, "attack: ");
+            createMapView();
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            container.addView(mapView, params);
+            mapView.getMapAsync(this);
+        }
+
+        @Override
+        public void onMapReady(GoogleMap googleMap) {
+            Log.d(TAG, "onMapReady() called with: googleMap = [" + googleMap + "]");
+        }
+
+        @Override
+        void create() {
+            super.create();
+            createMapView();
+            mapView.onCreate(null);
+        }
+
+        @Override
+        void start() {
+            super.start();
+            mapView.onStart();
+        }
+
+        @Override
+        void resume() {
+            super.resume();
+            mapView.onResume();
+        }
+
+        @Override
+        void pause() {
+            super.pause();
+            mapView.onPause();
+        }
+
+        @Override
+        void stop() {
+            super.stop();
+            mapView.onStop();
+        }
+
+        @Override
+        void destroy() {
+            super.destroy();
+            mapView.onDestroy();
+        }
+    }
+
 }

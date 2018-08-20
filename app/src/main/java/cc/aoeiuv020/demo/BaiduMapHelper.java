@@ -3,12 +3,15 @@ package cc.aoeiuv020.demo;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.SDKInitializer;
+import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.search.core.PoiInfo;
 import com.baidu.mapapi.search.geocode.GeoCodeResult;
 import com.baidu.mapapi.search.geocode.GeoCoder;
@@ -129,5 +132,59 @@ public class BaiduMapHelper extends MapHelper {
         ReverseGeoCodeOption reverseGeoCodeOption = new ReverseGeoCodeOption();
         reverseGeoCodeOption.location(bdLatLng);
         geoSearch.reverseGeoCode(reverseGeoCodeOption);
+    }
+
+    @Override
+    public Picker getPicker(Context context) {
+        return new BaiduMapPicker(context);
+    }
+
+    private class BaiduMapPicker extends Picker {
+        private MapView mapView;
+        private Context context;
+
+        private BaiduMapPicker(Context context) {
+            this.context = context;
+        }
+
+        private void createMapView() {
+            if (mapView == null) {
+                mapView = new MapView(context);
+                mapView.setClickable(true);
+                mapView.setFocusable(true);
+            }
+        }
+
+        @Override
+        public void attack(FrameLayout container) {
+            Log.d(TAG, "attack: ");
+            createMapView();
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            container.addView(mapView, params);
+        }
+
+        @Override
+        void create() {
+            super.create();
+            createMapView();
+        }
+
+        @Override
+        void resume() {
+            super.resume();
+            mapView.onResume();
+        }
+
+        @Override
+        void pause() {
+            super.pause();
+            mapView.onPause();
+        }
+
+        @Override
+        void destroy() {
+            super.destroy();
+            mapView.onDestroy();
+        }
     }
 }

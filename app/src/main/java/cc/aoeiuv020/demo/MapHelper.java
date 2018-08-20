@@ -1,23 +1,26 @@
 package cc.aoeiuv020.demo;
 
 import android.annotation.SuppressLint;
+import android.arch.lifecycle.Lifecycle;
+import android.arch.lifecycle.LifecycleObserver;
+import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Context;
-import android.support.annotation.RequiresPermission;
+import android.util.Log;
+import android.widget.FrameLayout;
 
 import java.util.List;
 
-import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static cc.aoeiuv020.demo.MapHelper.MapType.BAIDU;
 
 @SuppressWarnings("WeakerAccess")
 public abstract class MapHelper {
-
-    private static MapType type = BAIDU;
+    private static final String TAG = "MapHelper";
+    private static MapType sMapType = BAIDU;
     @SuppressLint("StaticFieldLeak")
     private static Context context;
 
-    public static void setType(MapType type) {
-        MapHelper.type = type;
+    public static void setMapType(MapType type) {
+        MapHelper.sMapType = type;
     }
 
     public static void initContext(Context context) {
@@ -25,8 +28,12 @@ public abstract class MapHelper {
     }
 
     public static MapHelper getInstance() {
+        return getInstance(sMapType);
+    }
+
+    public static MapHelper getInstance(MapType mapType) {
         MapHelper result = null;
-        switch (type) {
+        switch (mapType) {
             case BAIDU:
                 result = BaiduMapHelper.getInstance(context);
                 break;
@@ -37,10 +44,22 @@ public abstract class MapHelper {
         return result;
     }
 
-    @RequiresPermission(ACCESS_FINE_LOCATION)
+    /**
+     * TODO: 经纬度标准没有统一，百度的经纬度给谷歌不准，
+     *
+     * @param onSuccessListener 成功回调，可空，
+     * @param onErrorListener   成功回调，可空，
+     * @throws SecurityException 没有位置权限，
+     */
     abstract public void requestLatLng(OnSuccessListener<LatLng> onSuccessListener,
                                        OnErrorListener onErrorListener) throws SecurityException;
 
+    /**
+     * 请求周边位置信息，
+     *
+     * @param onSuccessListener 成功回调，可空，
+     * @param onErrorListener   失败回调，可空，
+     */
     public void requestPlaceList(final OnSuccessListener<List<Place>> onSuccessListener,
                                  final OnErrorListener onErrorListener) throws SecurityException {
         requestLatLng(new OnSuccessListener<LatLng>() {
@@ -61,6 +80,51 @@ public abstract class MapHelper {
     abstract public void requestPlaceList(LatLng latLng,
                                           OnSuccessListener<List<Place>> onSuccessListener,
                                           OnErrorListener onErrorListener);
+
+    abstract public Picker getPicker(Context context);
+
+    /**
+     * 子类继承封装选择位置视图相关一切，
+     */
+    public static abstract class Picker implements LifecycleObserver {
+
+        public abstract void attack(FrameLayout container);
+
+        @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
+        void create() {
+            Log.d(TAG, "create: ");
+        }
+
+        @OnLifecycleEvent(Lifecycle.Event.ON_START)
+        void start() {
+            Log.d(TAG, "start: ");
+        }
+
+        @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
+        void resume() {
+            Log.d(TAG, "resume: ");
+        }
+
+        @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
+        void pause() {
+            Log.d(TAG, "pause: ");
+        }
+
+        @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+        void stop() {
+            Log.d(TAG, "stop: ");
+        }
+
+        @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+        void destroy() {
+            Log.d(TAG, "destroy: ");
+        }
+
+        @OnLifecycleEvent(Lifecycle.Event.ON_ANY)
+        void any() {
+            Log.d(TAG, "any: ");
+        }
+    }
 
     public enum MapType {
         BAIDU, GOOGLE

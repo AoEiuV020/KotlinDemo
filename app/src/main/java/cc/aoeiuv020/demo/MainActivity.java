@@ -1,7 +1,6 @@
 package cc.aoeiuv020.demo;
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -40,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             type = MapHelper.MapType.GOOGLE;
         }
-        MapHelper.setType(type);
+        MapHelper.setMapType(type);
         mChinaCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChina) {
@@ -50,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 } else {
                     type = MapHelper.MapType.GOOGLE;
                 }
-                MapHelper.setType(type);
+                MapHelper.setMapType(type);
             }
         });
         mLocationTextView = findViewById(R.id.location_tv);
@@ -81,14 +80,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 });
                 break;
             case R.id.map_btn:
-                Class clazz;
+                MapHelper.MapType mapType;
                 if (isChina) {
-                    clazz = BaiduMapActivity.class;
+                    mapType = MapHelper.MapType.BAIDU;
                 } else {
-                    clazz = MapsActivityCurrentPlace.class;
+                    mapType = MapHelper.MapType.GOOGLE;
                 }
-                Intent intent = new Intent(this, clazz);
-                startActivity(intent);
+                MapPickerActivity.startActivity(this, mapType);
                 break;
             case R.id.image_btn:
                 break;
@@ -112,8 +110,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         t.printStackTrace();
                     }
                 });
-
-
                 break;
             case R.id.city_btn:
                 break;

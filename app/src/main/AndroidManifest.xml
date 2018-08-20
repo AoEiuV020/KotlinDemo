@@ -92,6 +92,7 @@
                 android:value="cc.aoeiuv020.demo.MainActivity" />
         </activity>
         <activity android:name=".MapsActivityCurrentPlace" />
+        <activity android:name=".MapPickerActivity" />
     </application>
 
 </manifest>
