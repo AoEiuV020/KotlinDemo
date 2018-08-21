@@ -59,7 +59,7 @@ public class MapPickerActivity extends AppCompatActivity {
         FrameLayout container = findViewById(R.id.map_view_container);
         picker.attack(container, new MapHelper.OnMapReadyListener() {
             @Override
-            public void ready() {
+            public void onMapReady() {
                 mapHelper.requestLatLng(new MapHelper.OnSuccessListener<MapHelper.LatLng>() {
                     @Override
                     public void onSuccess(MapHelper.LatLng latLng) {

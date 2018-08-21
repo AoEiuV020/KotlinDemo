@@ -18,9 +18,15 @@ import java.util.List;
 @SuppressWarnings("WeakerAccess")
 public abstract class MapHelper {
     private static final String TAG = "MapHelper";
+
+    // 默认百度，海外其实也能用，可以在Application中初始化这个type，
     private static MapType sMapType = MapType.BAIDU;
     @SuppressLint("StaticFieldLeak")
     private static Context context;
+
+    public static MapType getMapType() {
+        return sMapType;
+    }
 
     public static void setMapType(MapType type) {
         MapHelper.sMapType = type;
@@ -49,13 +55,14 @@ public abstract class MapHelper {
 
     /**
      * TODO: 经纬度标准没有统一，百度的经纬度给谷歌不准，
+     * TODO: 没做几次重试，
      *
      * @param onSuccessListener 成功回调，可空，
      * @param onErrorListener   成功回调，可空，
      * @throws SecurityException 没有位置权限，
      */
-    abstract public void requestLatLng(OnSuccessListener<LatLng> onSuccessListener,
-                                       OnErrorListener onErrorListener);
+    abstract public void requestLatLng(@Nullable OnSuccessListener<LatLng> onSuccessListener,
+                                       @Nullable OnErrorListener onErrorListener);
 
     /**
      * 请求周边位置信息，
@@ -63,8 +70,8 @@ public abstract class MapHelper {
      * @param onSuccessListener 成功回调，可空，
      * @param onErrorListener   失败回调，可空，
      */
-    public final void requestPlaceList(final OnSuccessListener<List<Place>> onSuccessListener,
-                                       final OnErrorListener onErrorListener) throws SecurityException {
+    public final void requestPlaceList(@Nullable final OnSuccessListener<List<Place>> onSuccessListener,
+                                       @Nullable final OnErrorListener onErrorListener) throws SecurityException {
         requestLatLng(new OnSuccessListener<LatLng>() {
             @Override
             public void onSuccess(LatLng latLng) {
@@ -81,8 +88,8 @@ public abstract class MapHelper {
      * @param onErrorListener   失败回调，可空，
      */
     abstract public void requestPlaceList(LatLng latLng,
-                                          OnSuccessListener<List<Place>> onSuccessListener,
-                                          OnErrorListener onErrorListener);
+                                          @Nullable OnSuccessListener<List<Place>> onSuccessListener,
+                                          @Nullable OnErrorListener onErrorListener);
 
     /**
      * TODO: 城市名称字符串不能保证和百度的一致，语言和是否包含“市”字样都没测试，
@@ -92,8 +99,8 @@ public abstract class MapHelper {
      * @param onErrorListener   失败回调，可空，
      */
     abstract public void requestCityName(LatLng latLng,
-                                         OnSuccessListener<String> onSuccessListener,
-                                         OnErrorListener onErrorListener);
+                                         @Nullable OnSuccessListener<String> onSuccessListener,
+                                         @Nullable OnErrorListener onErrorListener);
 
     abstract public Picker getPicker(Context context);
 
@@ -121,7 +128,7 @@ public abstract class MapHelper {
         /**
          * 等地图准备好了才能开始一些操作，
          */
-        void ready();
+        void onMapReady();
     }
 
     public interface OnSuccessListener<T> {
@@ -141,7 +148,7 @@ public abstract class MapHelper {
         @Nullable
         protected OnMapStatusChangeListener onMapStatusChangeListener;
 
-        public abstract void attack(FrameLayout container, OnMapReadyListener listener);
+        public abstract void attack(FrameLayout container, @Nullable OnMapReadyListener listener);
 
         public void setOnMapStatusChangeListener(@Nullable OnMapStatusChangeListener listener) {
             this.onMapStatusChangeListener = listener;

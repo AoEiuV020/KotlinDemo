@@ -70,7 +70,8 @@ public class BaiduMapHelper extends MapHelper {
     }
 
     @SuppressWarnings("deprecation")
-    private void requestLocationOnce(final OnSuccessListener<BDLocation> onSuccessListener, final OnErrorListener onErrorListener) {
+    private void requestLocationOnce(@Nullable final OnSuccessListener<BDLocation> onSuccessListener,
+                                     @Nullable final OnErrorListener onErrorListener) {
         LocationClientOption option = new LocationClientOption();
         option.setLocationMode(LocationClientOption.LocationMode.Battery_Saving);           // 设置定位模式
         option.setCoorType("bd09ll");                                  // 返回的定位结果是百度经纬度,默认值gcj02
@@ -115,12 +116,15 @@ public class BaiduMapHelper extends MapHelper {
     }
 
     @Override
-    public void requestLatLng(final OnSuccessListener<LatLng> onSuccessListener, final OnErrorListener onErrorListener) {
+    public void requestLatLng(@Nullable final OnSuccessListener<LatLng> onSuccessListener,
+                              @Nullable final OnErrorListener onErrorListener) {
         requestLocationOnce(new OnSuccessListener<BDLocation>() {
             @Override
             public void onSuccess(BDLocation location) {
                 LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                onSuccessListener.onSuccess(latLng);
+                if (onSuccessListener != null) {
+                    onSuccessListener.onSuccess(latLng);
+                }
             }
         }, onErrorListener);
     }
@@ -160,8 +164,8 @@ public class BaiduMapHelper extends MapHelper {
 
     @Override
     public void requestPlaceList(LatLng latLng,
-                                 final OnSuccessListener<List<Place>> onSuccessListener,
-                                 final OnErrorListener onErrorListener) {
+                                 @Nullable final OnSuccessListener<List<Place>> onSuccessListener,
+                                 @Nullable final OnErrorListener onErrorListener) {
         requestPoiList(latLng, new OnSuccessListener<List<PoiInfo>>() {
             @Override
             public void onSuccess(List<PoiInfo> poiList) {
@@ -184,8 +188,8 @@ public class BaiduMapHelper extends MapHelper {
 
     @Override
     public void requestCityName(final LatLng latLng,
-                                final OnSuccessListener<String> onSuccessListener,
-                                final OnErrorListener onErrorListener) {
+                                @Nullable final OnSuccessListener<String> onSuccessListener,
+                                @Nullable final OnErrorListener onErrorListener) {
         requestPoiList(latLng, new OnSuccessListener<List<PoiInfo>>() {
             @Override
             public void onSuccess(List<PoiInfo> poiList) {
@@ -204,7 +208,9 @@ public class BaiduMapHelper extends MapHelper {
                     }
                     return;
                 }
-                onSuccessListener.onSuccess(city);
+                if (onSuccessListener != null) {
+                    onSuccessListener.onSuccess(city);
+                }
             }
         }, onErrorListener);
     }
@@ -233,14 +239,14 @@ public class BaiduMapHelper extends MapHelper {
         private BaiduMap mBaiduMap;
 
         @Override
-        public void attack(FrameLayout container, OnMapReadyListener listener) {
+        public void attack(FrameLayout container, @Nullable OnMapReadyListener listener) {
             Log.d(TAG, "attack: ");
             createMapView();
             FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             container.addView(mapView, params);
             init();
             if (listener != null) {
-                listener.ready();
+                listener.onMapReady();
             }
         }
 
@@ -266,11 +272,11 @@ public class BaiduMapHelper extends MapHelper {
             // 在地图上添加Marker，并显示
             mapView.getMap().addOverlay(option);
 
+            // TODO: Info小框展示，
+/*
             com.baidu.mapapi.map.MapStatus mapStatus = new com.baidu.mapapi.map.MapStatus.Builder().zoom(mBaiduMap.getMaxZoomLevel() - 3).target(bdLatLng).build();
             MapStatusUpdate u = MapStatusUpdateFactory.newMapStatus(mapStatus);
 
-            // TODO: Info小框展示，
-/*
             mapView.getMap().setOnMarkerClickListener(new BaiduMap.OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(Marker arg0) {
@@ -278,7 +284,7 @@ public class BaiduMapHelper extends MapHelper {
                     InfoWindow mInfoWindow;
                     if (mInfoWindow == null) {
                         // 创建InfoWindow展示的view
-                        Button button = new Button(BaiduMapActivity.this);
+                        Button button = new Button(MapActivity.this);
                         button.setBackgroundResource(R.drawable.popup);
                         button.setText(name);
                         // 创建InfoWindow , 传入 view， 地理坐标， y 轴偏移量
@@ -292,7 +298,6 @@ public class BaiduMapHelper extends MapHelper {
                 }
             });
 */
-
         }
 
         @Override

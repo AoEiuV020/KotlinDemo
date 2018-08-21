@@ -245,6 +245,7 @@ public class GoogleMapHelper extends MapHelper {
                 public void onCameraMoveStarted(int reason) {
                     if (REASON_GESTURE != reason) {
                         // 不是用户拖出来的事件无视，
+                        // TODO: 只在这里无视好像没什么用，下面的move和idle还是执行了，
                         Log.d(TAG, "onCameraMoveStarted() called with: i = [" + reason + "]");
                         return;
                     }
@@ -290,7 +291,7 @@ public class GoogleMapHelper extends MapHelper {
             });
 */
             if (onMapReadyListener != null) {
-                onMapReadyListener.ready();
+                onMapReadyListener.onMapReady();
             }
         }
 
