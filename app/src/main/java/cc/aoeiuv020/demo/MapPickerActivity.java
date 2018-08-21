@@ -64,6 +64,7 @@ public class MapPickerActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(MapHelper.LatLng latLng) {
                         picker.moveMap(latLng);
+                        picker.addMarker(latLng, R.mipmap.icon_gcoding, "M");
                     }
                 }, new MapHelper.OnErrorListener() {
                     @Override

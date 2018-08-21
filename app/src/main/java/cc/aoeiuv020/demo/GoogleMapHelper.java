@@ -2,10 +2,12 @@ package cc.aoeiuv020.demo;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -20,6 +22,9 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
@@ -199,11 +204,28 @@ public class GoogleMapHelper extends MapHelper {
         }
 
         @Override
+        public void addMarker(LatLng latLng, Bitmap bitmap, @Nullable String info) {
+            if (googleMap == null) {
+                Log.e(TAG, "addMarker: 添加标记失败，", new RuntimeException("谷歌地图还没准备好，"));
+                return;
+            }
+            createMapView();
+            com.google.android.gms.maps.model.LatLng gLatLng = new com.google.android.gms.maps.model.LatLng(latLng.getLatitude(), latLng.getLongitude());
+            // 构建Marker图标
+            BitmapDescriptor gBitmap = BitmapDescriptorFactory.fromBitmap(bitmap);
+            googleMap.addMarker(new MarkerOptions()
+                    .icon(gBitmap)
+                    .position(gLatLng)
+                    .title(info));
+        }
+
+        @Override
         public void moveMap(LatLng latLng, boolean anim) {
             if (googleMap == null) {
                 Log.e(TAG, "moveMap: 移动地图失败，", new RuntimeException("谷歌地图还没准备好，"));
                 return;
             }
+            createMapView();
             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(
                     new com.google.android.gms.maps.model.LatLng(latLng.getLatitude(), latLng.getLongitude()),
                     15f);
@@ -229,7 +251,9 @@ public class GoogleMapHelper extends MapHelper {
                     MapStatus mapStatus = new MapStatus();
                     com.google.android.gms.maps.model.LatLng target = googleMap.getCameraPosition().target;
                     mapStatus.target = new LatLng(target.latitude, target.longitude);
-                    onMapStatusChangeListener.onMapStatusChangeStart(mapStatus);
+                    if (onMapStatusChangeListener != null) {
+                        onMapStatusChangeListener.onMapStatusChangeStart(mapStatus);
+                    }
                 }
             });
             googleMap.setOnCameraMoveListener(new GoogleMap.OnCameraMoveListener() {
@@ -238,7 +262,9 @@ public class GoogleMapHelper extends MapHelper {
                     MapStatus mapStatus = new MapStatus();
                     com.google.android.gms.maps.model.LatLng target = googleMap.getCameraPosition().target;
                     mapStatus.target = new LatLng(target.latitude, target.longitude);
-                    onMapStatusChangeListener.onMapStatusChange(mapStatus);
+                    if (onMapStatusChangeListener != null) {
+                        onMapStatusChangeListener.onMapStatusChange(mapStatus);
+                    }
                 }
             });
             googleMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
@@ -247,8 +273,9 @@ public class GoogleMapHelper extends MapHelper {
                     MapStatus mapStatus = new MapStatus();
                     com.google.android.gms.maps.model.LatLng target = googleMap.getCameraPosition().target;
                     mapStatus.target = new LatLng(target.latitude, target.longitude);
-                    onMapStatusChangeListener.onMapStatusChangeFinish(mapStatus);
-
+                    if (onMapStatusChangeListener != null) {
+                        onMapStatusChangeListener.onMapStatusChangeFinish(mapStatus);
+                    }
                 }
             });
 /*

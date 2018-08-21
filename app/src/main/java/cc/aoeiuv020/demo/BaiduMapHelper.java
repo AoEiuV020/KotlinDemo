@@ -2,8 +2,9 @@ package cc.aoeiuv020.demo;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.support.annotation.Nullable;
 import android.util.Log;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
@@ -13,9 +14,13 @@ import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.BitmapDescriptor;
+import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.MarkerOptions;
+import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.map.UiSettings;
 import com.baidu.mapapi.search.core.PoiInfo;
 import com.baidu.mapapi.search.geocode.GeoCodeResult;
@@ -244,13 +249,55 @@ public class BaiduMapHelper extends MapHelper {
             UiSettings settings = mBaiduMap.getUiSettings();
             settings.setOverlookingGesturesEnabled(false);
             settings.setRotateGesturesEnabled(false);
-            mapView.getChildAt(1).setVisibility(View.GONE);
+            // 好像是百度Logo,
+//            mapView.getChildAt(1).setVisibility(View.GONE);
             mapView.showZoomControls(false);
             mBaiduMap.setOnMapStatusChangeListener(this);
         }
 
         @Override
+        public void addMarker(LatLng latLng, Bitmap bitmap, @Nullable String info) {
+            createMapView();
+            com.baidu.mapapi.model.LatLng bdLatLng = new com.baidu.mapapi.model.LatLng(latLng.getLatitude(), latLng.getLongitude());
+            // 构建Marker图标
+            BitmapDescriptor bdBitmap = BitmapDescriptorFactory.fromBitmap(bitmap);
+            // 构建MarkerOption，用于在地图上添加Marker
+            OverlayOptions option = new MarkerOptions().position(bdLatLng).icon(bdBitmap).title(info);
+            // 在地图上添加Marker，并显示
+            mapView.getMap().addOverlay(option);
+
+            com.baidu.mapapi.map.MapStatus mapStatus = new com.baidu.mapapi.map.MapStatus.Builder().zoom(mBaiduMap.getMaxZoomLevel() - 3).target(bdLatLng).build();
+            MapStatusUpdate u = MapStatusUpdateFactory.newMapStatus(mapStatus);
+
+            // TODO: Info小框展示，
+/*
+            mapView.getMap().setOnMarkerClickListener(new BaiduMap.OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(Marker arg0) {
+                    String name = arg0.getTitle();
+                    InfoWindow mInfoWindow;
+                    if (mInfoWindow == null) {
+                        // 创建InfoWindow展示的view
+                        Button button = new Button(BaiduMapActivity.this);
+                        button.setBackgroundResource(R.drawable.popup);
+                        button.setText(name);
+                        // 创建InfoWindow , 传入 view， 地理坐标， y 轴偏移量
+                        mInfoWindow = new InfoWindow(button, arg0.getPosition(), -47);// 显示InfoWindow
+                        mMapView.getMap().showInfoWindow(mInfoWindow);
+                    } else {
+                        mInfoWindow = null;
+                        mMapView.getMap().hideInfoWindow();
+                    }
+                    return false;
+                }
+            });
+*/
+
+        }
+
+        @Override
         public void moveMap(LatLng latLng, boolean anim) {
+            createMapView();
             moveMap(latLng.getLatitude(), latLng.getLongitude(), anim);
         }
 
@@ -313,7 +360,9 @@ public class BaiduMapHelper extends MapHelper {
         public void onMapStatusChangeStart(com.baidu.mapapi.map.MapStatus bdMapStatus) {
             MapStatus mapStatus = new MapStatus();
             mapStatus.target = new LatLng(bdMapStatus.target.latitude, bdMapStatus.target.longitude);
-            onMapStatusChangeListener.onMapStatusChangeStart(mapStatus);
+            if (onMapStatusChangeListener != null) {
+                onMapStatusChangeListener.onMapStatusChangeStart(mapStatus);
+            }
         }
 
         // 低版本百度地图没有这个方法，
@@ -326,14 +375,18 @@ public class BaiduMapHelper extends MapHelper {
         public void onMapStatusChange(com.baidu.mapapi.map.MapStatus bdMapStatus) {
             MapStatus mapStatus = new MapStatus();
             mapStatus.target = new LatLng(bdMapStatus.target.latitude, bdMapStatus.target.longitude);
-            onMapStatusChangeListener.onMapStatusChange(mapStatus);
+            if (onMapStatusChangeListener != null) {
+                onMapStatusChangeListener.onMapStatusChange(mapStatus);
+            }
         }
 
         @Override
         public void onMapStatusChangeFinish(com.baidu.mapapi.map.MapStatus bdMapStatus) {
             MapStatus mapStatus = new MapStatus();
             mapStatus.target = new LatLng(bdMapStatus.target.latitude, bdMapStatus.target.longitude);
-            onMapStatusChangeListener.onMapStatusChangeFinish(mapStatus);
+            if (onMapStatusChangeListener != null) {
+                onMapStatusChangeListener.onMapStatusChangeFinish(mapStatus);
+            }
 
         }
     }

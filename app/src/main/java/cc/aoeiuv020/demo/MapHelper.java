@@ -5,6 +5,10 @@ import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.FrameLayout;
 
@@ -114,6 +118,9 @@ public abstract class MapHelper {
     }
 
     public interface OnMapReadyListener {
+        /**
+         * 等地图准备好了才能开始一些操作，
+         */
         void ready();
     }
 
@@ -127,15 +134,25 @@ public abstract class MapHelper {
 
     /**
      * 子类继承封装选择位置视图相关一切，
+     * 实现了移动地图，显示标记，
+     * TODO: 没实现百度的InfoWindow, 点击标记显示信息，
      */
     public static abstract class Picker implements LifecycleObserver {
+        @Nullable
         protected OnMapStatusChangeListener onMapStatusChangeListener;
 
         public abstract void attack(FrameLayout container, OnMapReadyListener listener);
 
-        public void setOnMapStatusChangeListener(OnMapStatusChangeListener listener) {
+        public void setOnMapStatusChangeListener(@Nullable OnMapStatusChangeListener listener) {
             this.onMapStatusChangeListener = listener;
         }
+
+        public void addMarker(LatLng latLng, @DrawableRes int res, @Nullable String info) {
+            Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), res);
+            addMarker(latLng, bitmap, info);
+        }
+
+        public abstract void addMarker(LatLng latLng, Bitmap bitmap, @Nullable String info);
 
         public void moveMap(LatLng latLng) {
             // 默认不要动画，闪现过去，
