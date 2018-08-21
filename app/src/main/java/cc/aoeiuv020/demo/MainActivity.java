@@ -1,7 +1,9 @@
 package cc.aoeiuv020.demo;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
@@ -33,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.image_btn).setOnClickListener(this);
         findViewById(R.id.poi_btn).setOnClickListener(this);
         findViewById(R.id.city_btn).setOnClickListener(this);
+        findViewById(R.id.static_btn).setOnClickListener(this);
         mChinaCheckBox = findViewById(R.id.china_cb);
         MapHelper.MapType type;
         if (mChinaCheckBox.isChecked()) {
@@ -125,6 +128,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         t.printStackTrace();
                     }
                 });
+                break;
+            case R.id.static_btn:
+                String url = MapHelper.getInstance().getStaticImage(mLatLng);
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
                 break;
         }
     }

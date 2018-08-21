@@ -80,11 +80,8 @@
         android:id="@+id/city_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
         android:text="城市"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/poi_btn"
         app:layout_constraintTop_toBottomOf="@+id/poi_btn"
         tools:ignore="HardcodedText" />
 
@@ -96,4 +93,13 @@
         android:layout_marginRight="18dp"
         app:layout_constraintBaseline_toBaselineOf="@+id/city_btn"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/static_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="静态图"
+        app:layout_constraintStart_toStartOf="@+id/city_btn"
+        app:layout_constraintTop_toBottomOf="@+id/city_btn"
+        tools:ignore="HardcodedText" />
 </android.support.constraint.ConstraintLayout>
