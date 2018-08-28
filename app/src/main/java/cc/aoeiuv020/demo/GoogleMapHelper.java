@@ -14,9 +14,6 @@ import android.widget.FrameLayout;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.places.PlaceDetectionClient;
-import com.google.android.gms.location.places.PlaceLikelihoodBufferResponse;
-import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -96,45 +93,37 @@ public class GoogleMapHelper extends MapHelper {
     }
 
     @Override
-    public void requestPlaceList(LatLng latLng, final OnSuccessListener<List<Place>> onSuccessListener, final OnErrorListener onErrorListener) {
-        PlaceDetectionClient placeDetectionClient = Places.getPlaceDetectionClient(context);
-        // TODO: 这是获取了当前位置的周边信息，没用到参数的经纬度，
-        @SuppressLint("MissingPermission") Task<PlaceLikelihoodBufferResponse> currentPlace = placeDetectionClient.getCurrentPlace(null);
-        currentPlace.addOnCompleteListener(new OnCompleteListener<PlaceLikelihoodBufferResponse>() {
+    public void requestPlaceList(LatLng latLng,
+                                 @Nullable final OnSuccessListener<List<Place>> onSuccessListener,
+                                 @Nullable final OnErrorListener onErrorListener) {
+        requestAddressList(latLng, new OnSuccessListener<List<Address>>() {
             @Override
-            public void onComplete(@NonNull Task<PlaceLikelihoodBufferResponse> task) {
-                if (!task.isSuccessful()) {
-                    if (onErrorListener != null) {
-                        onErrorListener.onError(new RuntimeException("获取周边位置失败,", task.getException()));
+            public void onSuccess(List<Address> addressList) {
+                List<Place> placeList = new ArrayList<>(addressList.size());
+                for (Address add : addressList) {
+                    String addressLine;
+                    if (add.getMaxAddressLineIndex() < 0) {
+                        break;
+                    } else {
+                        addressLine = add.getAddressLine(0);
                     }
-                    return;
-                }
-                PlaceLikelihoodBufferResponse placeLikelihoods = task.getResult();
-                if (placeLikelihoods == null) {
-                    if (onErrorListener != null) {
-                        onErrorListener.onError(new RuntimeException("获取周边位置失败,", task.getException()));
+                    if (addressLine == null) {
+                        // 不知道会不会出现空，
+                        break;
                     }
-                    return;
-                }
-                List<Place> placeList = new ArrayList<>(placeLikelihoods.getCount());
-                for (int i = 0; i < placeLikelihoods.getCount(); i++) {
-                    com.google.android.gms.location.places.Place gPlace = placeLikelihoods.get(i).getPlace();
-                    String name = gPlace.getName().toString();
-                    // 以防万一避免空指针，
-                    String address = "" + gPlace.getAddress();
-                    LatLng placeLatLng = new LatLng(gPlace.getLatLng().latitude, gPlace.getLatLng().longitude);
-                    Place place = new Place(name, address, placeLatLng);
+                    Place place = new Place(add.getFeatureName(), addressLine, new LatLng(add.getLatitude(), add.getLongitude()));
                     placeList.add(place);
                 }
                 if (onSuccessListener != null) {
                     onSuccessListener.onSuccess(placeList);
                 }
             }
-        });
+        }, onErrorListener);
     }
 
-    @Override
-    public void requestCityName(LatLng latLng, final OnSuccessListener<String> onSuccessListener, final OnErrorListener onErrorListener) {
+    private void requestAddressList(LatLng latLng,
+                                    @Nullable final OnSuccessListener<List<Address>> onSuccessListener,
+                                    @Nullable final OnErrorListener onErrorListener) {
         Geocoder geocoder = new Geocoder(context);
         List<Address> addressList;
         try {
@@ -151,22 +140,36 @@ public class GoogleMapHelper extends MapHelper {
             }
             return;
         }
-        /*
+        if (onSuccessListener != null) {
+            onSuccessListener.onSuccess(addressList);
+        }
+    }
+
+    @Override
+    public void requestCityName(LatLng latLng,
+                                @Nullable final OnSuccessListener<String> onSuccessListener,
+                                @Nullable final OnErrorListener onErrorListener) {
+        requestAddressList(latLng, new OnSuccessListener<List<Address>>() {
+            @Override
+            public void onSuccess(List<Address> addressList) {
+/*
             Address[addressLines=[0:"中国广东省深圳市宝安区五和大道 邮政编码: 518000"],
             feature=五和大道,admin=广东省,sub-admin=null,locality=深圳市,thoroughfare=五和大道,
             postalCode=518000,countryCode=CN,countryName=中国,hasLatitude=true,latitude=22.6032427,
             hasLongitude=true,longitude=114.05754379999999,phone=null,url=null,extras=null]
-         */
-        Address address = addressList.get(0);
-        if (address == null || address.getLocality() == null) {
-            if (onErrorListener != null) {
-                onErrorListener.onError(new RuntimeException("获取位置失败,"));
+*/
+                Address address = addressList.get(0);
+                if (address == null || address.getLocality() == null) {
+                    if (onErrorListener != null) {
+                        onErrorListener.onError(new RuntimeException("获取位置失败,"));
+                    }
+                    return;
+                }
+                if (onSuccessListener != null) {
+                    onSuccessListener.onSuccess(address.getLocality());
+                }
             }
-            return;
-        }
-        if (onSuccessListener != null) {
-            onSuccessListener.onSuccess(address.getLocality());
-        }
+        }, onErrorListener);
     }
 
     @Override
@@ -194,7 +197,7 @@ public class GoogleMapHelper extends MapHelper {
         }
 
         @Override
-        public void attack(FrameLayout container, OnMapReadyListener listener) {
+        public void attack(FrameLayout container, @Nullable OnMapReadyListener listener) {
             Log.d(TAG, "attack: ");
             this.onMapReadyListener = listener;
             createMapView();
