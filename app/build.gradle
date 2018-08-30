@@ -1,12 +1,20 @@
+buildscript {
+    ext {
+    }
+}
 android {
     defaultConfig {
         applicationId "cc.aoeiuv020.demo"
+        resValue("string", "app_name", "Demo")
+        defaultConfig {
+            manifestPlaceholders = [
+                    :
+            ]
+        }
     }
     productFlavors {
         demo {
             dimension "tier"
-            applicationIdSuffix ".demo"
-            resValue("string", "app_name", "Demo")
         }
     }
 }
