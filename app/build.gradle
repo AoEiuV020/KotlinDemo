@@ -4,8 +4,9 @@ android {
     }
     productFlavors {
         demo {
-            applicationIdSuffix ".demo"
             dimension "tier"
+            applicationIdSuffix ".demo"
+            resValue("string", "app_name", "Demo")
         }
     }
 }
