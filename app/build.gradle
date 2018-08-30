@@ -1,16 +1,29 @@
+buildscript {
+    ext {
+        umengAppKey = '5b84b6c48f4a9d780200004f'
+        umengChannel = 'default'
+    }
+}
 android {
     defaultConfig {
-        applicationId "cc.aoeiuv020.demo"
+        applicationId "cc.aoeiuv020.demo.umeng"
+        resValue("string", "app_name", "UmengDemo")
+        defaultConfig {
+            manifestPlaceholders = [
+                    UMENG_APP_KEY: umengAppKey,
+                    UMENG_CHANNEL: umengChannel,
+            ]
+        }
     }
     productFlavors {
         demo {
             dimension "tier"
-            applicationIdSuffix ".umeng"
-            resValue("string", "app_name", "UmengDemo")
         }
     }
 }
 
 dependencies {
     implementation "com.android.support.constraint:constraint-layout:$constraint_layout_version"
+    implementation 'com.umeng.sdk:common:1.5.0'
+    implementation 'com.umeng.sdk:analytics:7.5.0'
 }

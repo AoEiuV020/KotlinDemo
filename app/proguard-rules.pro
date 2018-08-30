@@ -1,3 +1,15 @@
+# Umeng, https://developer.umeng.com/docs/66632/detail/66889#h2-u81EAu52A8u96C6u62103
+-keep class com.umeng.** {*;}
+-keepclassmembers class * {
+   public <init> (org.json.JSONObject);
+}
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+-keep public class **.R$*{
+public static final int *;
+}
 
 #apk 包内所有 class 的内部结构
 -dump class_files.txt
