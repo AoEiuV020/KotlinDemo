@@ -4,8 +4,8 @@ buildscript {
 }
 android {
     defaultConfig {
-        applicationId "cc.aoeiuv020.demo"
-        resValue("string", "app_name", "Demo")
+        applicationId "cc.aoeiuv020.demo.bugly"
+        resValue("string", "app_name", "BuglyDemo")
         defaultConfig {
             manifestPlaceholders = [
                     :
