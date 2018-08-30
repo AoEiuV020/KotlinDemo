@@ -5,8 +5,8 @@ android {
     productFlavors {
         demo {
             dimension "tier"
-            applicationIdSuffix ".demo"
-            resValue("string", "app_name", "Demo")
+            applicationIdSuffix ".umeng"
+            resValue("string", "app_name", "UmengDemo")
         }
     }
 }
