@@ -1,15 +1,54 @@
 buildscript {
     ext {
+        channel = 'github'
+
+        buglyAppId = '56c4d32b3a'
+        buglyAppChannel = channel
+        date = new Date().format("yyyyMMdd")
+        datetime = new Date().format("yyyyMMddHHmmss")
+        releaseBuglyAppVersion = android.defaultConfig.versionName + '-' + date
     }
 }
 android {
     defaultConfig {
         applicationId "cc.aoeiuv020.demo.bugly"
         resValue("string", "app_name", "BuglyDemo")
+        buildConfigField('String', "BUGLY_APP_ID", '"' + buglyAppId + '"')
+        buildConfigField('String', "BUGLY_APP_CHANNEL", '"' + buglyAppChannel + '"')
+        buildConfigField('String', "RELEASE_BUGLY_APP_VERSION", '"' + releaseBuglyAppVersion + '"')
         defaultConfig {
             manifestPlaceholders = [
                     :
             ]
+        }
+    }
+    applicationVariants.all { variant ->
+        if (variant.buildType.name == 'release') {
+            variant.assemble.doLast {
+                copy {
+                    from variant.outputs[0].outputFile
+                    into "${rootDir}/release"
+                    rename { String fileName ->
+                        "$rootProject.name-$releaseBuglyAppVersion-${variant.name}.apk"
+                    }
+                }
+                if (variant.mappingFile != null) {
+                    copy {
+                        from variant.mappingFile
+                        into "${rootDir}/release"
+                        rename { String fileName ->
+                            "$rootProject.name-mapping-$releaseBuglyAppVersion-${variant.name}.txt"
+                        }
+                    }
+                }
+            }
+        }
+    }
+    buildTypes {
+        debug {
+
+        }
+        release {
         }
     }
     productFlavors {
@@ -21,4 +60,5 @@ android {
 
 dependencies {
     implementation "com.android.support.constraint:constraint-layout:$constraint_layout_version"
+    implementation 'com.tencent.bugly:crashreport:2.6.6'
 }

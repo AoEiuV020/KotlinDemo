@@ -1,3 +1,6 @@
+# Bugly, https://bugly.qq.com/docs/user-guide/instruction-manual-android/?v=20180821173534#_4
+-dontwarn com.tencent.bugly.**
+-keep public class com.tencent.bugly.**{*;}
 
 #apk 包内所有 class 的内部结构
 -dump class_files.txt
