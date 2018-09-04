@@ -64,5 +64,6 @@ private val baseClientBuilder: OkHttpClient.Builder by lazy {
             .sslSocketFactory((TLSSocketFactory(trustManager)), trustManager)
 }
 
-val baseClient: OkHttpClient = baseClientBuilder
-        .build()
+val baseClient: OkHttpClient by lazy {
+    baseClientBuilder.build()
+}
