@@ -1,8 +1,8 @@
 android {
     defaultConfig {
         applicationId "cc.aoeiuv020.demo"
-        applicationIdSuffix ".demo"
-        resValue("string", "app_name", "Demo")
+        applicationIdSuffix ".https"
+        resValue("string", "app_name", "HttpsDemo")
     }
 }
 
