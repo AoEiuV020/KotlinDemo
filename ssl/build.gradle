@@ -1,0 +1,5 @@
+
+dependencies {
+    implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
+    implementation 'bouncycastle:bcprov-jdk16:140'
+}

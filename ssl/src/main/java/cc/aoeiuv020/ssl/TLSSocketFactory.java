@@ -1,4 +1,4 @@
-package cc.aoeiuv020.demo.ssl;
+package cc.aoeiuv020.ssl;
 
 
 import java.io.IOException;
@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocket;
@@ -27,7 +28,7 @@ public class TLSSocketFactory extends SSLSocketFactory {
 
     public TLSSocketFactory(X509TrustManager tm) throws KeyManagementException, NoSuchAlgorithmException {
         SSLContext context = SSLContext.getInstance("TLS");
-        context.init(null, (tm != null) ? new X509TrustManager[]{tm} : null, null);
+        context.init(null, (tm != null) ? new X509TrustManager[]{tm} : null, new SecureRandom());
         internalSSLSocketFactory = context.getSocketFactory();
     }
 
