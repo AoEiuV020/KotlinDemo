@@ -123,7 +123,7 @@ applicationModules.forEach { name ->
             })
             implementation 'com.android.support:multidex:1.0.3'
             testImplementation 'org.mockito:mockito-core:2.15.0'
-            implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+            implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
             implementation "org.jetbrains.anko:anko-commons:$anko_version"
             implementation "org.slf4j:slf4j-api:$slf4j_version"
             debugRuntimeOnly "org.slf4j:slf4j-android:$slf4j_version"
@@ -141,7 +141,7 @@ javaModules.forEach { name ->
 
         dependencies {
             testImplementation "junit:junit:$junit_version"
-            implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+            implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
             implementation "org.slf4j:slf4j-api:$slf4j_version"
             testImplementation "org.slf4j:slf4j-simple:$slf4j_version"
         }
@@ -198,7 +198,7 @@ androidModules.forEach { name ->
             testImplementation "junit:junit:$junit_version"
             androidTestImplementation 'com.android.support.test:runner:1.0.2'
             androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-            implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+            implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
             implementation "org.jetbrains.anko:anko-commons:$anko_version"
         }
 
