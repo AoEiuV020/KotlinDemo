@@ -3,7 +3,7 @@
 buildscript {
     ext {
         applicationModules = ['app']
-        javaModules = ['empty', 'log', 'encrypt']
+        javaModules = ['log', 'encrypt']
         androidModules = []
         def versionFile = rootProject.file('version.properties')
         if (versionFile.exists()) {
@@ -62,7 +62,7 @@ applicationModules.forEach { name ->
             buildTypes {
                 release {
                     minifyEnabled true
-                    useProguard true
+                    useProguard false
                     shrinkResources true
                     proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
                 }
