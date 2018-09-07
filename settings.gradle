@@ -1,4 +1,4 @@
-include ':app', ':empty'
+include ':app', ':empty', ':log'
 // empty模块是为了jitpack准备的，
 // 如果添加java库模块，唯一的库模块的名字会被jitpack处理成固定的仓库名，
 // 加上空的empty模块，有两个模块后jitpack会处理成多模块项目，保留模块名，
