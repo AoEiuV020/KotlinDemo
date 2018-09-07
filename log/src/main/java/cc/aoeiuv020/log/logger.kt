@@ -12,8 +12,9 @@ import org.slf4j.LoggerFactory
  */
 object LoggerUtils {
     inline fun <reified T> getLogger(): Logger = getLogger(T::class.java)
+    inline fun <reified T> T.getLogger(): Logger = getLogger(T::class.java)
     fun getLogger(clazz: Class<*>): Logger {
-        return LoggerFactory.getLogger(clazz)
+        return LoggerFactory.getLogger(clazz.simpleName)
     }
 }
 

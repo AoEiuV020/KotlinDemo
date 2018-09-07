@@ -1,0 +1,7 @@
+dependencies {
+    javaModules.forEach { name ->
+        if (project.name != name) {
+            api project(":$name")
+        }
+    }
+}

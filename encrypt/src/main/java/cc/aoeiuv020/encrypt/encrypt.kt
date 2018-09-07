@@ -63,7 +63,7 @@ fun ByteArray.hex(from: Int = 0, to: Int = size): String {
     }
 }
 
-fun ByteArray.base64(urlSafe: Boolean, from: Int = 0, to: Int = size): String {
+fun ByteArray.base64(urlSafe: Boolean = false, from: Int = 0, to: Int = size): String {
     val bytes = if (from == 0 && to == size) {
         this
     } else {
