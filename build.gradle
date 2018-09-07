@@ -62,7 +62,7 @@ applicationModules.forEach { name ->
             buildTypes {
                 release {
                     minifyEnabled true
-                    useProguard true
+                    useProguard false
                     shrinkResources true
                     proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
                 }
