@@ -76,8 +76,8 @@ public class TLSSocketFactory extends SSLSocketFactory {
         if (socket != null && (socket instanceof SSLSocket)) {
             SSLSocket ssl = (SSLSocket) socket;
             // 启用所有支持的协议，
-//            ssl.setEnabledProtocols(new String[]{"TLSv1", "TLSv1.1", "TLSv1.2"});
-            ssl.setEnabledProtocols(ssl.getSupportedProtocols());
+            ssl.setEnabledProtocols(new String[]{"TLSv1", "TLSv1.1", "TLSv1.2"});
+//            ssl.setEnabledProtocols(ssl.getSupportedProtocols());
         }
         return socket;
     }
