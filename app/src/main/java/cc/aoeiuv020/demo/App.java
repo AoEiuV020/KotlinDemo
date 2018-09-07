@@ -1,6 +1,6 @@
 package cc.aoeiuv020.demo;
 
-import android.app.Application;
+import android.support.multidex.MultiDexApplication;
 
-public class App extends Application {
+public class App extends MultiDexApplication {
 }
