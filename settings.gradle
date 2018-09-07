@@ -1,1 +1,1 @@
-include ':app', ':log', ':encrypt', ':regex', ':anull', ':type', ':atry', ':exception'
+include ':app', ':log', ':encrypt', ':regex', ':anull', ':type', ':atry', ':exception', ':string'
