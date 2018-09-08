@@ -2,7 +2,7 @@ package cc.aoeiuv020.demo
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import cc.aoeiuv020.okhttp.OkhttpUtils
+import cc.aoeiuv020.okhttp.OkHttpUtils
 import cc.aoeiuv020.okhttp.get
 import cc.aoeiuv020.okhttp.string
 import kotlinx.android.synthetic.main.activity_main.*
@@ -11,7 +11,7 @@ import org.jetbrains.anko.toast
 import org.jetbrains.anko.uiThread
 
 class MainActivity : AppCompatActivity() {
-    private val client = OkhttpUtils.client
+    private val client = OkHttpUtils.client
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

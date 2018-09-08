@@ -12,7 +12,7 @@ import java.security.cert.X509Certificate
  */
 
 
-object OkhttpUtils {
+object OkHttpUtils {
     /**
      * 添加支持一个安卓4.x不支持的加密协议，
      * https://github.com/square/okhttp/issues/4053
