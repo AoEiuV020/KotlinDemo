@@ -24,7 +24,10 @@ public class ExampleInstrumentedTest {
         Context appContext = InstrumentationRegistry.getTargetContext();
 
         assertEquals(BuildConfig.APPLICATION_ID, appContext.getPackageName());
+    }
 
+    @Test
+    public void loggerTest() {
         Logger logger = LoggerFactory.getLogger("AndroidTest");
         logger.info(BuildConfig.APPLICATION_ID);
     }
