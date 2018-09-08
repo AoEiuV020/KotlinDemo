@@ -1,5 +1,6 @@
 
 dependencies {
+    implementation 'com.github.AoEiuV020.AndroidDemo:commons:' + commons_version
     implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
     implementation 'bouncycastle:bcprov-jdk16:140'
 }

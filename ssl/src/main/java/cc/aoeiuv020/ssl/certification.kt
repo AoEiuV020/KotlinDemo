@@ -1,15 +1,14 @@
 package cc.aoeiuv020.ssl
 
-import okio.ByteString
+import cc.aoeiuv020.encrypt.base64
+import cc.aoeiuv020.log.LoggerUtils.getLogger
 import org.bouncycastle.asn1.DERIA5String
 import org.bouncycastle.asn1.x509.AccessDescription
 import org.bouncycastle.asn1.x509.AuthorityInformationAccess
 import org.bouncycastle.asn1.x509.X509Extensions
 import org.bouncycastle.x509.extension.X509ExtensionUtil
 import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import java.net.URL
-import java.nio.ByteBuffer
 import java.security.cert.CertificateException
 import java.security.cert.CertificateFactory
 import java.security.cert.X509Certificate
@@ -22,7 +21,7 @@ import java.util.*
  */
 @Suppress("MemberVisibilityCanBePrivate")
 object CertificationUtils {
-    private val logger: Logger = LoggerFactory.getLogger("CertificationUtils")
+    private val logger: Logger = getLogger()
     private val cacheCert = WeakHashMap<String, X509Certificate>()
     /**
      * 下载该证书的签发者证书，
@@ -57,6 +56,8 @@ object CertificationUtils {
             // 自签发证书直接返回空，避免死循环获取签发者，
             return null
         }
+        // TODO: 移除bouncycastle，自己实现这个提取，
+        // bouncycastle太重，只用到AuthorityInformationAccess有点浪费，
         val aia = AuthorityInformationAccess.getInstance(X509ExtensionUtil.fromExtensionValue(cert.getExtensionValue(X509Extensions.AuthorityInfoAccess.id)))
         return aia.accessDescriptions.firstOrNull {
             it.accessMethod == AccessDescription.id_ad_caIssuers
@@ -69,7 +70,7 @@ object CertificationUtils {
     fun certificateBytesToBase64(bytes: ByteArray): String {
         val sb = StringBuilder()
         sb.appendln(BEGIN_CERTIFICATE)
-        val encoded = ByteString.of(ByteBuffer.wrap(bytes)).base64()
+        val encoded = bytes.base64()
         var start = 0
         while (start < encoded.length) {
             // 固定一行64个字符，与chrome导出的证书一致，
