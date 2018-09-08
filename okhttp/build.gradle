@@ -1,0 +1,5 @@
+dependencies {
+    implementation 'com.github.AoEiuV020.AndroidDemo:commons:' + commons_version
+    implementation 'com.github.AoEiuV020.AndroidDemo:ssl:' + ssl_version
+    api 'com.squareup.okhttp3:okhttp:' + okhttp_version
+}
