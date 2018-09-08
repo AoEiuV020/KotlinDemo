@@ -49,6 +49,16 @@ object OkhttpUtils {
     val client: OkHttpClient by lazy {
         clientBuilder.build()
     }
+
+    /**
+     * 简单的get，仅用于极简单的情况，
+     */
+    fun get(url: String): Call {
+        val request = Request.Builder()
+                .url(url)
+                .build()
+        return client.newCall(request)
+    }
 }
 
 /**
