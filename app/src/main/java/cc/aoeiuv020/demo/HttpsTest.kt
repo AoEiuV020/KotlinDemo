@@ -1,11 +1,10 @@
 package cc.aoeiuv020.demo
 
-import cc.aoeiuv020.ssl.*
-import cc.aoeiuv020.ssl.OkhttpUtils.client
-import okhttp3.Call
-import okhttp3.Request
+import cc.aoeiuv020.ssl.TLSSocketFactory
+import cc.aoeiuv020.ssl.TrustManagerUtils
+import okhttp3.*
 import java.net.SocketTimeoutException
-import javax.net.ssl.SSLHandshakeException
+import java.security.cert.X509Certificate
 
 /**
  * Created by AoEiuV020 on 2018.09.04-15:19:30.
@@ -72,7 +71,23 @@ class HttpsTest {
         okhttpGet(url)
     }
 
-    private fun okhttpGet(url: String, client: Call.Factory = OkhttpUtils.client) {
+    private val spec = ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
+            .cipherSuites(
+                    CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA,
+                    *ConnectionSpec.MODERN_TLS.cipherSuites()!!.toTypedArray()
+            )
+            .build()
+
+    private fun OkHttpClient.Builder.sslInclude(vararg certList: X509Certificate) = apply {
+        TrustManagerUtils.include(certList.toSet()).let { tm ->
+            sslSocketFactory((TLSSocketFactory(tm)), tm)
+        }
+    }
+
+    private fun okhttpGet(url: String, client: Call.Factory = OkHttpClient.Builder()
+            .connectionSpecs(listOf(spec, ConnectionSpec.CLEARTEXT))
+            .sslInclude()
+            .build()) {
         println(url)
         val body = Request.Builder()
                 .url(url)
@@ -83,28 +98,5 @@ class HttpsTest {
                 .let { requireNotNull(it) }
                 .string()
         println(body.length)
-    }
-
-    private fun cert(url: String, certBase64: String) {
-        try {
-            // 这网站证书链有问题，只有自己的证书，导致一般验证都不通过，
-            // 但是chrome和firefox之类照样能拿到颁发者，然后信任，
-            get(url)
-//            error("这网站突然受信任了，")
-        } catch (e: SSLHandshakeException) {
-        }
-        val cert = CertificationUtils.base64ToCertificate(certBase64)
-        okhttpGet(url, client
-                .newBuilder()
-                .sslOnly(cert)
-                .build())
-        okhttpGet(url, client
-                .newBuilder()
-                .sslInclude(cert)
-                .build())
-        okhttpGet(url, client
-                .newBuilder()
-                .sslAllowAll()
-                .build())
     }
 }
