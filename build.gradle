@@ -113,8 +113,10 @@ applicationModules.forEach { name ->
                 }
             }
         }
-        configurations {
-            apkOnly
+        // pc端的单元测试移除无法使用的slf4j-android，
+        // 关键是runtimeOnly依赖不只加入apk中，test也会加上，
+        configurations.findAll {it.name.startsWith('test')}.each { conf ->
+            conf.exclude group: "org.slf4j", module: "slf4j-android"
         }
         dependencies {
             implementation "com.android.support:support-v4:$support_version"
@@ -128,7 +130,7 @@ applicationModules.forEach { name ->
             implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
             implementation "org.jetbrains.anko:anko-commons:$anko_version"
             implementation "org.slf4j:slf4j-api:$slf4j_version"
-            apkOnly "org.slf4j:slf4j-android:$slf4j_version"
+            runtimeOnly "org.slf4j:slf4j-android:$slf4j_version"
             testImplementation "org.slf4j:slf4j-simple:$slf4j_version"
         }
     }
