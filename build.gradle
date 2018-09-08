@@ -35,11 +35,6 @@ allprojects {
         jcenter()
         maven { url "https://jitpack.io" }
     }
-    // pc端的单元测试移除无法使用的slf4j-android，
-    // 关键是runtimeOnly依赖不只加入apk中，test也会加上，
-    configurations.findAll {it.name.startsWith('test')}.each { conf ->
-        conf.exclude group: "org.slf4j", module: "slf4j-android"
-    }
 }
 
 // app模块，
@@ -118,6 +113,14 @@ applicationModules.forEach { name ->
                 }
             }
         }
+
+        // pc端的单元测试移除无法使用的slf4j-android，
+        // 关键是runtimeOnly依赖不只加入apk中，test也会加上，
+        // 在allprojects设置没用，apply plugin后才存在这些configurations,
+        configurations.findAll {it.name.startsWith('test')}.each { conf ->
+            conf.exclude group: "org.slf4j", module: "slf4j-android"
+        }
+
         dependencies {
             implementation 'com.android.support:support-v4:' + support_version
             implementation 'com.android.support:appcompat-v7:' + support_version
@@ -195,6 +198,13 @@ androidModules.forEach { name ->
                     proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
                 }
             }
+        }
+
+        // pc端的单元测试移除无法使用的slf4j-android，
+        // 关键是runtimeOnly依赖不只加入apk中，test也会加上，
+        // 在allprojects设置没用，apply plugin后才存在这些configurations,
+        configurations.findAll {it.name.startsWith('test')}.each { conf ->
+            conf.exclude group: "org.slf4j", module: "slf4j-android"
         }
 
         dependencies {
