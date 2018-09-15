@@ -2,7 +2,7 @@
 
 buildscript {
     ext {
-        applicationModules = ['app']
+        applicationModules = ['app', 'share']
         javaModules = []
         androidModules = []
         def versionFile = rootProject.file('version.properties')

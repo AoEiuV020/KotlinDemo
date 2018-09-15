@@ -1,8 +1,8 @@
 android {
     defaultConfig {
         applicationId "cc.aoeiuv020.demo"
-        applicationIdSuffix ".share"
-        resValue("string", "app_name", "ShareTo")
+        applicationIdSuffix ".share.demo"
+        resValue("string", "app_name", "ShareFrom")
     }
 }
 
