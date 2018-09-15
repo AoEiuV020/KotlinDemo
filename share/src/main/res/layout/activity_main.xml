@@ -6,13 +6,60 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
+    <EditText
+        android:id="@+id/etContent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="这游戏真好玩，"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etFile"
+        tools:ignore="HardcodedText,LabelFor" />
 
+    <Button
+        android:id="@+id/btnSendText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="9dp"
+        android:layout_marginStart="9dp"
+        android:text="text"
+        app:layout_constraintStart_toStartOf="@+id/etContent"
+        app:layout_constraintTop_toBottomOf="@+id/etContent"
+        tools:ignore="HardcodedText" />
+
+    <Button
+        android:id="@+id/btnSendImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="image"
+        app:layout_constraintStart_toStartOf="@+id/btnSendText"
+        app:layout_constraintTop_toBottomOf="@+id/btnSendText"
+        tools:ignore="HardcodedText" />
+
+    <Button
+        android:id="@+id/btnSendVideo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="video"
+        app:layout_constraintStart_toStartOf="@+id/btnSendImage"
+        app:layout_constraintTop_toBottomOf="@+id/btnSendImage"
+        tools:ignore="HardcodedText" />
+
+    <EditText
+        android:id="@+id/etFile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="/sdcard/"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="HardcodedText,LabelFor" />
 </android.support.constraint.ConstraintLayout>
