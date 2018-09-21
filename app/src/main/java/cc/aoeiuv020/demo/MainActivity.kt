@@ -1,6 +1,8 @@
 package cc.aoeiuv020.demo
 
+import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
@@ -30,5 +32,12 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
                 .toString()
+
+        val uri = intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
+        contentResolver.openInputStream(uri).use { input ->
+            openFileOutput("test", Context.MODE_PRIVATE).use { output ->
+                input.copyTo(output)
+            }
+        }
     }
 }
