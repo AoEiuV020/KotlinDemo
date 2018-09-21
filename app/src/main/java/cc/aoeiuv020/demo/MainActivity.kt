@@ -1,17 +1,17 @@
 package cc.aoeiuv020.demo
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_receive.*
-import org.jetbrains.anko.startActivity
+import kotlinx.android.synthetic.main.activity_main.*
 
-class ReceiveActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_receive)
+        setContentView(R.layout.activity_main)
 
-        val intent = requireNotNull(intent)
+        val intent = intent.getParcelableExtra<Intent>("share") ?: return
         val type = when {
             intent.type.startsWith("text") -> "文本"
             intent.type.startsWith("image") -> "图片"
@@ -19,7 +19,7 @@ class ReceiveActivity : AppCompatActivity() {
         // 不可能未知，只过滤了这三种，
             else -> "未知"
         }
-        tvIntent.text = StringBuilder()
+        textView.text = StringBuilder()
                 .appendln("intent: $intent")
                 .appendln("type: $type")
                 .appendln("action: ${intent.action}")
@@ -30,9 +30,5 @@ class ReceiveActivity : AppCompatActivity() {
                     }
                 }
                 .toString()
-
-        tvIntent.setOnClickListener {
-            startActivity<MainActivity>("share" to getIntent())
-        }
     }
 }
