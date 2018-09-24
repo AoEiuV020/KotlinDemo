@@ -134,6 +134,7 @@ applicationModules.forEach { name ->
             implementation 'org.slf4j:slf4j-api:' + slf4j_version
             runtimeOnly 'org.slf4j:slf4j-android:' + slf4j_version
             testImplementation 'org.slf4j:slf4j-simple:' + slf4j_version
+            implementation 'com.github.AoEiuV020.AndroidDemo:commons:commons-' + commons_version
         }
     }
 }
@@ -150,6 +151,7 @@ javaModules.forEach { name ->
             implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:' + kotlin_version
             implementation 'org.slf4j:slf4j-api:' + slf4j_version
             testImplementation 'org.slf4j:slf4j-simple:' + slf4j_version
+            implementation 'com.github.AoEiuV020.AndroidDemo:commons:commons-' + commons_version
         }
 
         sourceCompatibility = "1.7"
@@ -216,6 +218,7 @@ androidModules.forEach { name ->
             implementation 'org.slf4j:slf4j-api:' + slf4j_version
             runtimeOnly 'org.slf4j:slf4j-android:' + slf4j_version
             testImplementation 'org.slf4j:slf4j-simple:' + slf4j_version
+            implementation 'com.github.AoEiuV020.AndroidDemo:commons:commons-' + commons_version
         }
 
         task sourcesJar(type: Jar) {
