@@ -27,4 +27,10 @@ class GsonUtilsTest {
         } catch (_: Exception) {
         }
     }
+
+    @Test
+    fun now() {
+        val now = Date()
+        assertEquals(now, now.toJson().toBean<Date>())
+    }
 }
