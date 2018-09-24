@@ -1,0 +1,4 @@
+dependencies {
+    api project(':gson')
+    api 'com.jayway.jsonpath:json-path:' + json_path_version
+}
