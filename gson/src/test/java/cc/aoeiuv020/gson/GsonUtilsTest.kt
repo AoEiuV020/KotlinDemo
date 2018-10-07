@@ -1,6 +1,7 @@
 package cc.aoeiuv020.gson
 
 import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.util.*
@@ -32,5 +33,18 @@ class GsonUtilsTest {
     fun now() {
         val now = Date()
         assertEquals(now, now.toJson().toBean<Date>())
+    }
+
+    @Test
+    fun adapter() {
+        val gson = GsonBuilder()
+                .registerTypeAdapter(Date::class.java, DateTypeAdapter)
+                .setDateFormat("///yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+                .create()
+        // setDateFormat不覆盖registerTypeAdapter,
+        val json = "\"2018-10-07T21:24:28.674+0800\""
+        val date = Date(1538918668674)
+        assertEquals(date, json.toBean<Date>())
+        assertEquals(json, date.toJson(gson))
     }
 }
