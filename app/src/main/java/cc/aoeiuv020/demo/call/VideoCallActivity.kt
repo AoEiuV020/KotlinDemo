@@ -136,7 +136,7 @@ class VideoCallActivity : AppCompatActivity(), AnkoLogger {
         mUidsList.remove(uid) ?: return
 
         var bigBgUid = localUid
-        if (!::mSmallVideoViewAdapter.isInitialized) {
+        if (::mSmallVideoViewAdapter.isInitialized) {
             bigBgUid = mSmallVideoViewAdapter.exceptedUid
         }
 
@@ -345,6 +345,7 @@ class VideoCallActivity : AppCompatActivity(), AnkoLogger {
         // 无视成功失败，会自动下线，
         rtcEngine.leaveChannel()
         rtcEngine.stopPreview()
+        finish()
     }
 
     override fun onBackPressed() {
