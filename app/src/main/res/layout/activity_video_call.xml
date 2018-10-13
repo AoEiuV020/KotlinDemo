@@ -6,7 +6,7 @@
     android:keepScreenOn="true"
     tools:context=".call.VideoCallActivity">
 
-    <FrameLayout
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/big_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

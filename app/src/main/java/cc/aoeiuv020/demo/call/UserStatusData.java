@@ -3,35 +3,13 @@ package cc.aoeiuv020.demo.call;
 import android.view.SurfaceView;
 
 public class UserStatusData {
-    public static final int DEFAULT_STATUS = 0;
-    public static final int VIDEO_MUTED = 1;
-    public static final int AUDIO_MUTED = VIDEO_MUTED << 1;
-
-    public static final int DEFAULT_VOLUME = 0;
     public int mUid;
     public SurfaceView mView;
-    public Integer mStatus; // if status is null, do nothing
-    public int mVolume;
-    private VideoInfoData mVideoInfo;
+    public boolean videoMuted;
 
-    public UserStatusData(int uid, SurfaceView view, Integer status, int volume) {
-        this(uid, view, status, volume, null);
-    }
-
-    public UserStatusData(int uid, SurfaceView view, Integer status, int volume, VideoInfoData i) {
+    public UserStatusData(int uid, SurfaceView view) {
         this.mUid = uid;
         this.mView = view;
-        this.mStatus = status;
-        this.mVolume = volume;
-        this.mVideoInfo = i;
-    }
-
-    public void setVideoInfo(VideoInfoData video) {
-        mVideoInfo = video;
-    }
-
-    public VideoInfoData getVideoInfoData() {
-        return mVideoInfo;
     }
 
     @Override
@@ -39,8 +17,6 @@ public class UserStatusData {
         return "UserStatusData{" +
                 "mUid=" + (mUid & 0XFFFFFFFFL) +
                 ", mView=" + mView +
-                ", mStatus=" + mStatus +
-                ", mVolume=" + mVolume +
                 '}';
     }
 }

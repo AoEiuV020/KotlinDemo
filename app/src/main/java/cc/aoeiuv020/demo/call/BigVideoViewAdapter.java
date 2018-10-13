@@ -9,29 +9,28 @@ import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 
-public class SmallVideoViewAdapter extends VideoViewAdapter {
+public class BigVideoViewAdapter extends VideoViewAdapter {
     private final static Logger log = LoggerFactory.getLogger(SmallVideoViewAdapter.class);
 
-    private int mExceptedUid;
+    private int mBigUid;
 
-    public SmallVideoViewAdapter(Context context, int exceptedUid, HashMap<Integer, UserStatusData> userList, VideoViewEventListener listener) {
+    public BigVideoViewAdapter(Context context, int exceptedUid, HashMap<Integer, UserStatusData> userList, VideoViewEventListener listener) {
         super(context, userList, listener);
-        mExceptedUid = exceptedUid;
-        log.debug("SmallVideoViewAdapter " + (mExceptedUid & 0xFFFFFFFFL));
+        mBigUid = exceptedUid;
+        log.debug("SmallVideoViewAdapter " + " " + (mBigUid & 0xFFFFFFFFL));
     }
 
     @Override
     protected void customizedInit(HashMap<Integer, UserStatusData> userList, boolean force) {
         mUsers.clear();
-        mUsers.addAll(userList.values());
-        mUsers.remove(userList.get(mExceptedUid));
+        mUsers.add(userList.get(mBigUid));
 
         if (force || mItemWidth == 0 || mItemHeight == 0) {
             WindowManager windowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
             DisplayMetrics outMetrics = new DisplayMetrics();
             windowManager.getDefaultDisplay().getMetrics(outMetrics);
-            mItemWidth = outMetrics.widthPixels / 4;
-            mItemHeight = outMetrics.heightPixels / 4;
+            mItemWidth = outMetrics.widthPixels;
+            mItemHeight = outMetrics.heightPixels;
         }
     }
 
@@ -39,16 +38,15 @@ public class SmallVideoViewAdapter extends VideoViewAdapter {
     public void notifyUiChanged(HashMap<Integer, UserStatusData> userList, int uidExcepted) {
         mUsers.clear();
 
-        mExceptedUid = uidExcepted;
+        mBigUid = uidExcepted;
 
         log.debug("notifyUiChanged " + " " + (uidExcepted & 0xFFFFFFFFL) + " " + userList);
-        mUsers.addAll(userList.values());
-        mUsers.remove(userList.get(mExceptedUid));
+        mUsers.add(userList.get(mBigUid));
 
         notifyDataSetChanged();
     }
 
     public int getExceptedUid() {
-        return mExceptedUid;
+        return mBigUid;
     }
 }

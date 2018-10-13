@@ -6,12 +6,9 @@ import android.media.AudioManager
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
-import android.view.SurfaceView
 import android.view.View
-import android.view.ViewGroup
 import android.view.ViewParent
 import android.widget.ImageView
-import cc.aoeiuv020.anull.notNull
 import cc.aoeiuv020.demo.R
 import io.agora.rtc.Constants
 import io.agora.rtc.IRtcEngineEventHandler
@@ -33,10 +30,11 @@ class VideoCallActivity : AppCompatActivity(), AnkoLogger {
     }
 
     private lateinit var rtcEngine: RtcEngine
-    private val mUidsList = HashMap<Int, SurfaceView>()
+    private val userList = HashMap<Int, UserStatusData>()
     private var mVideoMuted = false
     private var mAudioMuted = false
     private var mAudioRouting = -1 // Default
+    private lateinit var mBigVideoViewAdapter: BigVideoViewAdapter
     private lateinit var mSmallVideoViewAdapter: SmallVideoViewAdapter
     private var localUid: Int = 0
 
@@ -124,16 +122,8 @@ class VideoCallActivity : AppCompatActivity(), AnkoLogger {
         rtcEngine.joinChannel(null, CHANNEL, null, localUid)
     }
 
-    private fun replaceBig(uid: Int) {
-        val view = mUidsList[uid]
-        (view?.parent as? ViewGroup)?.removeView(view)
-        big_container.removeAllViews()
-        big_container.addView(view)
-        bindToSmallVideoView(uid)
-    }
-
     private fun doRemoveRemoteUi(uid: Int) {
-        mUidsList.remove(uid) ?: return
+        userList.remove(uid) ?: return
 
         var bigBgUid = localUid
         if (::mSmallVideoViewAdapter.isInitialized) {
@@ -144,35 +134,62 @@ class VideoCallActivity : AppCompatActivity(), AnkoLogger {
 
         if (bigBgUid == uid) {
             // 如果是大画面被删除，就改成展示本地预览，
-            switchToSmallVideoView(localUid)
+            replaceBigView(localUid)
         } else {
-            switchToSmallVideoView(bigBgUid)
+            replaceBigView(bigBgUid)
         }
     }
 
-    private fun switchToSmallVideoView(bigBgUid: Int) {
-        mUidsList.forEach { (_, s) ->
-            s.setZOrderOnTop(true)
-            s.setZOrderMediaOverlay(true)
+    private fun replaceBigView(bigBgUid: Int) {
+        userList.forEach { (uid, user) ->
+            val s = user.mView
+            if (uid == bigBgUid) {
+                s.setZOrderOnTop(false)
+                s.setZOrderMediaOverlay(false)
+            } else {
+                s.setZOrderOnTop(true)
+                s.setZOrderMediaOverlay(true)
+            }
         }
 
-        val bigView = mUidsList[bigBgUid].notNull()
-        bigView.setZOrderOnTop(false)
-        bigView.setZOrderMediaOverlay(false)
+        bindToBigVideoView(bigBgUid)
+        bindToSmallVideoView(bigBgUid)
+    }
 
-        replaceBig(bigBgUid)
+    private fun bindToBigVideoView(bigUid: Int) {
+        val recycler = big_container
+        var create = false
+        if (!::mBigVideoViewAdapter.isInitialized) {
+            create = true
+            mBigVideoViewAdapter = BigVideoViewAdapter(this, bigUid, userList, VideoViewEventListener { _, user ->
+                replaceBigView(user.mUid)
+            })
+            mBigVideoViewAdapter.setHasStableIds(true)
+        }
+        recycler.setHasFixedSize(true)
+
+        debug("bindToBigVideoView $bigUid")
+
+        recycler.layoutManager = RtlLinearLayoutManager(applicationContext, LinearLayoutManager.HORIZONTAL, false)
+        recycler.addItemDecoration(SmallVideoViewDecoration())
+        recycler.adapter = mBigVideoViewAdapter
+
+        recycler.isDrawingCacheEnabled = true
+        recycler.drawingCacheQuality = View.DRAWING_CACHE_QUALITY_AUTO
+
+        if (!create) {
+            mBigVideoViewAdapter.notifyUiChanged(userList, bigUid)
+        }
+        recycler.visibility = View.VISIBLE
     }
 
     private fun bindToSmallVideoView(exceptUid: Int) {
-
         val recycler = small_video_view_container
-
         var create = false
-
         if (!::mSmallVideoViewAdapter.isInitialized) {
             create = true
-            mSmallVideoViewAdapter = SmallVideoViewAdapter(this, localUid, exceptUid, mUidsList, VideoViewEventListener { _, user ->
-                switchToSmallVideoView(user.mUid)
+            mSmallVideoViewAdapter = SmallVideoViewAdapter(this, exceptUid, userList, VideoViewEventListener { _, user ->
+                replaceBigView(user.mUid)
             })
             mSmallVideoViewAdapter.setHasStableIds(true)
         }
@@ -188,8 +205,7 @@ class VideoCallActivity : AppCompatActivity(), AnkoLogger {
         recycler.drawingCacheQuality = View.DRAWING_CACHE_QUALITY_AUTO
 
         if (!create) {
-            mSmallVideoViewAdapter.setLocalUid(localUid)
-            mSmallVideoViewAdapter.notifyUiChanged(mUidsList, exceptUid, null, null)
+            mSmallVideoViewAdapter.notifyUiChanged(userList, exceptUid)
         }
         recycler.visibility = View.VISIBLE
     }
@@ -201,12 +217,12 @@ class VideoCallActivity : AppCompatActivity(), AnkoLogger {
 
     @Suppress("RedundantVisibilityModifier")
     public fun onVoiceChatClicked(view: View) {
-        if (mUidsList.size == 0) {
+        if (userList.size == 0) {
             return
         }
 
-        val surfaceV = mUidsList[localUid]
-        val parent: ViewParent? = surfaceV?.parent
+        val surfaceV = userList[localUid]
+        val parent: ViewParent? = surfaceV?.mView?.parent
         if (surfaceV == null || parent == null) {
             warn { "onVoiceChatClicked $view $surfaceV" }
             return
@@ -238,13 +254,14 @@ class VideoCallActivity : AppCompatActivity(), AnkoLogger {
     }
 
     private fun doHideTargetView(targetUid: Int, hide: Boolean) {
-        val status = HashMap<Int, Int>()
-        status[targetUid] = if (hide) UserStatusData.VIDEO_MUTED else UserStatusData.DEFAULT_STATUS
+        val user = userList[targetUid] ?: return
+        user.videoMuted = hide
         val bigUid = mSmallVideoViewAdapter.exceptedUid
         // TODO: 关闭视频时的默认画面没做，
         if (targetUid == bigUid) {
+            mBigVideoViewAdapter.notifyChanged(user)
         } else {
-            mSmallVideoViewAdapter.notifyUiChanged(mUidsList, mSmallVideoViewAdapter.exceptedUid, status, null)
+            mSmallVideoViewAdapter.notifyChanged(user)
         }
     }
 
@@ -267,7 +284,7 @@ class VideoCallActivity : AppCompatActivity(), AnkoLogger {
 
     @Suppress("RedundantVisibilityModifier")
     public fun onVoiceMuteClicked(view: View) {
-        if (mUidsList.size == 0) {
+        if (userList.size == 0) {
             return
         }
 
@@ -319,26 +336,26 @@ class VideoCallActivity : AppCompatActivity(), AnkoLogger {
 
     private fun doRenderLocalUi(uid: Int) {
         // 本地预览只要一个，
-        mUidsList.remove(localUid)
+        userList.remove(localUid)
         localUid = uid
-        if (uid in mUidsList) {
+        if (uid in userList) {
             return
         }
         val view = RtcEngine.CreateRendererView(this)
-        mUidsList[uid] = view
+        userList[uid] = UserStatusData(uid, view)
         rtcEngine.setupLocalVideo(VideoCanvas(view, VideoCanvas.RENDER_MODE_HIDDEN, uid))
         rtcEngine.startPreview()
-        switchToSmallVideoView(uid)
+        replaceBigView(uid)
     }
 
     private fun doRenderRemoteUi(uid: Int) {
-        if (uid in mUidsList) {
+        if (uid in userList) {
             return
         }
         val view = RtcEngine.CreateRendererView(this)
-        mUidsList[uid] = view
+        userList[uid] = UserStatusData(uid, view)
         rtcEngine.setupRemoteVideo(VideoCanvas(view, VideoCanvas.RENDER_MODE_HIDDEN, uid))
-        switchToSmallVideoView(mSmallVideoViewAdapter.exceptedUid)
+        replaceBigView(mSmallVideoViewAdapter.exceptedUid)
     }
 
     private fun callEnd() {

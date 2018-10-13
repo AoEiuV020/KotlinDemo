@@ -1,15 +1,18 @@
 package cc.aoeiuv020.demo.call;
 
-import android.app.Activity;
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.FrameLayout;
 
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,52 +32,34 @@ public abstract class VideoViewAdapter extends RecyclerView.Adapter<RecyclerView
 
     protected final VideoViewEventListener mListener;
 
-    protected int mLocalUid;
     protected int mItemWidth;
     protected int mItemHeight;
-    protected HashMap<Integer, VideoInfoData> mVideoInfo; // left user should removed from this HashMap
     private int mDefaultChildItem = 0;
 
-    public VideoViewAdapter(Activity activity, int localUid, HashMap<Integer, SurfaceView> uids, VideoViewEventListener listener) {
-        mInflater = ((Activity) activity).getLayoutInflater();
-        mContext = ((Activity) activity).getApplicationContext();
-
-        mLocalUid = localUid;
+    public VideoViewAdapter(Context context, HashMap<Integer, UserStatusData> userList, VideoViewEventListener listener) {
+        mInflater = LayoutInflater.from(context);
+        mContext = context.getApplicationContext();
 
         mListener = listener;
 
         mUsers = new ArrayList<>();
 
-        init(uids);
+        init(userList);
     }
 
-    private void init(HashMap<Integer, SurfaceView> uids) {
+    private void init(HashMap<Integer, UserStatusData> userList) {
         mUsers.clear();
 
-        customizedInit(uids, true);
+        customizedInit(userList, true);
     }
 
-    protected abstract void customizedInit(HashMap<Integer, SurfaceView> uids, boolean force);
+    protected abstract void customizedInit(HashMap<Integer, UserStatusData> userList, boolean force);
 
-    public abstract void notifyUiChanged(HashMap<Integer, SurfaceView> uids, int uidExtra, HashMap<Integer, Integer> status, HashMap<Integer, Integer> volume);
-
-    public void addVideoInfo(int uid, VideoInfoData video) {
-        if (mVideoInfo == null) {
-            mVideoInfo = new HashMap<>();
-        }
-        mVideoInfo.put(uid, video);
-    }
-
-    public void cleanVideoInfo() {
-        mVideoInfo = null;
-    }
-
-    public void setLocalUid(int uid) {
-        mLocalUid = uid;
-    }
+    public abstract void notifyUiChanged(HashMap<Integer, UserStatusData> userList, int uidExtra);
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    @NonNull
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         ViewGroup v = (ViewGroup) mInflater.inflate(R.layout.video_view_container, parent, false);
         v.getLayoutParams().width = mItemWidth;
         v.getLayoutParams().height = mItemHeight;
@@ -83,7 +68,8 @@ public abstract class VideoViewAdapter extends RecyclerView.Adapter<RecyclerView
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    @SuppressLint("ClickableViewAccessibility")
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         VideoUserStatusHolder myHolder = ((VideoUserStatusHolder) holder);
 
         final UserStatusData user = mUsers.get(position);
@@ -105,13 +91,20 @@ public abstract class VideoViewAdapter extends RecyclerView.Adapter<RecyclerView
             }
         });
 
-        if (holderView.getChildCount() == mDefaultChildItem) {
-            SurfaceView target = user.mView;
-            VideoViewAdapterUtil.stripView(target);
-            holderView.addView(target, 0, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        if (holderView.getChildCount() > mDefaultChildItem) {
+            View oldView = holderView.findViewById(R.id.video_surface_view);
+            if (oldView != null) {
+                holderView.removeView(oldView);
+            }
         }
-
-        VideoViewAdapterUtil.renderExtraData(mContext, user, myHolder);
+        SurfaceView target = user.mView;
+        target.setId(R.id.video_surface_view);
+        ViewParent parent = target.getParent();
+        if (parent != null) {
+            // 正常来说不会走到这，但如果分两个列表，一个view从一个列表移到另一个列表，过程态可能出现这种情况，
+            ((ViewGroup) parent).removeView(target);
+        }
+        holderView.addView(target, 0, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
     }
 
     @Override
@@ -126,9 +119,14 @@ public abstract class VideoViewAdapter extends RecyclerView.Adapter<RecyclerView
 
         SurfaceView view = user.mView;
         if (view == null) {
-            throw new NullPointerException("SurfaceView destroyed for user " + user.mUid + " " + user.mStatus + " " + user.mVolume);
+            throw new NullPointerException("SurfaceView destroyed for user " + user.mUid);
         }
 
         return (String.valueOf(user.mUid) + System.identityHashCode(view)).hashCode();
+    }
+
+    public void notifyChanged(@NotNull UserStatusData user) {
+        // TODO: 可以改成只刷新一个，
+        notifyDataSetChanged();
     }
 }
