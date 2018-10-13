@@ -21,6 +21,7 @@ import java.util.HashMap;
 
 import cc.aoeiuv020.demo.R;
 
+@SuppressWarnings({"WeakerAccess", "SameParameterValue"})
 public abstract class VideoViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final static Logger log = LoggerFactory.getLogger(VideoViewAdapter.class);
@@ -35,6 +36,8 @@ public abstract class VideoViewAdapter extends RecyclerView.Adapter<RecyclerView
     protected int mItemWidth;
     protected int mItemHeight;
     private int mDefaultChildItem = 0;
+
+    public boolean videoEnabled = true;
 
     public VideoViewAdapter(Context context, HashMap<Integer, UserStatusData> userList, VideoViewEventListener listener) {
         mInflater = LayoutInflater.from(context);
@@ -57,6 +60,10 @@ public abstract class VideoViewAdapter extends RecyclerView.Adapter<RecyclerView
 
     public abstract void notifyUiChanged(HashMap<Integer, UserStatusData> userList, int uidExtra);
 
+    public void setVideoEnabled(boolean videoEnabled) {
+        this.videoEnabled = videoEnabled;
+    }
+
     @Override
     @NonNull
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -76,7 +83,7 @@ public abstract class VideoViewAdapter extends RecyclerView.Adapter<RecyclerView
 
         log.debug("onBindViewHolder " + position + " " + user + " " + myHolder + " " + myHolder.itemView + " " + mDefaultChildItem);
 
-        FrameLayout holderView = (FrameLayout) myHolder.itemView;
+        FrameLayout holderView = myHolder.holderView;
 
         holderView.setOnTouchListener(new OnDoubleTapListener(mContext) {
             @Override
@@ -105,6 +112,14 @@ public abstract class VideoViewAdapter extends RecyclerView.Adapter<RecyclerView
             ((ViewGroup) parent).removeView(target);
         }
         holderView.addView(target, 0, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+        if (!videoEnabled || user.videoMuted) {
+            myHolder.maskView.setBackgroundColor(mContext.getResources().getColor(R.color.dark_gray));
+            myHolder.avatar.setVisibility(View.VISIBLE);
+        } else {
+            myHolder.maskView.setBackground(null);
+            myHolder.avatar.setVisibility(View.GONE);
+        }
     }
 
     @Override

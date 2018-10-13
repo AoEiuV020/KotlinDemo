@@ -77,7 +77,6 @@ class VideoCallActivity : AppCompatActivity(), AnkoLogger {
                 }
             }
 
-            // 这个不会调用，
             override fun onUserMuteVideo(uid: Int, muted: Boolean) {
                 debug { "$uid muted: $muted" }
                 runOnUiThread {
@@ -171,7 +170,6 @@ class VideoCallActivity : AppCompatActivity(), AnkoLogger {
         debug("bindToBigVideoView $bigUid")
 
         recycler.layoutManager = RtlLinearLayoutManager(applicationContext, LinearLayoutManager.HORIZONTAL, false)
-        recycler.addItemDecoration(SmallVideoViewDecoration())
         recycler.adapter = mBigVideoViewAdapter
 
         recycler.isDrawingCacheEnabled = true
@@ -230,10 +228,19 @@ class VideoCallActivity : AppCompatActivity(), AnkoLogger {
 
         mVideoMuted = !mVideoMuted
 
+        // 关闭摄像头就直接改成纯语音模式，禁用视频，
+        // 但是关闭摄像头的方法还是调用一下，
+        rtcEngine.muteLocalVideoStream(mVideoMuted)
+        mBigVideoViewAdapter.setVideoEnabled(!mVideoMuted)
+        mSmallVideoViewAdapter.setVideoEnabled(!mVideoMuted)
+        mBigVideoViewAdapter.notifyDataSetChanged()
+        mSmallVideoViewAdapter.notifyDataSetChanged()
         if (mVideoMuted) {
             rtcEngine.disableVideo()
+            rtcEngine.stopPreview()
         } else {
             rtcEngine.enableVideo()
+            rtcEngine.startPreview()
         }
 
         val iv = view as ImageView
