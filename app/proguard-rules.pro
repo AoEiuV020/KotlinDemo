@@ -1,3 +1,5 @@
+# agora, https://docs.agora.io/cn/Video/android_video?platform=Android
+-keep class io.agora.**{*;}
 
 #apk 包内所有 class 的内部结构
 -dump class_files.txt
