@@ -15,9 +15,18 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".bind.BindActivityFirst" />
+
+        <service
+            android:name=".bind.NormalService"
+            android:enabled="true"
+            android:exported="false" />
+
+        <activity android:name=".bind.BindActivitySecond" />
     </application>
 
 </manifest>
