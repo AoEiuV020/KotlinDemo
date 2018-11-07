@@ -70,7 +70,7 @@ class GridViewActivity : AppCompatActivity() {
 
             // 不确定效果，布局改变时的回调不熟悉，
             resetLayoutSize(vh.itemView, parent, vh.llRoot)
-            parent.addOnLayoutChangeListener { _, _, top, _, bottom, _, _, _, _ ->
+            parent.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
                 resetLayoutSize(vh.itemView, parent, vh.llRoot)
             }
             vh.llRoot.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->

@@ -1,7 +1,6 @@
 package cc.aoeiuv020.demo
 
 import android.content.Context
-import android.graphics.Rect
 import android.os.Bundle
 import android.support.annotation.DrawableRes
 import android.support.annotation.StringRes
@@ -11,13 +10,15 @@ import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_grid_recycler_view.*
 import kotlinx.android.synthetic.main.item_square_action.view.*
 import org.jetbrains.anko.ctx
+import org.jetbrains.anko.dip
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
-import java.util.*
+import kotlin.math.max
 
 class GridRecyclerViewActivity : AppCompatActivity() {
     companion object {
@@ -32,23 +33,12 @@ class GridRecyclerViewActivity : AppCompatActivity() {
 
         recyclerView.layoutManager = GridLayoutManager(ctx, 2)
         recyclerView.adapter = SquareActionAdapter(getData())
-        recyclerView.addItemDecoration(object : RecyclerView.ItemDecoration() {
-            override fun getItemOffsets(outRect: Rect, view: View?, parent: RecyclerView?, state: RecyclerView.State?) {
-                outRect.top = 30
-                outRect.bottom = 30
-            }
-        })
     }
 
     private fun getData(): List<Item> {
-        return Arrays.asList(
-                Item(R.string.app_name, R.drawable.item_square, toToast()),
-                Item(R.string.app_name, R.drawable.item_square, toToast()),
-                Item(R.string.app_name, R.drawable.item_square, toToast()),
-                Item(R.string.app_name, R.drawable.item_square, toToast()),
-                Item(R.string.app_name, R.drawable.item_square, toToast()),
-                Item(R.string.app_name, R.drawable.item_square, toToast())
-        )
+        return List(13) {
+            Item(R.string.app_name, R.drawable.item_square, toToast())
+        }
     }
 
     private fun toToast() = Runnable {
@@ -58,10 +48,34 @@ class GridRecyclerViewActivity : AppCompatActivity() {
     private inner class SquareActionAdapter(
             private val data: List<Item>
     ) : RecyclerView.Adapter<ViewHolder>() {
+        private fun resetLayoutSize(
+                itemView: View,
+                parent: ViewGroup,
+                llRoot: View
+        ) {
+            itemView.run {
+                layoutParams = layoutParams.apply {
+                    height = max(
+                            llRoot.height + ctx.dip(30),
+                            parent.height / 3
+                    )
+                }
+            }
+        }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             val itemView = layoutInflater.inflate(R.layout.item_square_action, parent, false)
-            return ViewHolder(itemView)
+            val vh = ViewHolder(itemView)
+
+            // 不确定效果，布局改变时的回调不熟悉，
+            resetLayoutSize(vh.itemView, parent, vh.llRoot)
+            parent.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
+                resetLayoutSize(vh.itemView, parent, vh.llRoot)
+            }
+            vh.llRoot.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
+                resetLayoutSize(vh.itemView, parent, vh.llRoot)
+            }
+            return vh
         }
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -77,6 +91,7 @@ class GridRecyclerViewActivity : AppCompatActivity() {
     }
 
     private class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val llRoot: LinearLayout = itemView.llRoot
         val tvActionName: TextView = itemView.tvActionName
         val ivActionImage: ImageView = itemView.ivActionImage
     }
