@@ -68,15 +68,6 @@ class GridViewActivity : AppCompatActivity() {
                     ?: onCreateViewHolder(parent)
             vh.itemView.tag = vh
 
-            // 不确定效果，布局改变时的回调不熟悉，
-            resetLayoutSize(vh.itemView, parent, vh.llRoot)
-            parent.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
-                resetLayoutSize(vh.itemView, parent, vh.llRoot)
-            }
-            vh.llRoot.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
-                resetLayoutSize(vh.itemView, parent, vh.llRoot)
-            }
-
             onBindViewHolder(vh, position)
 
             return vh.itemView
@@ -96,7 +87,16 @@ class GridViewActivity : AppCompatActivity() {
 
         fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
             val itemView = layoutInflater.inflate(R.layout.item_square_action, parent, false)
-            return ViewHolder(itemView)
+            val vh = ViewHolder(itemView)
+            // 不确定效果，布局改变时的回调不熟悉，
+            resetLayoutSize(vh.itemView, parent, vh.llRoot)
+            parent.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
+                resetLayoutSize(vh.itemView, parent, vh.llRoot)
+            }
+            vh.llRoot.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
+                resetLayoutSize(vh.itemView, parent, vh.llRoot)
+            }
+            return vh
         }
 
         fun onBindViewHolder(holder: ViewHolder, position: Int) {
