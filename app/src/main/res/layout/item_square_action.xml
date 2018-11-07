@@ -18,14 +18,13 @@
         android:layout_width="wrap_content"
         android:layout_height="8dp" />
 
-    <!-- UI说用32px -->
     <TextView
         android:id="@+id/tvActionName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="文字"
         android:textColor="#0a0a0a"
         android:textSize="32px"
-        tools:ignore="PxUsage"
-        tools:text="文字" />
+        tools:ignore="HardcodedText,PxUsage" />
 
 </LinearLayout>

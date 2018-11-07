@@ -14,5 +14,9 @@ class MainActivity : AppCompatActivity() {
         btnGridLayoutManager.setOnClickListener {
             GridRecyclerViewActivity.start(ctx)
         }
+
+        btnGridLayout.setOnClickListener {
+            GridLayoutActivity.start(ctx)
+        }
     }
 }
