@@ -31,4 +31,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnGridLayoutManager"
         tools:ignore="HardcodedText" />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/btnGridView"
+        style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="GridView"
+        app:backgroundTint="@color/colorAccent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnGridLayout"
+        tools:ignore="HardcodedText" />
 </android.support.constraint.ConstraintLayout>
