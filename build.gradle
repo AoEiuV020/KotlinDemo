@@ -234,6 +234,7 @@ androidModules.forEach { name ->
         }
 
         task javadocJar(type: Jar, dependsOn: javadoc) {
+            javadoc.failOnError false
             classifier = 'javadoc'
             from javadoc.destinationDir
         }
