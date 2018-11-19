@@ -11,21 +11,22 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import kotlinx.android.synthetic.main.activity_browser.*
 import org.jetbrains.anko.startActivity
+import java.lang.ref.SoftReference
 
 class BrowserActivity : AppCompatActivity() {
     companion object {
         const val KEY_URL = "url"
         @SuppressLint("StaticFieldLeak")
-        private var webView: WebView? = null
+        private var softWebView: SoftReference<WebView?> = SoftReference(null)
 
         fun start(ctx: Context, url: String) {
             ctx.startActivity<BrowserActivity>(KEY_URL to url)
         }
 
         @SuppressLint("SetJavaScriptEnabled")
-        fun getWebView(ctx: Context): WebView = webView
+        fun getWebView(ctx: Context): WebView = softWebView.get()
                 ?: WebView(ctx.applicationContext)
-                        .also { webView = it }
+                        .also { softWebView = SoftReference(it) }
                         .apply {
                             webViewClient = WebViewClient()
                             settings.javaScriptEnabled = true
