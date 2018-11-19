@@ -11,7 +11,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        btnMoveTaskToBack.setOnClickListener {
+        btnCachedBrowser.setOnClickListener {
             BrowserActivity.start(ctx, etContent.text.toString())
         }
     }
