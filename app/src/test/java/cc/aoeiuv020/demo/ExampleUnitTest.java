@@ -1,6 +1,8 @@
 package cc.aoeiuv020.demo;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertEquals;
 
@@ -13,5 +15,11 @@ public class ExampleUnitTest {
     @Test
     public void addition_isCorrect() {
         assertEquals(4, 2 + 2);
+    }
+
+    @Test
+    public void loggerTest() {
+        Logger logger = LoggerFactory.getLogger("PCTest");
+        logger.info(BuildConfig.APPLICATION_ID);
     }
 }

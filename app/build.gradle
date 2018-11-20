@@ -7,6 +7,6 @@ android {
 }
 
 dependencies {
-    implementation "com.android.support.constraint:constraint-layout:$constraint_layout_version"
+    implementation 'com.android.support.constraint:constraint-layout:' + constraint_layout_version
     implementation project(':commons')
 }

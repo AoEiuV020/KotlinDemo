@@ -6,6 +6,8 @@ import android.support.test.runner.AndroidJUnit4;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertEquals;
 
@@ -21,6 +23,12 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("cc.aoeiuv020.demo", appContext.getPackageName());
+        assertEquals(BuildConfig.APPLICATION_ID, appContext.getPackageName());
+    }
+
+    @Test
+    public void loggerTest() {
+        Logger logger = LoggerFactory.getLogger("AndroidTest");
+        logger.info(BuildConfig.APPLICATION_ID);
     }
 }
