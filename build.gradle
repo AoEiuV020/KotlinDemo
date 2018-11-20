@@ -3,7 +3,7 @@
 buildscript {
     ext {
         applicationModules = ['app']
-        javaModules = []
+        javaModules = ['jarlibrary']
         androidModules = ['aarlibrary']
         def versionFile = rootProject.file('version.properties')
         if (versionFile.exists()) {
