@@ -37,10 +37,6 @@ allprojects {
     }
 }
 
-tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
-}
-
 // app模块，
 // 多个app模块可能导致AndroidStudio3.1.3右侧gradle面板的任务崩溃，原因和细节不明，
 // 不影响AndroidStudio的run, 和gradlew命令行，
@@ -50,6 +46,14 @@ applicationModules.forEach { name ->
         apply plugin: 'kotlin-android'
         apply plugin: 'kotlin-android-extensions'
         apply plugin: 'kotlin-kapt'
+
+        tasks.withType(JavaCompile) {
+            options.encoding = 'UTF-8'
+        }
+        tasks.withType(Javadoc) {
+            options.encoding = 'UTF-8'
+        }
+
         android {
             compileSdkVersion compile_version.toInteger()
             flavorDimensions "tier"
@@ -150,6 +154,13 @@ javaModules.forEach { name ->
         apply plugin: 'kotlin'
         apply plugin: 'maven'
 
+        tasks.withType(JavaCompile) {
+            options.encoding = 'UTF-8'
+        }
+        tasks.withType(Javadoc) {
+            options.encoding = 'UTF-8'
+        }
+
         dependencies {
             testImplementation 'junit:junit:' + junit_version
             implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:' + kotlin_version
@@ -186,6 +197,13 @@ androidModules.forEach { name ->
         apply plugin: 'kotlin-android'
         apply plugin: 'kotlin-android-extensions'
         apply plugin: 'com.github.dcendents.android-maven'
+
+        tasks.withType(JavaCompile) {
+            options.encoding = 'UTF-8'
+        }
+        tasks.withType(Javadoc) {
+            options.encoding = 'UTF-8'
+        }
 
         android {
             compileSdkVersion compile_version.toInteger()
