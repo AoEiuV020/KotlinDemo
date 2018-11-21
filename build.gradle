@@ -308,8 +308,8 @@ androidModules.forEach { name ->
         bintrayUpload.dependsOn('assemble')
         tasks.whenTaskAdded { task ->
             if ([
-                    'genereateJavadocsJarForMavenPublication',
-                    'genereateSourcesJarForMavenPublication'
+                    'genereateJavadocsJarForReleasePublication',
+                    'genereateSourcesJarForReleasePublication'
             ].contains(task.name)) {
                 task.enabled = false
             }
