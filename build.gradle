@@ -209,6 +209,17 @@ javaModules.forEach { name ->
             desc = "Java library $name."
             website = 'https://github.com/AoEiuV020'
         }
+        // 删除bintray-release插件自带的javadocJar和sourceJar任务，
+        // 因为不支持kotlin, 不支持安卓，
+        bintrayUpload.dependsOn('assemble')
+        tasks.whenTaskAdded { task ->
+            if ([
+                    'genereateJavadocsJarForMavenPublication',
+                    'genereateSourcesJarForMavenPublication'
+            ].contains(task.name)) {
+                task.enabled = false
+            }
+        }
     }
 }
 
@@ -291,6 +302,17 @@ androidModules.forEach { name ->
             publishVersion = version
             desc = "Android library $name."
             website = 'https://github.com/AoEiuV020'
+        }
+        // 删除bintray-release插件自带的javadocJar和sourceJar任务，
+        // 因为不支持kotlin, 不支持安卓，
+        bintrayUpload.dependsOn('assemble')
+        tasks.whenTaskAdded { task ->
+            if ([
+                    'genereateJavadocsJarForMavenPublication',
+                    'genereateSourcesJarForMavenPublication'
+            ].contains(task.name)) {
+                task.enabled = false
+            }
         }
     }
 }
