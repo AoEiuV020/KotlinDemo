@@ -3,8 +3,8 @@
 buildscript {
     ext {
         applicationModules = ['app']
-        javaModules = []
-        androidModules = []
+        javaModules = ['jarlibrary']
+        androidModules = ['aarlibrary']
         def versionFile = rootProject.file('version.properties')
         if (versionFile.exists()) {
             def input = versionFile.newInputStream()
