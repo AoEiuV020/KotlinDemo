@@ -25,6 +25,8 @@ buildscript {
         //noinspection DifferentKotlinGradleVersion
         classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:' + kotlin_version
         classpath 'com.github.dcendents:android-maven-gradle-plugin:' + jitpack_android_version
+        classpath 'org.jetbrains.dokka:dokka-gradle-plugin:' + dokka_version
+        classpath 'org.jetbrains.dokka:dokka-android-gradle-plugin:' + dokka_version
     }
 }
 
@@ -40,7 +42,7 @@ allprojects {
         options.encoding = 'UTF-8'
     }
     tasks.withType(Javadoc) {
-        options{
+        options {
             encoding 'UTF-8'
             charSet 'UTF-8'
             links "http://docs.oracle.com/javase/7/docs/api"
@@ -157,6 +159,7 @@ javaModules.forEach { name ->
         apply plugin: 'java-library'
         apply plugin: 'kotlin'
         apply plugin: 'maven'
+        apply plugin: 'org.jetbrains.dokka'
 
         dependencies {
             testImplementation 'junit:junit:' + junit_version
@@ -174,10 +177,16 @@ javaModules.forEach { name ->
             from sourceSets.main.allSource
         }
 
-        task javadocJar(type: Jar, dependsOn: javadoc) {
-            javadoc.failOnError false
+        task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaTask) {
+            jdkVersion = 7
+            outputFormat = 'javadoc'
+            outputDirectory = "$buildDir/dokkadoc"
+        }
+
+        task javadocJar(type: Jar, dependsOn: dokkaJavadoc) {
+            group = 'jar'
             classifier = 'javadoc'
-            from javadoc.destinationDir
+            from "$buildDir/dokkadoc"
         }
 
         artifacts {
@@ -194,6 +203,7 @@ androidModules.forEach { name ->
         apply plugin: 'kotlin-android'
         apply plugin: 'kotlin-android-extensions'
         apply plugin: 'com.github.dcendents.android-maven'
+        apply plugin: 'org.jetbrains.dokka-android'
 
         android {
             compileSdkVersion compile_version.toInteger()
@@ -238,17 +248,16 @@ androidModules.forEach { name ->
             classifier = 'sources'
         }
 
-        task javadoc(type: Javadoc) {
-            failOnError false
-            source = android.sourceSets.main.java.srcDirs
-            classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-            classpath += configurations.compile
+        task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaAndroidTask) {
+            jdkVersion = 7
+            outputFormat = 'javadoc'
+            outputDirectory = "$buildDir/dokkadoc"
         }
 
-        task javadocJar(type: Jar, dependsOn: javadoc) {
-            javadoc.failOnError false
+        task javadocJar(type: Jar, dependsOn: dokkaJavadoc) {
+            group = 'jar'
             classifier = 'javadoc'
-            from javadoc.destinationDir
+            from "$buildDir/dokkadoc"
         }
 
         artifacts {
