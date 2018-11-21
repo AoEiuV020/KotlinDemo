@@ -14,6 +14,7 @@ buildscript {
                 ext.set(k, v)
             }
         }
+        user = 'aoeiuv020'
     }
     repositories {
         google()
@@ -27,6 +28,7 @@ buildscript {
         classpath 'com.github.dcendents:android-maven-gradle-plugin:' + jitpack_android_version
         classpath 'org.jetbrains.dokka:dokka-gradle-plugin:' + dokka_version
         classpath 'org.jetbrains.dokka:dokka-android-gradle-plugin:' + dokka_version
+        classpath 'com.novoda:bintray-release:' + bintray_version
     }
 }
 
@@ -161,6 +163,7 @@ javaModules.forEach { name ->
         apply plugin: 'kotlin'
         apply plugin: 'maven'
         apply plugin: 'org.jetbrains.dokka'
+        apply plugin: 'com.novoda.bintray-release'
 
         dependencies {
             testImplementation 'junit:junit:' + junit_version
@@ -195,6 +198,16 @@ javaModules.forEach { name ->
             archives sourcesJar
             archives javadocJar
         }
+
+        publish {
+            userOrg = user
+            bintrayUser = userOrg
+            groupId = group
+            artifactId = name
+            publishVersion = version
+            desc = "Java library $name."
+            website = 'https://github.com/AoEiuV020'
+        }
     }
 }
 
@@ -206,6 +219,7 @@ androidModules.forEach { name ->
         apply plugin: 'kotlin-android-extensions'
         apply plugin: 'com.github.dcendents.android-maven'
         apply plugin: 'org.jetbrains.dokka-android'
+        apply plugin: 'com.novoda.bintray-release'
 
         android {
             compileSdkVersion compile_version.toInteger()
@@ -266,6 +280,16 @@ androidModules.forEach { name ->
         artifacts {
             archives sourcesJar
             archives javadocJar
+        }
+
+        publish {
+            userOrg = user
+            bintrayUser = userOrg
+            groupId = group
+            artifactId = name
+            publishVersion = version
+            desc = "Android library $name."
+            website = 'https://github.com/AoEiuV020'
         }
     }
 }
