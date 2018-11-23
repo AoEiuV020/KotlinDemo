@@ -14,7 +14,13 @@ buildscript {
                 ext.set(k, v)
             }
         }
-        user = 'aoeiuv020'
+        def publicFile = rootProject.file('publish.properties')
+        hasPublic = publicFile.exists()
+        if (hasPublic) {
+            def input = publicFile.newInputStream()
+            pub = new Properties()
+            pub.load(input)
+        }
     }
     repositories {
         google()
@@ -201,10 +207,26 @@ javaModules.forEach { name ->
             archives javadocJar
         }
 
+        // 如果没有public.properties或者没有key属性，就不上传，也就是dryRun=true,
         publish {
-            userOrg = user
+            userOrg = 'aoeiuv020'
             bintrayUser = userOrg
             groupId = group
+            if (hasPublic) {
+                dryRun = false
+                if (pub.user?.trim()) {
+                    bintrayUser = pub.user
+                    userOrg = bintrayUser
+                }
+                if (pub.key?.trim()) {
+                    bintrayKey = pub.key
+                } else {
+                    dryRun = true
+                }
+                if (pub.group?.trim()) {
+                    groupId = pub.group
+                }
+            }
             artifactId = name
             publishVersion = version
             desc = "Java library $name."
@@ -295,10 +317,26 @@ androidModules.forEach { name ->
             archives javadocJar
         }
 
+        // 如果没有public.properties或者没有key属性，就不上传，也就是dryRun=true,
         publish {
-            userOrg = user
+            userOrg = 'aoeiuv020'
             bintrayUser = userOrg
             groupId = group
+            if (hasPublic) {
+                dryRun = false
+                if (pub.user?.trim()) {
+                    bintrayUser = pub.user
+                    userOrg = bintrayUser
+                }
+                if (pub.key?.trim()) {
+                    bintrayKey = pub.key
+                } else {
+                    dryRun = true
+                }
+                if (pub.group?.trim()) {
+                    groupId = pub.group
+                }
+            }
             artifactId = name
             publishVersion = version
             desc = "Android library $name."
