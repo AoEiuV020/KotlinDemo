@@ -1,6 +1,6 @@
 dependencies {
     javaModules.forEach { name ->
-        if (project.name != name) {
+        if (project.name != name && 'jarlibrary' != name) {
             api project(":$name")
         }
     }
