@@ -1,1 +1,1 @@
-include ':app', ':log', ':encrypt', ':regex', ':anull', ':type', ':atry', ':exception', ':string', ':commons'
+include ':app', ':aarlibrary', ':jarlibrary', ':log', ':encrypt', ':regex', ':anull', ':type', ':atry', ':exception', ':string', ':commons'
