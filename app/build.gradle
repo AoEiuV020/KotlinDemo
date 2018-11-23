@@ -8,5 +8,5 @@ android {
 
 dependencies {
     implementation 'com.android.support.constraint:constraint-layout:' + constraint_layout_version
-    implementation project(':commons')
+    implementation 'cc.aoeiuv020:commons:1.1'
 }
