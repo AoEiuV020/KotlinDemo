@@ -50,7 +50,7 @@ buildscript {
 allprojects {
     // 上传仓库的组名优先从publish.properties中拿，
     group = 'cc.aoeiuv020'
-    version = self_version
+    version = version_name
     repositories {
         google()
         jcenter()
@@ -91,7 +91,7 @@ applicationModules.forEach { name ->
                 minSdkVersion min_version.toInteger()
                 targetSdkVersion target_version.toInteger()
                 versionCode version_code.toInteger()
-                versionName version_name
+                versionName version
                 multiDexEnabled true
                 testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
                 setProperty("archivesBaseName", "$rootProject.name-$versionName")

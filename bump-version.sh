@@ -8,7 +8,7 @@ project=$(pwd)
 versionFile="$project/version.properties"
 
 versionName=$1
-sed -i "s/self_version\\s*=\\s*.*/self_version=$versionName/" $versionFile
+sed -i "s/version_name\\s*=\\s*.*/version_name=$versionName/" $versionFile
 
 git add $versionFile
 git commit -m "Bumped version number to $versionName"
