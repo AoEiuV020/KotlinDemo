@@ -8,5 +8,5 @@ android {
 
 dependencies {
     implementation 'com.android.support.constraint:constraint-layout:' + constraint_layout_version
-    implementation 'com.github.AoEiuV020.AndroidDemo:gdtsdk:gdt-4.19.574'
+    implementation project(':gdtsdk')
 }
