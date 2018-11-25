@@ -1,1 +1,1 @@
-include ':app', ':gson', ':jsonpath'
+include ':app', ':aarlibrary', ':jarlibrary', ':gson', ':jsonpath'
