@@ -3,7 +3,6 @@ package cc.aoeiuv020.demo
 import cc.aoeiuv020.ssl.TLSSocketFactory
 import cc.aoeiuv020.ssl.TrustManagerUtils
 import okhttp3.*
-import java.net.SocketTimeoutException
 import java.security.cert.X509Certificate
 
 /**
@@ -27,17 +26,11 @@ class HttpsTest {
 
     fun sslv3() {
         get("https://lnovel.cc")
-        get("https://www.shangshu.cc")
+//        get("https://www.shangshu.cc")
     }
 
     fun clearText() {
         get("https://www.haxwx11.com")
-        try {
-            // 这网站可能超时，改域名了，这个旧域名可能是半墙，
-            get("https://www.haxds.com")
-        } catch (e: SocketTimeoutException) {
-            println("又超时了，")
-        }
     }
 
     fun timeout() {
@@ -56,7 +49,7 @@ class HttpsTest {
         get("https://www.miaobige.com")
         get("https://www.qidian.com")
         get("https://www.exiaoshuo.cc")
-        get("https://www.yssm.org")
+        get("https://www.yssm.tv")
         get("https://www.liewen.cc")
         get("https://www.wenxuemi.com")
         get("https://www.piaotian.com")
