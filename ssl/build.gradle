@@ -1,4 +1,3 @@
 dependencies {
-    implementation 'com.github.AoEiuV020.AndroidDemo:commons:' + commons_version
     implementation 'bouncycastle:bcprov-jdk16:' + bcprov_version
 }
