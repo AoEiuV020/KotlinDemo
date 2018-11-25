@@ -255,26 +255,30 @@ javaModules.forEach { name ->
             // 都是publish.properties优先的，这里赋值避免没有publish.properties时gradle同步失败，
             userOrg = 'aoeiuv020'
             bintrayUser = userOrg
-            groupId = group
-            if (hasPublic) {
-                dryRun = false
-                if (pub.user?.trim()) {
-                    bintrayUser = pub.user
-                    userOrg = bintrayUser
-                }
-                if (pub.key?.trim()) {
-                    bintrayKey = pub.key
-                } else {
-                    dryRun = true
-                }
-                if (pub.group?.trim()) {
-                    groupId = pub.group
-                }
-            }
             artifactId = name
             publishVersion = version
             desc = "Java library $name."
-            website = 'https://github.com/AoEiuV020'
+            website = 'https://github.com/AoEiuV020/AndroidDemo'
+            groupId = group
+            if (hasPublic) {
+                dryRun = false
+                // publish.properties里和这个publish闭包参数同名，参考bintray-release官方wiki，
+                // https://github.com/HailouWang/bintray-release/wiki/%E9%85%8D%E7%BD%AEpublish%E9%97%AD%E5%8C%85
+                properties.forEach { key, value ->
+                    if (pub.getProperty(key)?.trim()) {
+                        setProperty(key, pub.getProperty(key))
+                    }
+                }
+                // 字符串转成数组，逗号分隔，
+                // 因为配置文件无法存数组，
+                if (pub.licences?.trim()) {
+                    licences = pub.licences.split(',')
+                }
+            }
+            // 如果没有配置bintrayKey就不上传，
+            if (!bintrayKey?.trim()) {
+                dryRun = true
+            }
         }
         // 删除bintray-release插件自带的javadocJar和sourceJar任务，
         // 因为不支持kotlin, 不支持安卓，
@@ -379,26 +383,30 @@ androidModules.forEach { name ->
             // 都是publish.properties优先的，这里赋值避免没有publish.properties时gradle同步失败，
             userOrg = 'aoeiuv020'
             bintrayUser = userOrg
-            groupId = group
-            if (hasPublic) {
-                dryRun = false
-                if (pub.user?.trim()) {
-                    bintrayUser = pub.user
-                    userOrg = bintrayUser
-                }
-                if (pub.key?.trim()) {
-                    bintrayKey = pub.key
-                } else {
-                    dryRun = true
-                }
-                if (pub.group?.trim()) {
-                    groupId = pub.group
-                }
-            }
             artifactId = name
             publishVersion = version
             desc = "Android library $name."
-            website = 'https://github.com/AoEiuV020'
+            website = 'https://github.com/AoEiuV020/AndroidDemo'
+            groupId = group
+            if (hasPublic) {
+                dryRun = false
+                // publish.properties里和这个publish闭包参数同名，参考bintray-release官方wiki，
+                // https://github.com/HailouWang/bintray-release/wiki/%E9%85%8D%E7%BD%AEpublish%E9%97%AD%E5%8C%85
+                properties.forEach { key, value ->
+                    if (pub.getProperty(key)?.trim()) {
+                        setProperty(key, pub.getProperty(key))
+                    }
+                }
+                // 字符串转成数组，逗号分隔，
+                // 因为配置文件无法存数组，
+                if (pub.licences?.trim()) {
+                    licences = pub.licences.split(',')
+                }
+            }
+            // 如果没有配置bintrayKey就不上传，
+            if (!bintrayKey?.trim()) {
+                dryRun = true
+            }
         }
         // 删除bintray-release插件自带的javadocJar和sourceJar任务，
         // 因为不支持kotlin, 不支持安卓，
