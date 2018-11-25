@@ -1,1 +1,1 @@
-include ':app', ':photopicker', ':lib'
+include ':app', ':aarlibrary', ':jarlibrary', ':photopicker', ':lib'
