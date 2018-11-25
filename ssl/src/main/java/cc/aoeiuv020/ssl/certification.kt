@@ -1,13 +1,15 @@
+@file:Suppress("DEPRECATION")
+
 package cc.aoeiuv020.ssl
 
 import cc.aoeiuv020.encrypt.base64
 import cc.aoeiuv020.log.LoggerUtils.getLogger
-import org.bouncycastle.asn1.DERIA5String
-import org.bouncycastle.asn1.x509.AccessDescription
-import org.bouncycastle.asn1.x509.AuthorityInformationAccess
-import org.bouncycastle.asn1.x509.X509Extensions
-import org.bouncycastle.x509.extension.X509ExtensionUtil
 import org.slf4j.Logger
+import org.spongycastle.asn1.DERIA5String
+import org.spongycastle.asn1.x509.AccessDescription
+import org.spongycastle.asn1.x509.AuthorityInformationAccess
+import org.spongycastle.asn1.x509.X509Extensions
+import org.spongycastle.x509.extension.X509ExtensionUtil
 import java.net.URL
 import java.security.cert.CertificateException
 import java.security.cert.CertificateFactory
