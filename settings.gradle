@@ -1,1 +1,1 @@
-include ':app', ':okhttp', ':lib'
+include ':app', ':aarlibrary', ':jarlibrary', ':okhttp', ':lib'
