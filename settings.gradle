@@ -1,1 +1,1 @@
-include ':app', ':gdtsdk', ':gdttbssdk'
+include ':app', ':aarlibrary', ':jarlibrary', ':gdtsdk', ':gdttbssdk'
