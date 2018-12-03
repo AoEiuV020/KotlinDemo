@@ -285,9 +285,11 @@ javaModules.forEach { name ->
         bintrayUpload.dependsOn('assemble')
         tasks.whenTaskAdded { task ->
             if ([
-                    'genereateJavadocsJarForMavenPublication',
-                    'genereateSourcesJarForMavenPublication'
-            ].contains(task.name)) {
+                    'genereateJavadocsJar',
+                    'genereateSourcesJar'
+            ].any {
+                task.name.startsWith(it)
+            }) {
                 task.enabled = false
             }
         }
@@ -413,9 +415,11 @@ androidModules.forEach { name ->
         bintrayUpload.dependsOn('assemble')
         tasks.whenTaskAdded { task ->
             if ([
-                    'genereateJavadocsJarForReleasePublication',
-                    'genereateSourcesJarForReleasePublication'
-            ].contains(task.name)) {
+                    'genereateJavadocsJar',
+                    'genereateSourcesJar'
+            ].any {
+                task.name.startsWith(it)
+            }) {
                 task.enabled = false
             }
         }
