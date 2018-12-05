@@ -24,6 +24,8 @@ class MainActivity : AppCompatActivity() {
         val pendingIntent = PendingIntent.getActivity(this, 0, intent, 0)
         val nb = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel("default", "default", NotificationManager.IMPORTANCE_DEFAULT)
+            // 关闭响铃，需要清除数据重建这个渠道才会生效，
+            channel.setSound(null, null)
             val nManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             nManager.createNotificationChannel(channel)
             NotificationCompat.Builder(this, channel.id)
