@@ -14,15 +14,16 @@ import org.jetbrains.anko.info
 import org.jetbrains.anko.startActivity
 
 class ListViewActivity : AppCompatActivity(), AnkoLogger {
-    private val data: List<Item> = List(88) {
-        Item(it.toString())
-    }
-
     companion object {
         fun start(ctx: Context) {
             ctx.startActivity<ListViewActivity>()
         }
     }
+
+    private val data: MutableList<Item> = MutableList(88) {
+        Item(it.toString())
+    }
+    private var isBottom = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,6 +36,7 @@ class ListViewActivity : AppCompatActivity(), AnkoLogger {
                 info {
                     "onScroll <$firstVisibleItem, $visibleItemCount, $totalItemCount>"
                 }
+                isBottom = firstVisibleItem + visibleItemCount >= totalItemCount
             }
 
             override fun onScrollStateChanged(view: AbsListView?, scrollState: Int) {
@@ -43,6 +45,13 @@ class ListViewActivity : AppCompatActivity(), AnkoLogger {
                 }
             }
         })
+        listView.setOnItemClickListener { parent, _, _, _ ->
+            data.add(data.size, Item(data.size.toString()))
+            (parent.adapter as MyAdapter).notifyDataSetChanged()
+            if (isBottom) {
+                parent.setSelection(parent.adapter.count)
+            }
+        }
     }
 
     inner class MyAdapter : BaseAdapter() {
