@@ -5,12 +5,15 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AbsListView
 import android.widget.BaseAdapter
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_list_view.*
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
 import org.jetbrains.anko.startActivity
 
-class ListViewActivity : AppCompatActivity() {
+class ListViewActivity : AppCompatActivity(), AnkoLogger {
     private val data: List<Item> = List(88) {
         Item(it.toString())
     }
@@ -26,6 +29,20 @@ class ListViewActivity : AppCompatActivity() {
         setContentView(R.layout.activity_list_view)
 
         listView.adapter = MyAdapter()
+
+        listView.setOnScrollListener(object : AbsListView.OnScrollListener {
+            override fun onScroll(view: AbsListView?, firstVisibleItem: Int, visibleItemCount: Int, totalItemCount: Int) {
+                info {
+                    "onScroll <$firstVisibleItem, $visibleItemCount, $totalItemCount>"
+                }
+            }
+
+            override fun onScrollStateChanged(view: AbsListView?, scrollState: Int) {
+                info {
+                    "onScrollStateChanged $scrollState"
+                }
+            }
+        })
     }
 
     inner class MyAdapter : BaseAdapter() {
