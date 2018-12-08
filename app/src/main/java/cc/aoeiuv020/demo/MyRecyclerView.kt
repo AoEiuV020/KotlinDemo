@@ -9,4 +9,7 @@ class MyRecyclerView : RecyclerView {
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
     constructor(context: Context?, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle)
 
+    override fun onMeasure(widthSpec: Int, heightSpec: Int) {
+        super.onMeasure(widthSpec, minOf(heightSpec, context.resources.displayMetrics.heightPixels))
+    }
 }
