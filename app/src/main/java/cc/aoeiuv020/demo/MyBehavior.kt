@@ -44,6 +44,13 @@ class MyBehavior(context: Context, attrs: AttributeSet) : CoordinatorLayout.Beha
         }
         val minHeaderTranslate = (dependentView.height).toFloat()
         val newTranslateY = dependentView.translationY - dy
+        if (newTranslateY <= minHeaderTranslate) {
+            consumed[1] = dy
+        } else {
+            if (dependentView.translationY <= minHeaderTranslate) {
+                consumed[1] = (dependentView.translationY - minHeaderTranslate).toInt()
+            }
+        }
         dependentView.translationY = minOf(minHeaderTranslate, newTranslateY)
     }
 
