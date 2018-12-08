@@ -12,13 +12,24 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
+        <android.support.v4.widget.NestedScrollView
             android:id="@+id/move"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:background="@color/colorAccent"
-            android:gravity="center"
-            android:text="Hello World!" />
+            android:layout_height="200dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:background="@color/colorAccent"
+                    android:gravity="center"
+                    android:text="Hello World!" />
+
+            </LinearLayout>
+        </android.support.v4.widget.NestedScrollView>
 
         <LinearLayout
             android:id="@+id/llContent"
