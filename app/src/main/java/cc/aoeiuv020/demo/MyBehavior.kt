@@ -42,18 +42,9 @@ class MyBehavior(context: Context, attrs: AttributeSet) : CoordinatorLayout.Beha
         if (dy < 0) {
             return
         }
-        val newTranslateY = dependentView.translationY - dy
         val minHeaderTranslate = (-dependentView.height).toFloat()
-        if (newTranslateY >= minHeaderTranslate) {
-            dependentView.translationY = newTranslateY
-            consumed[1] = dy
-        } else {
-            if (dependentView.translationY >= -minHeaderTranslate) {
-                consumed[1] = (dependentView.translationY - minHeaderTranslate).toInt()
-            }
-            dependentView.translationY = minHeaderTranslate
-
-        }
+        val newTranslateY = dependentView.translationY - dy
+        dependentView.translationY = maxOf(minHeaderTranslate, newTranslateY)
     }
 
 
@@ -67,12 +58,6 @@ class MyBehavior(context: Context, attrs: AttributeSet) : CoordinatorLayout.Beha
         }
         val newTranslateY = currentTranslationY - dyUnconsumed
         val maxHeaderTranslate = 0f
-        if (newTranslateY <= maxHeaderTranslate) {
-            dependentView.translationY = newTranslateY
-        } else {
-            dependentView.translationY = maxHeaderTranslate
-        }
-
-
+        dependentView.translationY = minOf(newTranslateY, maxHeaderTranslate)
     }
 }
