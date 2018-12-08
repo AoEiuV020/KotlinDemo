@@ -50,13 +50,12 @@ class MyBehavior(context: Context, attrs: AttributeSet) : CoordinatorLayout.Beha
 
     override fun onNestedScroll(coordinatorLayout: CoordinatorLayout, child: View, target: View, dxConsumed: Int, dyConsumed: Int, dxUnconsumed: Int, dyUnconsumed: Int, type: Int) {
         val dependentView = getDependentView()
-        val currentTranslationY = dependentView.translationY
-        Log.i("onLayoutChild", "onNestedScroll dyUnconsumed=" + dyUnconsumed + "currentTranslationY=" + currentTranslationY)
+        Log.i("onLayoutChild", "onNestedScroll dyUnconsumed=" + dyUnconsumed + "currentTranslationY=" + dependentView.translationY)
 
         if (dyUnconsumed > 0) {
             return
         }
-        val newTranslateY = currentTranslationY - dyUnconsumed
+        val newTranslateY = dependentView.translationY - dyUnconsumed
         val maxHeaderTranslate = 0f
         dependentView.translationY = minOf(newTranslateY, maxHeaderTranslate)
     }
