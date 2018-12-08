@@ -17,5 +17,9 @@ class MainActivity : AppCompatActivity() {
         btnNested.setOnClickListener {
             NestedActivity.start(this)
         }
+
+        btnGrid.setOnClickListener {
+            GridActivity.start(this)
+        }
     }
 }
