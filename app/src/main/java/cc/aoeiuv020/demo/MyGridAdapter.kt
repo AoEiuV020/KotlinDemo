@@ -7,7 +7,7 @@ import android.widget.BaseAdapter
 import android.widget.TextView
 
 class MyGridAdapter : BaseAdapter() {
-    private val data: MutableList<Item> = MutableList(2222) {
+    private val data: MutableList<Item> = MutableList(888) {
         Item(it.toString())
     }
 

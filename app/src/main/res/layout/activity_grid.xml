@@ -5,12 +5,12 @@
     android:layout_height="match_parent"
     tools:context="cc.aoeiuv020.demo.GridActivity">
 
-    <GridView
+    <in.srain.cube.views.GridViewWithHeaderAndFooter
         android:id="@+id/gridView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:numColumns="3">
 
-    </GridView>
+    </in.srain.cube.views.GridViewWithHeaderAndFooter>
 
 </android.support.constraint.ConstraintLayout>
