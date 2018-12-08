@@ -25,8 +25,8 @@ class MyBehavior(context: Context, attrs: AttributeSet) : CoordinatorLayout.Beha
         return super.layoutDependsOn(parent, child, dependency)
     }
 
-    override fun onDependentViewChanged(parent: CoordinatorLayout?, child: View?, dependency: View?): Boolean {
-        child!!.translationY = (dependency!!.height + dependency.translationY)
+    override fun onDependentViewChanged(parent: CoordinatorLayout, child: View, dependency: View): Boolean {
+        child.translationY = (dependency.height + dependency.translationY)
         return true
     }
 
