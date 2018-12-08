@@ -20,6 +20,5 @@ class NestedActivity : AppCompatActivity() {
 
         recyclerView.adapter = MyRecyclerAdapter()
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.isNestedScrollingEnabled = false
     }
 }
