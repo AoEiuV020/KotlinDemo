@@ -26,7 +26,7 @@ class MyBehavior(context: Context, attrs: AttributeSet) : CoordinatorLayout.Beha
     }
 
     override fun onDependentViewChanged(parent: CoordinatorLayout, child: View, dependency: View): Boolean {
-        child.translationY = (dependency.height + dependency.translationY)
+        child.translationY = (-dependency.height + dependency.translationY)
         return true
     }
 
@@ -39,12 +39,12 @@ class MyBehavior(context: Context, attrs: AttributeSet) : CoordinatorLayout.Beha
         val dependentView = getDependentView()
         Log.i("onLayoutChild", "onNestedPreScroll dy=" + dy + "TranslationY='" + dependentView.translationY)
 
-        if (dy < 0) {
+        if (dy > 0) {
             return
         }
-        val minHeaderTranslate = (-dependentView.height).toFloat()
+        val minHeaderTranslate = (dependentView.height).toFloat()
         val newTranslateY = dependentView.translationY - dy
-        dependentView.translationY = maxOf(minHeaderTranslate, newTranslateY)
+        dependentView.translationY = minOf(minHeaderTranslate, newTranslateY)
     }
 
 
@@ -52,11 +52,11 @@ class MyBehavior(context: Context, attrs: AttributeSet) : CoordinatorLayout.Beha
         val dependentView = getDependentView()
         Log.i("onLayoutChild", "onNestedScroll dyUnconsumed=" + dyUnconsumed + "currentTranslationY=" + dependentView.translationY)
 
-        if (dyUnconsumed > 0) {
+        if (dyUnconsumed < 0) {
             return
         }
         val newTranslateY = dependentView.translationY - dyUnconsumed
         val maxHeaderTranslate = 0f
-        dependentView.translationY = minOf(newTranslateY, maxHeaderTranslate)
+        dependentView.translationY = maxOf(newTranslateY, maxHeaderTranslate)
     }
 }
