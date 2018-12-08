@@ -26,7 +26,7 @@ class MyBehavior(context: Context, attrs: AttributeSet) : CoordinatorLayout.Beha
     }
 
     override fun onDependentViewChanged(parent: CoordinatorLayout?, child: View?, dependency: View?): Boolean {
-        child!!.translationY = dependency!!.height + dependency.translationY
+        child!!.translationY = (dependency!!.height + dependency.translationY)
         return true
     }
 
@@ -36,15 +36,14 @@ class MyBehavior(context: Context, attrs: AttributeSet) : CoordinatorLayout.Beha
     }
 
     override fun onNestedPreScroll(coordinatorLayout: CoordinatorLayout, child: View, target: View, dx: Int, dy: Int, consumed: IntArray, type: Int) {
-        super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed, type)
+        val dependentView = getDependentView()
+        Log.i("onLayoutChild", "onNestedPreScroll dy=" + dy + "TranslationY='" + dependentView.translationY)
 
         if (dy < 0) {
             return
         }
-        val dependentView = getDependentView()
         val newTranslateY = dependentView.translationY - dy
         val minHeaderTranslate = (-dependentView.height).toFloat()
-        Log.i("onLayoutChild", "onNestedPreScroll dy=" + dy + "TranslationY='" + dependentView.translationY)
         if (newTranslateY >= minHeaderTranslate) {
             dependentView.translationY = newTranslateY
             consumed[1] = dy
@@ -59,15 +58,15 @@ class MyBehavior(context: Context, attrs: AttributeSet) : CoordinatorLayout.Beha
 
 
     override fun onNestedScroll(coordinatorLayout: CoordinatorLayout, child: View, target: View, dxConsumed: Int, dyConsumed: Int, dxUnconsumed: Int, dyUnconsumed: Int, type: Int) {
+        val dependentView = getDependentView()
+        val currentTranslationY = dependentView.translationY
+        Log.i("onLayoutChild", "onNestedScroll dyUnconsumed=" + dyUnconsumed + "currentTranslationY=" + currentTranslationY)
 
         if (dyUnconsumed > 0) {
             return
         }
-        val dependentView = getDependentView()
-        val currentTranslationY = dependentView.translationY
         val newTranslateY = currentTranslationY - dyUnconsumed
         val maxHeaderTranslate = 0f
-        Log.i("onLayoutChild", "onNestedScroll dyUnconsumed=" + dyUnconsumed + "currentTranslationY=" + currentTranslationY)
         if (newTranslateY <= maxHeaderTranslate) {
             dependentView.translationY = newTranslateY
         } else {
@@ -75,6 +74,5 @@ class MyBehavior(context: Context, attrs: AttributeSet) : CoordinatorLayout.Beha
         }
 
 
-        super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, type)
     }
 }
