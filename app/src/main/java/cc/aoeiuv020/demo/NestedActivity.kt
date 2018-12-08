@@ -20,5 +20,6 @@ class NestedActivity : AppCompatActivity() {
 
         recyclerView.adapter = MyRecyclerAdapter()
         recyclerView.layoutManager = LinearLayoutManager(this)
+
     }
 }
