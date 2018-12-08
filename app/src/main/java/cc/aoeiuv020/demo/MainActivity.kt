@@ -13,5 +13,9 @@ class MainActivity : AppCompatActivity() {
         btnListView.setOnClickListener {
             ListViewActivity.start(this)
         }
+
+        btnNested.setOnClickListener {
+            NestedActivity.start(this)
+        }
     }
 }
