@@ -5,6 +5,7 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.support.v4.view.PagerAdapter
 import android.support.v7.app.AppCompatActivity
+import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
@@ -89,6 +90,7 @@ class PagerGridActivity : AppCompatActivity() {
                         height = v.height / 2
                     }
                 }
+                gravity = Gravity.CENTER
                 background = ColorDrawable(0xffff0000L.toInt())
             }
             val item = getItem(position)
