@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.GridView
+import android.widget.ListAdapter
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_pager_grid.*
 import org.jetbrains.anko.startActivity
@@ -21,12 +22,16 @@ class PagerGridActivity : AppCompatActivity() {
         }
     }
 
-    private lateinit var adapter: GridPagerAdapter
+    private lateinit var adapter: GridPagerAdapter<Int>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pager_grid)
-        adapter = GridPagerAdapter(loadData(), 4, 2)
+        adapter = GridPagerAdapter(loadData(), 4, 2, object : PagerGridAdapterFactory<Int> {
+            override fun createPagerGridAdapter(data: List<Int>): ListAdapter {
+                return PagerGridAdapter(data)
+            }
+        })
         vpContent.adapter = adapter
     }
 
@@ -34,13 +39,14 @@ class PagerGridActivity : AppCompatActivity() {
         it
     }
 
-    class GridPagerAdapter(
-            private val data: List<Int>,
+    class GridPagerAdapter<T>(
+            private val data: List<T>,
             private val columnCount: Int,
-            rowCount: Int
+            rowCount: Int,
+            private val factory: PagerGridAdapterFactory<T>
     ) : PagerAdapter() {
         private val pageSize = rowCount * columnCount
-        private fun getPageData(page: Int): List<Int> {
+        private fun getPageData(page: Int): List<T> {
             return data.subList(page * pageSize, minOf((((page + 1) * pageSize) - 1), data.size))
         }
 
@@ -50,7 +56,7 @@ class PagerGridActivity : AppCompatActivity() {
         override fun instantiateItem(container: ViewGroup, position: Int): Any {
             val grid = GridView(container.context)
             grid.numColumns = columnCount
-            grid.adapter = PagerGridAdapter(getPageData(position))
+            grid.adapter = factory.createPagerGridAdapter(getPageData(position))
             container.addView(grid, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
             return grid
         }
@@ -62,6 +68,10 @@ class PagerGridActivity : AppCompatActivity() {
         override fun getCount(): Int {
             return (data.size + (pageSize - 1)) / pageSize
         }
+    }
+
+    interface PagerGridAdapterFactory<T> {
+        fun createPagerGridAdapter(data: List<T>): ListAdapter
     }
 
     class PagerGridAdapter(
