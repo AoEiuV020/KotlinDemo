@@ -91,11 +91,14 @@ class PagerGridActivity : AppCompatActivity(), PagerGridAdapterFactory<Item>, On
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.MATCH_PARENT
                 )
-                viewPager.addOnLayoutChangeListener { v, _, _, _, _, _, _, _, _ ->
-                    layoutParams = layoutParams.apply {
-                        height = v.height / 2
+                viewPager.addOnLayoutChangeListener(object : View.OnLayoutChangeListener {
+                    override fun onLayoutChange(v: View, left: Int, top: Int, right: Int, bottom: Int, oldLeft: Int, oldTop: Int, oldRight: Int, oldBottom: Int) {
+                        layoutParams = layoutParams.apply {
+                            height = v.height / 2
+                        }
+                        v.removeOnLayoutChangeListener(this)
                     }
-                }
+                })
                 gravity = Gravity.CENTER
                 background = ColorDrawable(0xffff0000L.toInt())
             }
