@@ -89,7 +89,7 @@ class PagerGridActivity : AppCompatActivity() {
                         height = v.height / 2
                     }
                 }
-                background = ColorDrawable(0x00ff00)
+                background = ColorDrawable(0xffff0000L.toInt())
             }
             val item = getItem(position)
             val tv = view as TextView
