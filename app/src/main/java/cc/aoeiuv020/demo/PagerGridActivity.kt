@@ -16,28 +16,25 @@ import kotlinx.android.synthetic.main.activity_pager_grid.*
 import org.jetbrains.anko.startActivity
 import kotlin.random.Random
 
-class PagerGridActivity : AppCompatActivity() {
+class PagerGridActivity : AppCompatActivity(), PagerGridAdapterFactory<Int> {
     companion object {
         fun start(ctx: Context) {
             ctx.startActivity<PagerGridActivity>()
         }
     }
 
-    private lateinit var adapter: GridPagerAdapter<Int>
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pager_grid)
-        adapter = GridPagerAdapter(loadData(), 4, 2, object : PagerGridAdapterFactory<Int> {
-            override fun createPagerGridAdapter(data: List<Int>): ListAdapter {
-                return PagerGridAdapter(data, vpContent)
-            }
-        })
-        vpContent.adapter = adapter
+        vpContent.adapter = GridPagerAdapter(loadData(), 4, 2, this)
     }
 
     private fun loadData(): List<Int> = List(Random.nextInt(10, 20)) {
         it
+    }
+
+    override fun createPagerGridAdapter(data: List<Int>): ListAdapter {
+        return PagerGridAdapter(data, vpContent)
     }
 
     class GridPagerAdapter<T>(
@@ -69,10 +66,6 @@ class PagerGridActivity : AppCompatActivity() {
         override fun getCount(): Int {
             return (data.size + (pageSize - 1)) / pageSize
         }
-    }
-
-    interface PagerGridAdapterFactory<T> {
-        fun createPagerGridAdapter(data: List<T>): ListAdapter
     }
 
     class PagerGridAdapter(
@@ -111,4 +104,8 @@ class PagerGridActivity : AppCompatActivity() {
             return data.size
         }
     }
+}
+
+interface PagerGridAdapterFactory<T> {
+    fun createPagerGridAdapter(data: List<T>): ListAdapter
 }
