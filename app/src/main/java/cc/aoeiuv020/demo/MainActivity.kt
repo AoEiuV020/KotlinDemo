@@ -21,5 +21,9 @@ class MainActivity : AppCompatActivity() {
         btnGrid.setOnClickListener {
             GridActivity.start(this)
         }
+
+        btnPagerGrid.setOnClickListener {
+            PagerGridActivity.start(this)
+        }
     }
 }
