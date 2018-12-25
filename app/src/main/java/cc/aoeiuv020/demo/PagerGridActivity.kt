@@ -17,7 +17,7 @@ import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
 import kotlin.random.Random
 
-class PagerGridActivity : AppCompatActivity(), PagerGridAdapterFactory<Int>, OnItemClickListener<Int> {
+class PagerGridActivity : AppCompatActivity(), PagerGridAdapterFactory<Item>, OnItemClickListener<Item> {
     companion object {
         fun start(ctx: Context) {
             ctx.startActivity<PagerGridActivity>()
@@ -30,15 +30,17 @@ class PagerGridActivity : AppCompatActivity(), PagerGridAdapterFactory<Int>, OnI
         vpContent.adapter = GridPagerAdapter(loadData(), 4, 2, this, this)
     }
 
-    private fun loadData(): List<Int> = List(Random.nextInt(10, 20)) {
-        it
+    private fun loadData(): List<Item> = List(Random.nextInt(10, 20)) {
+        Item(it.toString(), Runnable {
+            toast("onItemClick: $it")
+        })
     }
 
-    override fun onItemClick(item: Int) {
-        toast("onItemClick: $item")
+    override fun onItemClick(item: Item) {
+        item.runnable.run()
     }
 
-    override fun createPagerGridAdapter(data: List<Int>): ListAdapter {
+    override fun createPagerGridAdapter(data: List<Item>): ListAdapter {
         return PagerGridAdapter(data, vpContent)
     }
 
@@ -79,7 +81,7 @@ class PagerGridActivity : AppCompatActivity(), PagerGridAdapterFactory<Int>, OnI
     }
 
     class PagerGridAdapter(
-            private val data: List<Int>,
+            private val data: List<Item>,
             private val viewPager: View
     ) : BaseAdapter() {
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
@@ -98,11 +100,11 @@ class PagerGridActivity : AppCompatActivity(), PagerGridAdapterFactory<Int>, OnI
             }
             val item = getItem(position)
             val tv = view as TextView
-            tv.text = item.toString()
+            tv.text = item.text
             return view
         }
 
-        override fun getItem(position: Int): Int {
+        override fun getItem(position: Int): Item {
             return data[position]
         }
 
@@ -115,6 +117,11 @@ class PagerGridActivity : AppCompatActivity(), PagerGridAdapterFactory<Int>, OnI
         }
     }
 }
+
+data class Item(
+        val text: String,
+        val runnable: Runnable
+)
 
 interface PagerGridAdapterFactory<T> {
     fun createPagerGridAdapter(data: List<T>): ListAdapter
