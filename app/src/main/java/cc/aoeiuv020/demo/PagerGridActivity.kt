@@ -29,7 +29,7 @@ class PagerGridActivity : AppCompatActivity() {
         setContentView(R.layout.activity_pager_grid)
         adapter = GridPagerAdapter(loadData(), 4, 2, object : PagerGridAdapterFactory<Int> {
             override fun createPagerGridAdapter(data: List<Int>): ListAdapter {
-                return PagerGridAdapter(data)
+                return PagerGridAdapter(data, vpContent)
             }
         })
         vpContent.adapter = adapter
@@ -75,7 +75,8 @@ class PagerGridActivity : AppCompatActivity() {
     }
 
     class PagerGridAdapter(
-            private val data: List<Int>
+            private val data: List<Int>,
+            private val viewPager: View
     ) : BaseAdapter() {
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             val view = convertView ?: TextView(parent.context).apply {
@@ -83,6 +84,11 @@ class PagerGridActivity : AppCompatActivity() {
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.MATCH_PARENT
                 )
+                viewPager.addOnLayoutChangeListener { v, _, _, _, _, _, _, _, _ ->
+                    layoutParams = layoutParams.apply {
+                        height = v.height / 2
+                    }
+                }
                 background = ColorDrawable(0x00ff00)
             }
             val item = getItem(position)
