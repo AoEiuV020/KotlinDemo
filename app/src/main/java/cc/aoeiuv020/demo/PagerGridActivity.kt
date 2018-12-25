@@ -30,7 +30,7 @@ class PagerGridActivity : AppCompatActivity(), PagerGridAdapterFactory<Item>, On
         vpContent.adapter = GridPagerAdapter(loadData(), 4, 2, this, this)
     }
 
-    private fun loadData(): List<Item> = List(Random.nextInt(10, 20)) {
+    private fun loadData(): List<Item> = List(Random.nextInt(100, 200)) {
         Item(it.toString(), Runnable {
             toast("onItemClick: $it")
         })
@@ -57,6 +57,7 @@ class PagerGridActivity : AppCompatActivity(), PagerGridAdapterFactory<Item>, On
         }
 
         override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
+            container.removeView(`object` as View)
         }
 
         override fun instantiateItem(container: ViewGroup, position: Int): Any {
