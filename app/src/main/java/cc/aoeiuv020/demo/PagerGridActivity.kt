@@ -14,9 +14,10 @@ import android.widget.ListAdapter
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_pager_grid.*
 import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.toast
 import kotlin.random.Random
 
-class PagerGridActivity : AppCompatActivity(), PagerGridAdapterFactory<Int> {
+class PagerGridActivity : AppCompatActivity(), PagerGridAdapterFactory<Int>, OnItemClickListener<Int> {
     companion object {
         fun start(ctx: Context) {
             ctx.startActivity<PagerGridActivity>()
@@ -26,11 +27,15 @@ class PagerGridActivity : AppCompatActivity(), PagerGridAdapterFactory<Int> {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pager_grid)
-        vpContent.adapter = GridPagerAdapter(loadData(), 4, 2, this)
+        vpContent.adapter = GridPagerAdapter(loadData(), 4, 2, this, this)
     }
 
     private fun loadData(): List<Int> = List(Random.nextInt(10, 20)) {
         it
+    }
+
+    override fun onItemClick(item: Int) {
+        toast("onItemClick: $item")
     }
 
     override fun createPagerGridAdapter(data: List<Int>): ListAdapter {
@@ -41,7 +46,8 @@ class PagerGridActivity : AppCompatActivity(), PagerGridAdapterFactory<Int> {
             private val data: List<T>,
             private val columnCount: Int,
             rowCount: Int,
-            private val factory: PagerGridAdapterFactory<T>
+            private val factory: PagerGridAdapterFactory<T>,
+            private val listener: OnItemClickListener<T>
     ) : PagerAdapter() {
         private val pageSize = rowCount * columnCount
         private fun getPageData(page: Int): List<T> {
@@ -55,6 +61,10 @@ class PagerGridActivity : AppCompatActivity(), PagerGridAdapterFactory<Int> {
             val grid = GridView(container.context)
             grid.numColumns = columnCount
             grid.adapter = factory.createPagerGridAdapter(getPageData(position))
+            grid.setOnItemClickListener { parent, _, itemPosition, _ ->
+                @Suppress("UNCHECKED_CAST")
+                listener.onItemClick(parent.adapter.getItem(itemPosition) as T)
+            }
             container.addView(grid, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
             return grid
         }
@@ -108,4 +118,8 @@ class PagerGridActivity : AppCompatActivity(), PagerGridAdapterFactory<Int> {
 
 interface PagerGridAdapterFactory<T> {
     fun createPagerGridAdapter(data: List<T>): ListAdapter
+}
+
+interface OnItemClickListener<T> {
+    fun onItemClick(item: T)
 }
