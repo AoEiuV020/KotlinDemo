@@ -47,7 +47,7 @@ class PagerGridActivity : AppCompatActivity() {
     ) : PagerAdapter() {
         private val pageSize = rowCount * columnCount
         private fun getPageData(page: Int): List<T> {
-            return data.subList(page * pageSize, minOf((((page + 1) * pageSize) - 1), data.size))
+            return data.subList(page * pageSize, minOf(((page + 1) * pageSize), data.size))
         }
 
         override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
