@@ -5,7 +5,7 @@ buildscript {
         // 统一配置所有安卓应用模块，
         applicationModules = ['app']
         // 统一配置所有java库模块，
-        javaModules = ['jarlibrary', 'commons', 'log', 'encrypt', 'regex', 'type', 'anull', 'atry', 'exception', 'string']
+        javaModules = ['jarlibrary', 'commons']
         // 统一配置所有android库模块，
         androidModules = ['aarlibrary']
         // 读取所有库的版本信息，
