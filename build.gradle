@@ -4,7 +4,7 @@ buildscript {
     ext {
         // 统一配置所有安卓应用模块，
         applicationModules = ['app']
-        // 统一配置所有java模块，
+        // 统一配置所有java库模块，
         javaModules = ['jarlibrary', 'commons', 'log', 'encrypt', 'regex', 'type', 'anull', 'atry', 'exception', 'string']
         // 统一配置所有android库模块，
         androidModules = ['aarlibrary']
@@ -19,10 +19,10 @@ buildscript {
             }
         }
         // 读取上传仓库相关配置，示例在publish.properties.example,
-        def publicFile = rootProject.file('publish.properties')
-        hasPublic = publicFile.exists()
-        if (hasPublic) {
-            def input = publicFile.newInputStream()
+        def publishFile = rootProject.file('publish.properties')
+        hasPublish = publishFile.exists()
+        if (hasPublish) {
+            def input = publishFile.newInputStream()
             pub = new Properties()
             pub.load(input)
         }
@@ -50,7 +50,7 @@ buildscript {
 allprojects {
     // 上传仓库的组名优先从publish.properties中拿，
     group = 'cc.aoeiuv020'
-    version = self_version
+    version = version_name
     repositories {
         google()
         jcenter()
@@ -91,7 +91,7 @@ applicationModules.forEach { name ->
                 minSdkVersion min_version.toInteger()
                 targetSdkVersion target_version.toInteger()
                 versionCode version_code.toInteger()
-                versionName version_name
+                versionName version
                 multiDexEnabled true
                 testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
                 setProperty("archivesBaseName", "$rootProject.name-$versionName")
@@ -256,7 +256,7 @@ javaModules.forEach { name ->
             desc = "Java library $name."
             website = 'https://github.com/AoEiuV020/AndroidDemo'
             groupId = group
-            if (hasPublic) {
+            if (hasPublish) {
                 dryRun = false
                 // publish.properties里和这个publish闭包参数同名，参考bintray-release官方wiki，
                 // https://github.com/HailouWang/bintray-release/wiki/%E9%85%8D%E7%BD%AEpublish%E9%97%AD%E5%8C%85
@@ -281,9 +281,11 @@ javaModules.forEach { name ->
         bintrayUpload.dependsOn('assemble')
         tasks.whenTaskAdded { task ->
             if ([
-                    'genereateJavadocsJarForMavenPublication',
-                    'genereateSourcesJarForMavenPublication'
-            ].contains(task.name)) {
+                    'genereateJavadocsJar',
+                    'genereateSourcesJar'
+            ].any {
+                task.name.startsWith(it)
+            }) {
                 task.enabled = false
             }
         }
@@ -382,7 +384,7 @@ androidModules.forEach { name ->
             desc = "Android library $name."
             website = 'https://github.com/AoEiuV020/AndroidDemo'
             groupId = group
-            if (hasPublic) {
+            if (hasPublish) {
                 dryRun = false
                 // publish.properties里和这个publish闭包参数同名，参考bintray-release官方wiki，
                 // https://github.com/HailouWang/bintray-release/wiki/%E9%85%8D%E7%BD%AEpublish%E9%97%AD%E5%8C%85
@@ -407,9 +409,11 @@ androidModules.forEach { name ->
         bintrayUpload.dependsOn('assemble')
         tasks.whenTaskAdded { task ->
             if ([
-                    'genereateJavadocsJarForReleasePublication',
-                    'genereateSourcesJarForReleasePublication'
-            ].contains(task.name)) {
+                    'genereateJavadocsJar',
+                    'genereateSourcesJar'
+            ].any {
+                task.name.startsWith(it)
+            }) {
                 task.enabled = false
             }
         }
