@@ -31,12 +31,14 @@ class CoordinatorActivity : AppCompatActivity(), AnkoLogger {
             }
 
             override fun getItemCount(): Int {
-                return 2
+                return 222
             }
 
             override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
                 (holder.itemView as TextView).text = "$position"
             }
         }
+        rvContent.setHasFixedSize(true)
+        rvContent.isNestedScrollingEnabled = false
     }
 }
