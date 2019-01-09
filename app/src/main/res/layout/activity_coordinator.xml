@@ -14,7 +14,7 @@
 
         <android.support.v7.widget.Toolbar
             android:layout_width="match_parent"
-            android:layout_height="444dp"
+            android:layout_height="333dp"
             android:background="@drawable/bg_g_green"
             app:layout_scrollFlags="scroll">
 
@@ -24,14 +24,14 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@drawable/bg_g_red"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rvContent"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"

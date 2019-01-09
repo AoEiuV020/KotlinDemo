@@ -30,7 +30,7 @@ class CoordinatorActivity : AppCompatActivity() {
             }
 
             override fun getItemCount(): Int {
-                return 222
+                return 2
             }
 
             override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
