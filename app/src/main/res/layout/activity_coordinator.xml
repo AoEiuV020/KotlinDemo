@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#00f"
+    android:background="@drawable/bg_g_blue"
     tools:context="cc.aoeiuv020.demo.CoordinatorActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -15,7 +15,7 @@
         <android.support.v7.widget.Toolbar
             android:layout_width="match_parent"
             android:layout_height="444dp"
-            android:background="#0f0"
+            android:background="@drawable/bg_g_green"
             app:layout_scrollFlags="scroll">
 
         </android.support.v7.widget.Toolbar>
@@ -26,7 +26,7 @@
         android:id="@+id/rvContent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#f00"
+        android:background="@drawable/bg_g_red"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     </android.support.v7.widget.RecyclerView>
