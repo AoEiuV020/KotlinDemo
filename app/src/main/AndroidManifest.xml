@@ -23,6 +23,7 @@
         <activity android:name=".NestedActivity" />
         <activity android:name=".GridActivity" />
         <activity android:name=".PagerGridActivity" />
+        <activity android:name=".CoordinatorActivity" />
     </application>
 
 </manifest>
