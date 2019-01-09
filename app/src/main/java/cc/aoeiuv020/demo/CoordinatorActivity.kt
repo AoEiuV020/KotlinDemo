@@ -10,7 +10,6 @@ import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_coordinator.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.ctx
-import org.jetbrains.anko.info
 import org.jetbrains.anko.startActivity
 
 class CoordinatorActivity : AppCompatActivity(), AnkoLogger {
@@ -32,20 +31,12 @@ class CoordinatorActivity : AppCompatActivity(), AnkoLogger {
             }
 
             override fun getItemCount(): Int {
-                return 222
+                return 2
             }
 
             override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
                 (holder.itemView as TextView).text = "$position"
             }
-        }
-        rvContent.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
-            val direct = -1
-            info { "coordinator: ${coordinator.canScrollVertically(direct)}" }
-            info { "appbar: ${appbar.canScrollVertically(direct)}" }
-            info { "toolbar: ${toolbar.canScrollVertically(direct)}" }
-            info { "constraintLayout: ${constraintLayout.canScrollVertically(direct)}" }
-            info { "rvContent: ${rvContent.canScrollVertically(direct)}" }
         }
     }
 }
