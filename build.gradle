@@ -177,7 +177,7 @@ applicationModules.forEach { name ->
             // 单元测试mock，
             testImplementation 'org.mockito:mockito-core:' + mockito_version
             // 安卓测试,
-            androidTestImplementation 'androidx.test:runner:' + test_runner_version
+            androidTestImplementation 'androidx.test.ext:junit:' + test_runner_version
             androidTestImplementation 'androidx.test.espresso:espresso-core:' + test_espresso_version
             // 安卓分包，
             implementation 'androidx.multidex:multidex:' + multidex_version
@@ -338,7 +338,7 @@ androidModules.forEach { name ->
             // 单元测试junit,
             testImplementation 'junit:junit:' + junit_version
             // 安卓测试,
-            androidTestImplementation 'androidx.test:runner:' + test_runner_version
+            androidTestImplementation 'androidx.test.ext:junit:' + test_runner_version
             androidTestImplementation 'androidx.test.espresso:espresso-core:' + test_espresso_version
             // kotlin开发语言支持，
             implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:' + kotlin_version
