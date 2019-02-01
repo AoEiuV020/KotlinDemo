@@ -12,7 +12,12 @@ import java.net.InetSocketAddress
 import java.net.Socket
 import java.util.concurrent.LinkedBlockingQueue
 
-class DeviceConnection(private val listener: DeviceConnectionListener, val host: String, val port: Int) : Closeable {
+class DeviceConnection(
+        private val listener: DeviceConnectionListener,
+        private val crypto: AdbCrypto,
+        val host: String,
+        val port: Int
+) : Closeable {
 
     private var connection: AdbConnection? = null
     private var shellStream: AdbStream? = null
@@ -43,10 +48,6 @@ class DeviceConnection(private val listener: DeviceConnectionListener, val host:
         Thread(Runnable {
             var connected = false
             val socket = Socket()
-            val crypto: AdbCrypto?
-
-            /* Load the crypto config */
-            crypto = listener.loadAdbCrypto(this@DeviceConnection)
 
             try {
                 /* Establish a connect to the remote host */

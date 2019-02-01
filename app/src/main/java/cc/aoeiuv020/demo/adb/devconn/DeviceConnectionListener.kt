@@ -1,7 +1,5 @@
 package cc.aoeiuv020.demo.adb.devconn
 
-import com.cgutman.adblib.AdbCrypto
-
 interface DeviceConnectionListener {
 
     fun notifyConnectionEstablished(devConn: DeviceConnection)
@@ -11,8 +9,6 @@ interface DeviceConnectionListener {
     fun notifyStreamFailed(devConn: DeviceConnection, e: Exception)
 
     fun notifyStreamClosed(devConn: DeviceConnection)
-
-    fun loadAdbCrypto(devConn: DeviceConnection): AdbCrypto
 
     fun receivedData(devConn: DeviceConnection, data: ByteArray, offset: Int, length: Int)
 }

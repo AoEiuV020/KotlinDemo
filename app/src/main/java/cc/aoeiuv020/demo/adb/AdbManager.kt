@@ -15,29 +15,26 @@ import org.jetbrains.anko.doAsync
  * Created by AoEiuV020 on 2019.02.01-14:23:43.
  */
 object AdbManager : AnkoLogger {
-    lateinit var crypto: AdbCrypto
+    private lateinit var crypto: AdbCrypto
+
+    private var connection: DeviceConnection? = null
+
+    private val listeners: MutableList<DeviceConnectionListener> = mutableListOf()
+
     fun init(ctx: Context) {
         crypto = AdbUtils.readCryptoConfig(ctx.filesDir)
                 ?: AdbUtils.writeNewCryptoConfig(ctx.filesDir)
     }
 
-    fun loadAdbCrypto(): AdbCrypto {
-        return crypto
-    }
-
-    private var connection: DeviceConnection? = null
-
-    private val listeners: MutableList<ReceiveDataListener> = mutableListOf()
-
-    fun addDataListener(listener: ReceiveDataListener) {
+    fun addDataListener(listener: DeviceConnectionListener) {
         listeners.add(listener)
     }
 
-    fun removeDataListener(listener: ReceiveDataListener) {
+    fun removeDataListener(listener: DeviceConnectionListener) {
         listeners.remove(listener)
     }
 
-    fun register(lifecycleOwner: LifecycleOwner, listener: ReceiveDataListener) {
+    fun register(lifecycleOwner: LifecycleOwner, listener: DeviceConnectionListener) {
         lifecycleOwner.lifecycle.addObserver(
                 object : LifecycleObserver {
                     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
@@ -58,30 +55,38 @@ object AdbManager : AnkoLogger {
         }
         connection = DeviceConnection(object : DeviceConnectionListener {
             override fun notifyConnectionEstablished(devConn: DeviceConnection) {
+                listeners.forEach {
+                    it.notifyConnectionEstablished(devConn)
+                }
             }
 
             override fun notifyConnectionFailed(devConn: DeviceConnection, e: Exception) {
                 connection = null
+                listeners.forEach {
+                    it.notifyConnectionFailed(devConn, e)
+                }
             }
 
             override fun notifyStreamFailed(devConn: DeviceConnection, e: Exception) {
                 connection = null
+                listeners.forEach {
+                    it.notifyStreamFailed(devConn, e)
+                }
             }
 
             override fun notifyStreamClosed(devConn: DeviceConnection) {
                 connection = null
-            }
-
-            override fun loadAdbCrypto(devConn: DeviceConnection): AdbCrypto {
-                return loadAdbCrypto()
+                listeners.forEach {
+                    it.notifyStreamClosed(devConn)
+                }
             }
 
             override fun receivedData(devConn: DeviceConnection, data: ByteArray, offset: Int, length: Int) {
                 listeners.forEach {
-                    it.receive(data, offset, length)
+                    it.receivedData(devConn, data, offset, length)
                 }
             }
-        }, host, port).apply {
+        }, crypto, host, port).apply {
             startConnect()
         }
     }

@@ -3,11 +3,22 @@ package cc.aoeiuv020.demo
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import cc.aoeiuv020.demo.adb.AdbManager
-import cc.aoeiuv020.demo.adb.ReceiveDataListener
+import cc.aoeiuv020.demo.adb.devconn.DeviceConnection
+import cc.aoeiuv020.demo.adb.devconn.DeviceConnectionAdapter
+import cc.aoeiuv020.demo.adb.devconn.DeviceConnectionListener
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.AnkoLogger
 
-class MainActivity : AppCompatActivity(), AnkoLogger, ReceiveDataListener {
+class MainActivity : AppCompatActivity(), AnkoLogger {
+    private val listener: DeviceConnectionListener = object : DeviceConnectionAdapter() {
+        override fun receivedString(devConn: DeviceConnection, data: String) {
+            runOnUiThread {
+                etConsole.text.append(data)
+                etConsole.setSelection(etConsole.text.length)
+            }
+
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,14 +38,7 @@ class MainActivity : AppCompatActivity(), AnkoLogger, ReceiveDataListener {
             AdbManager.send(etCommand.text.toString())
         }
 
-        AdbManager.register(this, this)
-    }
-
-    override fun receive(data: ByteArray, offset: Int, length: Int) {
-        runOnUiThread {
-            etConsole.text.append(String(data, offset, length))
-            etConsole.setSelection(etConsole.text.length)
-        }
+        AdbManager.register(this, listener)
     }
 
 }
