@@ -4,10 +4,8 @@ import cc.aoeiuv020.demo.adb.AdbUtils
 import com.cgutman.adblib.AdbConnection
 import com.cgutman.adblib.AdbCrypto
 import com.cgutman.adblib.AdbStream
-
 import java.io.Closeable
 import java.io.IOException
-import java.io.UnsupportedEncodingException
 import java.net.InetSocketAddress
 import java.net.Socket
 import java.util.concurrent.LinkedBlockingQueue
@@ -28,14 +26,7 @@ class DeviceConnection(
     private val commandQueue = LinkedBlockingQueue<ByteArray>()
 
     fun queueCommand(command: String): Boolean {
-        try {
-            /* Queue it up for sending to the device */
-            commandQueue.add((command + '\n').toByteArray(charset("UTF-8")))
-            return true
-        } catch (e: UnsupportedEncodingException) {
-            return false
-        }
-
+        return queueBytes((command + '\n').toByteArray(Charsets.UTF_8))
     }
 
     fun queueBytes(buffer: ByteArray): Boolean {

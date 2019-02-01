@@ -101,7 +101,7 @@ object AdbManager : AnkoLogger {
         connection = null
     }
 
-    fun send(command: String) {
-        connection?.queueCommand(command)
+    fun send(command: String): Boolean {
+        return connection?.queueCommand(command) == true
     }
 }
