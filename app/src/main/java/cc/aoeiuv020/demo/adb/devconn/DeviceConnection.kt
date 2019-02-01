@@ -10,6 +10,7 @@ import java.net.InetSocketAddress
 import java.net.Socket
 import java.util.concurrent.LinkedBlockingQueue
 
+@Suppress("MemberVisibilityCanBePrivate", "MayBeConstant")
 class DeviceConnection(
         private val listener: DeviceConnectionListener,
         private val crypto: AdbCrypto,

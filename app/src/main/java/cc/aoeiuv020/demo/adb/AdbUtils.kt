@@ -9,8 +9,8 @@ import java.io.IOException
 
 object AdbUtils {
 
-    val PUBLIC_KEY_NAME = "public.key"
-    val PRIVATE_KEY_NAME = "private.key"
+    private const val PUBLIC_KEY_NAME = "public.key"
+    private const val PRIVATE_KEY_NAME = "private.key"
 
     fun readCryptoConfig(dataDir: File): AdbCrypto? {
         val pubKey = File(dataDir, PUBLIC_KEY_NAME)
