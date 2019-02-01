@@ -98,6 +98,7 @@ object AdbManager : AnkoLogger {
                 it.close()
             }
         }
+        connection = null
     }
 
     fun send(command: String) {
