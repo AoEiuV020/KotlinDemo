@@ -5,6 +5,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.OnLifecycleEvent
+import cc.aoeiuv020.anull.notNull
 import cc.aoeiuv020.demo.adb.devconn.DeviceConnection
 import cc.aoeiuv020.demo.adb.devconn.DeviceConnectionListener
 import com.cgutman.adblib.AdbCrypto
@@ -21,7 +22,8 @@ object AdbManager : AnkoLogger {
 
     private val listeners: MutableList<DeviceConnectionListener> = mutableListOf()
 
-    val isConnected get() = connection?.isClosed == false
+    val isConnected: Boolean
+        get() = connection?.isClosed == false
 
     fun init(ctx: Context) {
         crypto = AdbUtils.readCryptoConfig(ctx.filesDir)
@@ -53,7 +55,12 @@ object AdbManager : AnkoLogger {
 
     fun connect(host: String, port: Int) {
         if (isConnected) {
-            return
+            val conn = connection.notNull()
+            if (conn.host == host && conn.port == port) {
+                return
+            } else {
+                close()
+            }
         }
         connection = DeviceConnection(object : DeviceConnectionListener {
             override fun notifyConnectionEstablished(devConn: DeviceConnection) {
