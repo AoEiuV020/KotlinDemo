@@ -60,7 +60,9 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
         }
 
         btnDisconnect.setOnClickListener {
-            connection.close()
+            Thread {
+                connection.close()
+            }.start()
         }
 
         btnSend.setOnClickListener {
