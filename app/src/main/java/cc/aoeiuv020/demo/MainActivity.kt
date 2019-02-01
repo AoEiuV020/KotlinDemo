@@ -35,6 +35,7 @@ class MainActivity : AppCompatActivity(), AnkoLogger, ReceiveDataListener {
     override fun receive(data: ByteArray, offset: Int, length: Int) {
         runOnUiThread {
             etConsole.text.append(String(data, offset, length))
+            etConsole.setSelection(etConsole.text.length)
         }
     }
 
