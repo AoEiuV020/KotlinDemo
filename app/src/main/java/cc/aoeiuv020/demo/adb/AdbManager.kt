@@ -21,6 +21,8 @@ object AdbManager : AnkoLogger {
 
     private val listeners: MutableList<DeviceConnectionListener> = mutableListOf()
 
+    val isConnected get() = connection?.isClosed == false
+
     fun init(ctx: Context) {
         crypto = AdbUtils.readCryptoConfig(ctx.filesDir)
                 ?: AdbUtils.writeNewCryptoConfig(ctx.filesDir)
@@ -50,7 +52,7 @@ object AdbManager : AnkoLogger {
     }
 
     fun connect(host: String, port: Int) {
-        if (connection?.isClosed == false) {
+        if (isConnected) {
             return
         }
         connection = DeviceConnection(object : DeviceConnectionListener {

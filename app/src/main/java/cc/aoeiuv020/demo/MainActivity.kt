@@ -59,6 +59,10 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
             }
         }
 
+        if (AdbManager.isConnected) {
+            status("已经连接")
+        }
+
         AdbManager.register(this, listener)
     }
 
