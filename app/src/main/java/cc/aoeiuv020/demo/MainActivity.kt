@@ -4,12 +4,10 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import cc.aoeiuv020.demo.adb.AdbManager
 import cc.aoeiuv020.demo.adb.ReceiveDataListener
-import cc.aoeiuv020.demo.adb.devconn.DeviceConnection
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.AnkoLogger
 
 class MainActivity : AppCompatActivity(), AnkoLogger, ReceiveDataListener {
-    private lateinit var connection: DeviceConnection
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
