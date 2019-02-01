@@ -57,7 +57,6 @@ object AdbManager : AnkoLogger {
             return
         }
         connection = DeviceConnection(object : DeviceConnectionListener {
-            override val isConsole: Boolean = false
             override fun notifyConnectionEstablished(devConn: DeviceConnection) {
             }
 

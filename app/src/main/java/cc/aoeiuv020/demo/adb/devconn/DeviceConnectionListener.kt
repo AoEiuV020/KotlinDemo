@@ -4,7 +4,6 @@ import com.cgutman.adblib.AdbCrypto
 
 interface DeviceConnectionListener {
 
-    val isConsole: Boolean
     fun notifyConnectionEstablished(devConn: DeviceConnection)
 
     fun notifyConnectionFailed(devConn: DeviceConnection, e: Exception)
