@@ -260,7 +260,7 @@ javaModules.forEach { name ->
             artifactId = name
             publishVersion = version
             desc = "Java library $name."
-            website = 'https://github.com/AoEiuV020/AndroidDemo'
+            website = 'https://github.com/AoEiuV020/KotlinDemo'
             groupId = group
             if (hasPublish) {
                 dryRun = false
@@ -390,7 +390,7 @@ androidModules.forEach { name ->
             artifactId = name
             publishVersion = version
             desc = "Android library $name."
-            website = 'https://github.com/AoEiuV020/AndroidDemo'
+            website = 'https://github.com/AoEiuV020/KotlinDemo'
             groupId = group
             if (hasPublish) {
                 dryRun = false
