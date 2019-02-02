@@ -1,4 +1,4 @@
-package cc.aoeiuv020.demo
+package cc.aoeiuv020
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
