@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
             intent.type.startsWith("text") -> "文本"
             intent.type.startsWith("image") -> "图片"
             intent.type.startsWith("video") -> "视频"
-        // 不可能未知，只过滤了这三种，
+            // 不可能未知，只过滤了这三种，
             else -> "未知"
         }
         textView.text = StringBuilder()
@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 .toString()
 
-        val uri = intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
+        val uri = intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM) ?: return
         contentResolver.openInputStream(uri).use { input ->
             openFileOutput("test", Context.MODE_PRIVATE).use { output ->
                 input.copyTo(output)
