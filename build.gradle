@@ -14,6 +14,7 @@ buildscript {
             def input = versionFile.newInputStream()
             def p = new Properties()
             p.load(input)
+            input.close()
             p.forEach { k, v ->
                 ext.set(k, v)
             }
@@ -25,6 +26,7 @@ buildscript {
             def input = publishFile.newInputStream()
             pub = new Properties()
             pub.load(input)
+            input.close()
         }
     }
     repositories {
@@ -117,6 +119,7 @@ applicationModules.forEach { name ->
                 def input = signingFile.newInputStream()
                 def p = new Properties()
                 p.load(input)
+                input.close()
                 // 签名文件存在才配置签名，
                 def jks = rootProject.file(p['storeFile'])
                 if (jks.exists()) {
