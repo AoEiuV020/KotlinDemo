@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
+import android.support.v4.content.ContextCompat
 import org.jetbrains.anko.*
 
 class NormalService : Service(), AnkoLogger {
@@ -15,6 +16,11 @@ class NormalService : Service(), AnkoLogger {
         fun start(ctx: Context, comment: String) {
             info { "start: $ctx, $comment" }
             ctx.startService<NormalService>(KEY_COMMENT to comment)
+        }
+
+        fun startForeground(ctx: Context, comment: String) {
+            info { "startForeground: $ctx, $comment" }
+            ContextCompat.startForegroundService(ctx, ctx.intentFor<NormalService>(KEY_COMMENT to comment))
         }
 
         /**

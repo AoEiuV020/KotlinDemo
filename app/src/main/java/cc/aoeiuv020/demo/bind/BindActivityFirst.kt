@@ -30,6 +30,9 @@ open class BindActivityFirst : AppCompatActivity(), AnkoLogger {
         btnStart.setOnClickListener {
             NormalService.start(this, "$title start")
         }
+        btnStartForeground.setOnClickListener {
+            NormalService.startForeground(this, "$title start")
+        }
         btnBind.setOnClickListener {
             NormalService.bind(this, "$title bind")
         }
