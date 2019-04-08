@@ -144,9 +144,9 @@ applicationModules.forEach { name ->
             // 以便发布上传，
             applicationVariants.all { variant ->
                 if (variant.buildType.name == 'release') {
-                    variant.assemble.doLast {
+                    variant.assembleProvider.get().doLast {
                         copy {
-                            from variant.outputs[0].outputFile
+                            from variant.packageApplicationProvider.get().outputs.files
                             into "${rootDir}/release"
                         }
                         if (variant.mappingFile != null) {
