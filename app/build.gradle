@@ -3,6 +3,7 @@ android {
         applicationId "cc.aoeiuv020"
         applicationIdSuffix ".https"
         resValue("string", "app_name", "HttpsDemo")
+        multiDexEnabled false
     }
 }
 
