@@ -1,5 +1,6 @@
 package cc.aoeiuv020.ssl
 
+import cc.aoeiuv020.log.debug
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.security.KeyStore
@@ -170,7 +171,9 @@ object TrustManagerUtils {
                 }
             } catch (e: Exception) {
                 // 颁发者是假的，
-                e.printStackTrace()
+                logger.debug(e) {
+                    "查询证书链上的颁发者失败"
+                }
                 false
             }.also { trust ->
                 if (trust) {
