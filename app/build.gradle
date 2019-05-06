@@ -10,4 +10,5 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:' + constraint_layout_version
     implementation 'com.squareup.okhttp3:okhttp:' + okhttp_version
     implementation project(':ssl')
+    implementation 'cc.aoeiuv020:gson:' + a_gson_version
 }
