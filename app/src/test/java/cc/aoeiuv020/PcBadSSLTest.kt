@@ -1,8 +1,8 @@
-package cc.aoeiuv020.demo
+package cc.aoeiuv020
 
 import org.junit.Test
 
-class AndroidBadSSLTest {
+class PcBadSSLTest {
     private val b = BadSSLTest()
     @Test
     fun testHtml() {

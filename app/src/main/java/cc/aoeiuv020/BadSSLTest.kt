@@ -1,4 +1,4 @@
-package cc.aoeiuv020.demo
+package cc.aoeiuv020
 
 import cc.aoeiuv020.gson.toBean
 import cc.aoeiuv020.regex.compilePattern

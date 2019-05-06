@@ -1,4 +1,4 @@
-package cc.aoeiuv020.demo
+package cc.aoeiuv020
 
 import org.junit.Test
 

@@ -1,4 +1,4 @@
-package cc.aoeiuv020.demo
+package cc.aoeiuv020
 
 import cc.aoeiuv020.ssl.TLSSocketFactory
 import cc.aoeiuv020.ssl.TrustManagerUtils

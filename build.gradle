@@ -4,27 +4,29 @@ buildscript {
     ext {
         // 统一配置所有安卓应用模块，
         applicationModules = ['app']
-        // 统一配置所有java模块，
-        javaModules = ['jarlibrary', 'ssl']
+        // 统一配置所有java库模块，
+        javaModules = ['ssl']
         // 统一配置所有android库模块，
-        androidModules = ['aarlibrary']
+        androidModules = []
         // 读取所有库的版本信息，
         def versionFile = rootProject.file('version.properties')
         if (versionFile.exists()) {
             def input = versionFile.newInputStream()
             def p = new Properties()
             p.load(input)
+            input.close()
             p.forEach { k, v ->
                 ext.set(k, v)
             }
         }
         // 读取上传仓库相关配置，示例在publish.properties.example,
-        def publicFile = rootProject.file('publish.properties')
-        hasPublic = publicFile.exists()
-        if (hasPublic) {
-            def input = publicFile.newInputStream()
+        def publishFile = rootProject.file('publish.properties')
+        hasPublish = publishFile.exists()
+        if (hasPublish) {
+            def input = publishFile.newInputStream()
             pub = new Properties()
             pub.load(input)
+            input.close()
         }
     }
     repositories {
@@ -50,7 +52,7 @@ buildscript {
 allprojects {
     // 上传仓库的组名优先从publish.properties中拿，
     group = 'cc.aoeiuv020'
-    version = self_version
+    version = version_name
     repositories {
         google()
         jcenter()
@@ -91,9 +93,9 @@ applicationModules.forEach { name ->
                 minSdkVersion min_version.toInteger()
                 targetSdkVersion target_version.toInteger()
                 versionCode version_code.toInteger()
-                versionName version_name
+                versionName version
                 multiDexEnabled true
-                testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+                testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
                 setProperty("archivesBaseName", "$rootProject.name-$versionName")
                 vectorDrawables.useSupportLibrary = true
             }
@@ -117,22 +119,23 @@ applicationModules.forEach { name ->
                 def input = signingFile.newInputStream()
                 def p = new Properties()
                 p.load(input)
-                signingConfigs {
-                    config {
-                        keyAlias p['keyAlias']
-                        keyPassword p['keyPassword']
-                        storeFile file(p['storeFile'])
-                        storePassword p['storePassword']
-                        v1SigningEnabled true
-                        v2SigningEnabled true
+                input.close()
+                // 签名文件存在才配置签名，
+                def jks = rootProject.file(p['storeFile'])
+                if (jks.exists()) {
+                    signingConfigs {
+                        config {
+                            keyAlias p['keyAlias']
+                            keyPassword p['keyPassword']
+                            storeFile jks
+                            storePassword p['storePassword']
+                            v1SigningEnabled true
+                            v2SigningEnabled true
+                        }
                     }
-                }
-                buildTypes {
-                    debug {
-                        signingConfig signingConfigs.config
-                    }
-                    release {
-                        signingConfig signingConfigs.config
+                    buildTypes {
+                        debug.signingConfig signingConfigs.config
+                        release.signingConfig signingConfigs.config
                     }
                 }
             }
@@ -141,9 +144,9 @@ applicationModules.forEach { name ->
             // 以便发布上传，
             applicationVariants.all { variant ->
                 if (variant.buildType.name == 'release') {
-                    variant.assemble.doLast {
+                    variant.assembleProvider.get().doLast {
                         copy {
-                            from variant.outputs[0].outputFile
+                            from variant.packageApplicationProvider.get().outputs.files
                             into "${rootDir}/release"
                         }
                         if (variant.mappingFile != null) {
@@ -169,18 +172,18 @@ applicationModules.forEach { name ->
 
         dependencies {
             // support-v4,
-            implementation 'com.android.support:support-v4:' + support_version
+            implementation 'androidx.legacy:legacy-support-v4:' + androidx_version
             // appcompat-v7,
-            implementation 'com.android.support:appcompat-v7:' + support_version
+            implementation 'androidx.appcompat:appcompat:' + androidx_version
             // 单元测试junit,
             testImplementation 'junit:junit:' + junit_version
             // 单元测试mock，
             testImplementation 'org.mockito:mockito-core:' + mockito_version
             // 安卓测试,
-            androidTestImplementation 'com.android.support.test:runner:' + test_runner_version
-            androidTestImplementation 'com.android.support.test.espresso:espresso-core:' + test_espresso_version
+            androidTestImplementation 'androidx.test.ext:junit:' + test_runner_version
+            androidTestImplementation 'androidx.test.espresso:espresso-core:' + test_espresso_version
             // 安卓分包，
-            implementation 'com.android.support:multidex:' + multidex_version
+            implementation 'androidx.multidex:multidex:' + multidex_version
             // kotlin开发语言支持，
             implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:' + kotlin_version
             // kotlin专用的安卓工具集，anko-commons,
@@ -191,6 +194,8 @@ applicationModules.forEach { name ->
             runtimeOnly 'org.slf4j:slf4j-android:' + slf4j_version
             // slf4j的控制台简单实现，
             testImplementation 'org.slf4j:slf4j-simple:' + slf4j_version
+            // 支持使用浏览器调试数据库，
+            debugImplementation 'com.amitshekhar.android:debug-db:' + debug_db_version
             // 自己的kotlin通用工具集，
             implementation 'cc.aoeiuv020:commons:' + a_commons_version
         }
@@ -258,9 +263,9 @@ javaModules.forEach { name ->
             artifactId = name
             publishVersion = version
             desc = "Java library $name."
-            website = 'https://github.com/AoEiuV020/AndroidDemo'
+            website = 'https://github.com/AoEiuV020/KotlinDemo'
             groupId = group
-            if (hasPublic) {
+            if (hasPublish) {
                 dryRun = false
                 // publish.properties里和这个publish闭包参数同名，参考bintray-release官方wiki，
                 // https://github.com/HailouWang/bintray-release/wiki/%E9%85%8D%E7%BD%AEpublish%E9%97%AD%E5%8C%85
@@ -282,12 +287,14 @@ javaModules.forEach { name ->
         }
         // 删除bintray-release插件自带的javadocJar和sourceJar任务，
         // 因为不支持kotlin, 不支持安卓，
-        bintrayUpload.dependsOn('assemble')
+        publishToMavenLocal.dependsOn('assemble')
         tasks.whenTaskAdded { task ->
             if ([
-                    'genereateJavadocsJarForMavenPublication',
-                    'genereateSourcesJarForMavenPublication'
-            ].contains(task.name)) {
+                    'genereateJavadocsJar',
+                    'genereateSourcesJar'
+            ].any {
+                task.name.startsWith(it)
+            }) {
                 task.enabled = false
             }
         }
@@ -312,7 +319,7 @@ androidModules.forEach { name ->
                 versionCode 1
                 versionName version
 
-                testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+                testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
             }
 
             buildTypes {
@@ -334,8 +341,8 @@ androidModules.forEach { name ->
             // 单元测试junit,
             testImplementation 'junit:junit:' + junit_version
             // 安卓测试,
-            androidTestImplementation 'com.android.support.test:runner:' + test_runner_version
-            androidTestImplementation 'com.android.support.test.espresso:espresso-core:' + test_espresso_version
+            androidTestImplementation 'androidx.test.ext:junit:' + test_runner_version
+            androidTestImplementation 'androidx.test.espresso:espresso-core:' + test_espresso_version
             // kotlin开发语言支持，
             implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:' + kotlin_version
             // kotlin专用的安卓工具集，anko-commons,
@@ -386,9 +393,9 @@ androidModules.forEach { name ->
             artifactId = name
             publishVersion = version
             desc = "Android library $name."
-            website = 'https://github.com/AoEiuV020/AndroidDemo'
+            website = 'https://github.com/AoEiuV020/KotlinDemo'
             groupId = group
-            if (hasPublic) {
+            if (hasPublish) {
                 dryRun = false
                 // publish.properties里和这个publish闭包参数同名，参考bintray-release官方wiki，
                 // https://github.com/HailouWang/bintray-release/wiki/%E9%85%8D%E7%BD%AEpublish%E9%97%AD%E5%8C%85
@@ -410,12 +417,14 @@ androidModules.forEach { name ->
         }
         // 删除bintray-release插件自带的javadocJar和sourceJar任务，
         // 因为不支持kotlin, 不支持安卓，
-        bintrayUpload.dependsOn('assemble')
+        publishToMavenLocal.dependsOn('assemble')
         tasks.whenTaskAdded { task ->
             if ([
-                    'genereateJavadocsJarForReleasePublication',
-                    'genereateSourcesJarForReleasePublication'
-            ].contains(task.name)) {
+                    'genereateJavadocsJar',
+                    'genereateSourcesJar'
+            ].any {
+                task.name.startsWith(it)
+            }) {
                 task.enabled = false
             }
         }

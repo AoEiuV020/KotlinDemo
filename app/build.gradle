@@ -1,13 +1,13 @@
 android {
     defaultConfig {
-        applicationId "cc.aoeiuv020.demo"
+        applicationId "cc.aoeiuv020"
         applicationIdSuffix ".https"
         resValue("string", "app_name", "HttpsDemo")
     }
 }
 
 dependencies {
-    implementation 'com.android.support.constraint:constraint-layout:' + constraint_layout_version
+    implementation 'androidx.constraintlayout:constraintlayout:' + constraint_layout_version
     implementation 'com.squareup.okhttp3:okhttp:' + okhttp_version
     implementation project(':ssl')
     implementation 'cc.aoeiuv020:gson:' + a_gson_version
