@@ -6,11 +6,9 @@ import cc.aoeiuv020.okhttp.OkHttpUtils
 import cc.aoeiuv020.okhttp.get
 import cc.aoeiuv020.okhttp.string
 import kotlinx.android.synthetic.main.activity_main.*
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.toast
-import org.jetbrains.anko.uiThread
+import org.jetbrains.anko.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), AnkoLogger {
     private val client = OkHttpUtils.client
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -20,6 +18,7 @@ class MainActivity : AppCompatActivity() {
         btnGet.setOnClickListener {
             val url = etUrl.text.toString()
             doAsync({ e ->
+                error { e }
                 runOnUiThread {
                     toast(e.message.toString())
                 }
