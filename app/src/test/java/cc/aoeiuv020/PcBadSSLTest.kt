@@ -18,4 +18,9 @@ class PcBadSSLTest {
     fun expired() {
         b.singleTest("https://expired.badssl.com/test/dashboard/small-image.png")
     }
+
+    @Test
+    fun sha1_intermediate() {
+        b.singleTest("https://sha1-intermediate.badssl.com/test/dashboard/small-image.png")
+    }
 }
