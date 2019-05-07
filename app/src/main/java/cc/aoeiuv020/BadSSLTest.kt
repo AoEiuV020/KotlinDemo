@@ -198,6 +198,11 @@ class BadSSLTest {
         }
     }
 
+    fun singleTest(url: String) {
+        val success = get(url)
+        println((if (success) "O" else "X"))
+    }
+
     private val spec = ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
             .cipherSuites(
                     CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA,

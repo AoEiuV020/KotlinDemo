@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory
 import java.security.KeyStore
 import java.security.Principal
 import java.security.cert.CertificateException
+import java.security.cert.CertificateExpiredException
 import java.security.cert.X509Certificate
 import javax.net.ssl.TrustManagerFactory
 import javax.net.ssl.X509TrustManager
@@ -144,6 +145,10 @@ object TrustManagerUtils {
             try {
                 tmDefault.checkServerTrusted(chain, authType)
             } catch (e: CertificateException) {
+                // 统一catch，因为子Exception不定直接会抛出来，比如时间不对不抛CertificateExpiredException，
+                if (e.causeBy(CertificateExpiredException::class.java)) {
+                    throw e
+                }
                 // 不受系统信任的证书才判断是否在主动信任列表中，
                 // 证书链中只要有一个受信任就可以，也就是颁发者受信任就可以，
                 chain?.firstOrNull {
@@ -153,6 +158,20 @@ object TrustManagerUtils {
             }
         }
 
+        private fun Throwable.causeBy(clazz: Class<out Throwable>): Boolean {
+            var cause: Throwable? = this
+            while (cause != null) {
+                if (clazz.isInstance(cause)) {
+                    return true
+                }
+                if (cause.cause == cause) {
+                    return false
+                }
+                cause = cause.cause
+            }
+            return false
+        }
+
         /**
          * 递归补齐证书链再判断该证书是否受信任，
          */
@@ -160,7 +179,7 @@ object TrustManagerUtils {
             // 可以是证书本身是个受信任的签发者证书，也可以是证书的签发者受信任，
             // 这样处理是因为有的网站证书链只部署了自己的证书，没有颁发者的证书，只能从AuthorityInformationAccess判断，
             // 比如COMODO RSA Domain Validation Secure Server CA签发的数个网站，比如https://www.snwx8.com/，
-            return exists(cert) || try {
+            return trust(cert) || try {
                 // 最终实现equals方法的类是X500Name，应该有好好的判断签名，没有的话也没办法了，
                 val issuer = CertificationUtils.getIssuer(cert)
                 if (issuer == null) {
@@ -181,6 +200,10 @@ object TrustManagerUtils {
                     certList.add(cert.subjectDN)
                 }
             }
+        }
+
+        private fun trust(cert: X509Certificate): Boolean {
+            return exists(cert)
         }
 
         private fun exists(cert: X509Certificate): Boolean {
