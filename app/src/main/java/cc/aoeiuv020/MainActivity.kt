@@ -1,7 +1,7 @@
-package cc.aoeiuv020.demo
+package cc.aoeiuv020
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import cc.aoeiuv020.okhttp.OkHttpUtils
 import cc.aoeiuv020.okhttp.get
 import cc.aoeiuv020.okhttp.string
