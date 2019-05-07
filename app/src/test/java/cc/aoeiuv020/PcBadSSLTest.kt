@@ -23,4 +23,9 @@ class PcBadSSLTest {
     fun sha1_intermediate() {
         b.singleTest("https://sha1-intermediate.badssl.com/test/dashboard/small-image.png")
     }
+
+    @Test
+    fun testUnsecured() {
+        b.testUnsecured()
+    }
 }

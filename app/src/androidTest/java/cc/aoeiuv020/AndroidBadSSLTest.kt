@@ -18,4 +18,9 @@ class AndroidBadSSLTest {
     fun expired() {
         b.singleTest("https://expired.badssl.com/test/dashboard/small-image.png")
     }
+
+    @Test
+    fun testUnsecured() {
+        b.testUnsecured()
+    }
 }
