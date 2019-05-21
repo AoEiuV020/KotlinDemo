@@ -9,14 +9,13 @@ import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 
 class BlankFragment : Fragment(), AnkoLogger {
+    private val id = hashCode().toString(16)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
+        info { "$id onCreateView" }
         return inflater.inflate(R.layout.fragment_blank, container, false)
     }
-
-    private val id = hashCode().toString(16)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
