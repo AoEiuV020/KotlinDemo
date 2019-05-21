@@ -1,8 +1,8 @@
 android {
     defaultConfig {
         applicationId "cc.aoeiuv020"
-        applicationIdSuffix ".demo"
-        resValue("string", "app_name", "Demo")
+        applicationIdSuffix ".camera"
+        resValue("string", "app_name", "CameraDemo")
     }
 }
 
