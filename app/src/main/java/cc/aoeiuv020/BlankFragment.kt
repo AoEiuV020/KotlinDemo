@@ -22,6 +22,11 @@ class BlankFragment : Fragment(), AnkoLogger {
         info { "$id onActivityCreated" }
     }
 
+    override fun onStart() {
+        super.onStart()
+        info { "$id onStart" }
+    }
+
     override fun onResume() {
         super.onResume()
         info { "$id onResume" }
@@ -30,6 +35,11 @@ class BlankFragment : Fragment(), AnkoLogger {
     override fun onPause() {
         super.onPause()
         info { "$id onPause" }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        info { "$id onStop" }
     }
 
     override fun onDestroyView() {
