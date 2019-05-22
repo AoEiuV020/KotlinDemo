@@ -21,6 +21,7 @@ class OldCameraActivity : AppCompatActivity() {
     }
 
     private var mCamera: Camera? = null
+    private var mCameraId: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,12 +30,7 @@ class OldCameraActivity : AppCompatActivity() {
         textureView.surfaceTextureListener = object : TextureView.SurfaceTextureListener {
 
             override fun onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int) {
-                val camera = Camera.open(0).also { mCamera = it }
-                camera.setPreviewTexture(surface)
-                camera.startPreview()
-                val cameraInfo = Camera.CameraInfo()
-                Camera.getCameraInfo(0, cameraInfo)
-                camera.setDisplayOrientation(getCameraDisplayOrientation(cameraInfo))
+                openCamera()
             }
 
             override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture, width: Int, height: Int) {
@@ -44,17 +40,57 @@ class OldCameraActivity : AppCompatActivity() {
             }
 
             override fun onSurfaceTextureDestroyed(surface: SurfaceTexture): Boolean {
-                mCamera?.run {
-                    stopPreview()
-                    release()
-                }
-                mCamera = null
+                releaseCamera()
                 return true
             }
         }
+
+        textureView.setOnClickListener {
+            switchCamera()
+        }
     }
 
-    fun getCameraDisplayOrientation(info: Camera.CameraInfo): Int {
+    private fun openCamera() {
+        openCamera(mCameraId)
+    }
+
+
+    private fun openCamera(id: Int) {
+        mCameraId = id
+        releaseCamera()
+        initCamera(Camera.open(id))
+    }
+
+    private fun switchCamera() {
+        val count = Camera.getNumberOfCameras()
+        val next = (mCameraId + 1) % count
+        openCamera(next)
+    }
+
+    private fun initCamera(camera: Camera) {
+        mCamera = camera
+        val surface: SurfaceTexture = textureView.surfaceTexture
+        camera.setPreviewTexture(surface)
+        val cameraInfo = Camera.CameraInfo()
+        Camera.getCameraInfo(0, cameraInfo)
+        camera.setDisplayOrientation(getCameraDisplayOrientation(cameraInfo))
+        camera.startPreview()
+    }
+
+    private fun releaseCamera() {
+        mCamera?.run {
+            stopPreview()
+            release()
+        }
+        mCamera = null
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        releaseCamera()
+    }
+
+    private fun getCameraDisplayOrientation(info: Camera.CameraInfo): Int {
         val rotation = this.windowManager.defaultDisplay.rotation
         var degrees = 0
         when (rotation) {
