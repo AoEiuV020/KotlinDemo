@@ -17,5 +17,9 @@ class MainActivity : AppCompatActivity() {
         btnFullScreen.setOnClickListener {
             FullscreenActivity.start(this)
         }
+
+        btnFullScreenDialog.setOnClickListener {
+            FullscreenDialog.start(this)
+        }
     }
 }

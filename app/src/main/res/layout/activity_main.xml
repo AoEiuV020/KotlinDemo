@@ -24,4 +24,13 @@
         android:text="FullScreen"
         app:backgroundTint="@color/colorAccent"
         tools:ignore="HardcodedText" />
+
+    <Button
+        android:id="@+id/btnFullScreenDialog"
+        style="@style/Base.TextAppearance.AppCompat.Widget.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="FullScreenDialog"
+        app:backgroundTint="@color/colorAccent"
+        tools:ignore="HardcodedText" />
 </LinearLayout>
