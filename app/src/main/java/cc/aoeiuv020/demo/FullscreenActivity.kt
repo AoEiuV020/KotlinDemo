@@ -1,10 +1,12 @@
 package cc.aoeiuv020.demo
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.support.v7.app.AppCompatActivity
 import android.view.View
+import android.view.WindowManager
 import kotlinx.android.synthetic.main.activity_fullscreen.*
 import org.jetbrains.anko.startActivity
 
@@ -48,6 +50,11 @@ class FullscreenActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            val lp = window.attributes
+            lp.layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+            window.attributes = lp
+        }
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_fullscreen)
