@@ -51,9 +51,10 @@ class ListViewActivity : AppCompatActivity(), AnkoLogger {
                 "first: ${parent.firstVisiblePosition}, last: ${parent.lastVisiblePosition}, selected: ${parent.selectedItemPosition}"
             }
             val oldPosition = parent.firstVisiblePosition
+            val oldTop = parent.getChildAt(0)?.top ?: 0
             data.add(0, Item((defaultSize - data.size - 1).toString()))
             (parent.adapter as MyAdapter).notifyDataSetChanged()
-            parent.setSelection(1 + oldPosition)
+            listView.setSelectionFromTop(1 + oldPosition, oldTop)
         }
     }
 
