@@ -20,7 +20,8 @@ class ListViewActivity : AppCompatActivity(), AnkoLogger {
         }
     }
 
-    private val data: MutableList<Item> = MutableList(88) {
+    private val defaultSize = 88
+    private val data: MutableList<Item> = MutableList(defaultSize) {
         Item(it.toString())
     }
     private var isBottom = false
@@ -46,11 +47,13 @@ class ListViewActivity : AppCompatActivity(), AnkoLogger {
             }
         })
         listView.setOnItemClickListener { parent, _, _, _ ->
-            data.add(data.size, Item(data.size.toString()))
-            (parent.adapter as MyAdapter).notifyDataSetChanged()
-            if (isBottom) {
-                parent.setSelection(parent.adapter.count)
+            info {
+                "first: ${parent.firstVisiblePosition}, last: ${parent.lastVisiblePosition}, selected: ${parent.selectedItemPosition}"
             }
+            val oldPosition = parent.firstVisiblePosition
+            data.add(0, Item((defaultSize - data.size - 1).toString()))
+            (parent.adapter as MyAdapter).notifyDataSetChanged()
+            parent.setSelection(1 + oldPosition)
         }
     }
 
