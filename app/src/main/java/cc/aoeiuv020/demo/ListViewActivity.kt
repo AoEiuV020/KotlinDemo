@@ -20,6 +20,7 @@ class ListViewActivity : AppCompatActivity(), AnkoLogger {
         }
     }
 
+    private val count = 10
     private val defaultSize = 88
     private val data: MutableList<Item> = MutableList(defaultSize) {
         Item(it.toString())
@@ -38,6 +39,9 @@ class ListViewActivity : AppCompatActivity(), AnkoLogger {
                     "onScroll <$firstVisibleItem, $visibleItemCount, $totalItemCount>"
                 }
                 isBottom = firstVisibleItem + visibleItemCount >= totalItemCount
+                if (firstVisibleItem < count) {
+                    addItem()
+                }
             }
 
             override fun onScrollStateChanged(view: AbsListView?, scrollState: Int) {
@@ -50,12 +54,18 @@ class ListViewActivity : AppCompatActivity(), AnkoLogger {
             info {
                 "first: ${parent.firstVisiblePosition}, last: ${parent.lastVisiblePosition}, selected: ${parent.selectedItemPosition}"
             }
-            val oldPosition = parent.firstVisiblePosition
-            val oldTop = parent.getChildAt(0)?.top ?: 0
-            data.add(0, Item((defaultSize - data.size - 1).toString()))
-            (parent.adapter as MyAdapter).notifyDataSetChanged()
-            listView.setSelectionFromTop(1 + oldPosition, oldTop)
+            addItem()
         }
+    }
+
+    private fun addItem() {
+        val oldPosition = listView.firstVisiblePosition
+        val oldTop = listView.getChildAt(0)?.top ?: 0
+        repeat(count) {
+            data.add(0, Item((defaultSize - data.size - 1).toString()))
+        }
+        (listView.adapter as MyAdapter).notifyDataSetChanged()
+        listView.setSelectionFromTop(count + oldPosition, oldTop)
     }
 
     inner class MyAdapter : BaseAdapter() {
