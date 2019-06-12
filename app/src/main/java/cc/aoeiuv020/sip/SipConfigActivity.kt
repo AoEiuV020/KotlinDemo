@@ -26,6 +26,7 @@ class SipConfigActivity : AppCompatActivity() {
             val password = etPassword.text.toString()
             val server = etServer.text.toString()
             SipHelper.save(this, username, password, server)
+            finish()
         }
         val sp = ctx.defaultSharedPreferences
         val username = sp.getString("username", null)
