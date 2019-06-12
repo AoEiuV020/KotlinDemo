@@ -1,8 +1,6 @@
 package cc.aoeiuv020.sip
 
-import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
 import android.net.sip.SipManager
 import android.net.sip.SipProfile
 import android.net.sip.SipRegistrationListener
@@ -12,7 +10,10 @@ import android.text.TextWatcher
 import androidx.appcompat.app.AppCompatActivity
 import cc.aoeiuv020.R
 import kotlinx.android.synthetic.main.activity_sip_call.*
-import org.jetbrains.anko.*
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
+import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.warn
 
 class SipCallActivity : AppCompatActivity(), AnkoLogger {
     companion object {
@@ -76,9 +77,7 @@ class SipCallActivity : AppCompatActivity(), AnkoLogger {
             this.me = me
             etServer.setText(me.sipDomain)
             if (!sipManager.isOpened(me.uriString)) {
-                val intent = intentFor<SipCallingActivity>()
-                val pi = PendingIntent.getActivity(this, 1, intent, Intent.FILL_IN_DATA)
-                sipManager.open(me, pi, object : SipRegistrationListener {
+                sipManager.open(me, SipCallingActivity.pendingIntent(this), object : SipRegistrationListener {
                     override fun onRegistering(localProfileUri: String) {
                         info { localProfileUri }
                     }

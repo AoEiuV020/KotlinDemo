@@ -1,5 +1,8 @@
 package cc.aoeiuv020.sip
 
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
 import android.net.sip.SipAudioCall
 import android.net.sip.SipSession
 import android.os.Bundle
@@ -9,8 +12,15 @@ import cc.aoeiuv020.R
 import kotlinx.android.synthetic.main.activity_sip_calling.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
+import org.jetbrains.anko.intentFor
 
 class SipCallingActivity : AppCompatActivity(), AnkoLogger {
+    companion object {
+        fun pendingIntent(ctx: Context): PendingIntent {
+            val intent = ctx.intentFor<SipCallingActivity>()
+            return PendingIntent.getActivity(ctx, 1, intent, Intent.FILL_IN_DATA)
+        }
+    }
 
     private lateinit var sipAudioCall: SipAudioCall
 
