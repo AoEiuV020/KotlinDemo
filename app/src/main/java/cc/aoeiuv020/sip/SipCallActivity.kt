@@ -63,6 +63,11 @@ class SipCallActivity : AppCompatActivity(), AnkoLogger {
                     .build()
             info { peerProfile.uriString }
         }
+
+        btnClose.setOnClickListener {
+            closeLocal()
+            finish()
+        }
     }
 
 

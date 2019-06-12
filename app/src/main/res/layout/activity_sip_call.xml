@@ -99,4 +99,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etServer" />
+
+    <Button
+        android:id="@+id/btnClose"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="Close"
+        app:backgroundTint="@color/colorAccent"
+        app:layout_constraintEnd_toStartOf="@+id/btnConfig"
+        app:layout_constraintTop_toTopOf="@+id/btnConfig" />
 </androidx.constraintlayout.widget.ConstraintLayout>
