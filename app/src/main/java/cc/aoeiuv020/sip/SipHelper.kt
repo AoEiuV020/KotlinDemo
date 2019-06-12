@@ -32,4 +32,16 @@ object SipHelper {
     fun getSipManager(ctx: Context): SipManager {
         return SipManager.newInstance(ctx) ?: throw IllegalStateException("设备不支持sip")
     }
+
+
+    fun equals(a: SipProfile?, b: SipProfile?): Boolean {
+        if (a == null && b == null) {
+            return true
+        }
+        if (a == null || b == null) {
+            return false
+        }
+        return a.uriString == b.uriString
+                && a.password == b.password
+    }
 }

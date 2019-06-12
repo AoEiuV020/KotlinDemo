@@ -12,10 +12,7 @@ import android.text.TextWatcher
 import androidx.appcompat.app.AppCompatActivity
 import cc.aoeiuv020.R
 import kotlinx.android.synthetic.main.activity_sip_call.*
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.info
-import org.jetbrains.anko.intentFor
-import org.jetbrains.anko.startActivity
+import org.jetbrains.anko.*
 
 class SipCallActivity : AppCompatActivity(), AnkoLogger {
     companion object {
@@ -73,7 +70,7 @@ class SipCallActivity : AppCompatActivity(), AnkoLogger {
         if (me == null) {
             SipConfigActivity.start(this)
         } else {
-            if (this.me != null) {
+            if (this.me != null && !SipHelper.equals(this.me, me)) {
                 closeLocal()
             }
             this.me = me
@@ -98,6 +95,11 @@ class SipCallActivity : AppCompatActivity(), AnkoLogger {
                         }
                     }
                 })
+            } else {
+                // 这个打开状态应该是记录在系统里的，客户端直接杀掉不关闭的话下次还是已经打开状态，
+                // 但是PendingIntent依然有效，所以没关系，
+                // 甚至客户端杀掉后还能接到电话，
+                warn { "already opened: ${me.uriString}" }
             }
         }
     }
