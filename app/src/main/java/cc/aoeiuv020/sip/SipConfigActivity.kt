@@ -4,6 +4,9 @@ import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import cc.aoeiuv020.R
+import kotlinx.android.synthetic.main.activity_sip_config.*
+import org.jetbrains.anko.ctx
+import org.jetbrains.anko.defaultSharedPreferences
 import org.jetbrains.anko.startActivity
 
 class SipConfigActivity : AppCompatActivity() {
@@ -17,5 +20,20 @@ class SipConfigActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sip_config)
+
+        btnSave.setOnClickListener {
+            val username = etUsername.text.toString()
+            val password = etPassword.text.toString()
+            val server = etServer.text.toString()
+            SipHelper.save(this, username, password, server)
+        }
+        val sp = ctx.defaultSharedPreferences
+        val username = sp.getString("username", null)
+        val password = sp.getString("password", null)
+        val server = sp.getString("server", null)
+
+        etUsername.setText(username)
+        etPassword.setText(password)
+        etServer.setText(server)
     }
 }
