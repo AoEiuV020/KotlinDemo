@@ -3,6 +3,7 @@ package cc.aoeiuv020.sip
 import android.net.sip.SipAudioCall
 import android.net.sip.SipSession
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import cc.aoeiuv020.R
 import kotlinx.android.synthetic.main.activity_sip_calling.*
@@ -41,6 +42,7 @@ class SipCallingActivity : AppCompatActivity(), AnkoLogger {
                     toggleMute()
                 }
             }
+            btnTake.visibility = View.GONE
         }
     }
 }
