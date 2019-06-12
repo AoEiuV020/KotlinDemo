@@ -51,6 +51,9 @@ class SipCallActivity : AppCompatActivity(), AnkoLogger {
         }
         etUsername.addTextChangedListener(textWatcher)
         etServer.addTextChangedListener(textWatcher)
+        defaultSharedPreferences.getString("peerUsername", null)?.also {
+            etUsername.setText(it)
+        }
 
         sipManager = SipHelper.getSipManager(this)
 
@@ -60,6 +63,10 @@ class SipCallActivity : AppCompatActivity(), AnkoLogger {
             val peerProfile = SipProfile.Builder(username, server)
                     .build()
             info { peerProfile.uriString }
+            defaultSharedPreferences.edit()
+                    .putString("peerUsername", username)
+                    .apply()
+            SipMakeCallActivity.start(this, peerProfile)
         }
 
         btnClose.setOnClickListener {
