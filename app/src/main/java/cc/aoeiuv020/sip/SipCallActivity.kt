@@ -73,7 +73,7 @@ class SipCallActivity : AppCompatActivity(), AnkoLogger {
             doAsync({ t ->
                 error("关闭sip失败", t)
             }, {
-                closeSip(mMySipProfile)
+                mMySipProfile?.also { closeSip(it) }
             })
             finish()
         }
@@ -90,8 +90,10 @@ class SipCallActivity : AppCompatActivity(), AnkoLogger {
             if (mySipProfile == null) {
                 SipConfigActivity.start(ctx)
             } else {
-                if (mMySipProfile != null && !SipHelper.equals(mMySipProfile, mySipProfile)) {
-                    closeSip(mMySipProfile)
+                mMySipProfile?.also { it ->
+                    if (!SipHelper.equals(it, mySipProfile)) {
+                        closeSip(it)
+                    }
                 }
                 mMySipProfile = mySipProfile
                 uiThread {
@@ -130,8 +132,8 @@ class SipCallActivity : AppCompatActivity(), AnkoLogger {
      * 这个关闭真的慢，大概要一秒，
      */
     @WorkerThread
-    private fun closeSip(sipProfile: SipProfile?) {
-        sipProfile?.uriString?.also {
+    private fun closeSip(sipProfile: SipProfile) {
+        sipProfile.uriString.also {
             if (sipManager.isOpened(it)) {
                 sipManager.close(it)
             }
