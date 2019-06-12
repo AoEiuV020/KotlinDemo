@@ -43,10 +43,12 @@ class SipCallActivity : AppCompatActivity(), AnkoLogger {
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 val username = etUsername.text.toString()
                 val server = etServer.text.toString()
-                val uriString = SipProfile.Builder(username, server)
-                        .build()
-                        .uriString
-                tvRemoteUrl.text = uriString
+                if (username.isNotEmpty() && server.isNotEmpty()) {
+                    val uriString = SipProfile.Builder(username, server)
+                            .build()
+                            .uriString
+                    tvRemoteUrl.text = uriString
+                }
             }
         }
         etUsername.addTextChangedListener(textWatcher)
