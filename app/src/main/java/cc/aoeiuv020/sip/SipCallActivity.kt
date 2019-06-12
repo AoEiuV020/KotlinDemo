@@ -98,15 +98,10 @@ class SipCallActivity : AppCompatActivity(), AnkoLogger {
             } else {
                 // 这个打开状态应该是记录在系统里的，客户端直接杀掉不关闭的话下次还是已经打开状态，
                 // 但是PendingIntent依然有效，所以没关系，
-                // 甚至客户端杀掉后还能接到电话，
+                // 甚至客户端杀掉后还能接到电话，所以结束页面时不需要关闭sip,
                 warn { "already opened: ${me.uriString}" }
             }
         }
-    }
-
-    override fun onDestroy() {
-        closeLocal()
-        super.onDestroy()
     }
 
     private fun closeLocal() {
