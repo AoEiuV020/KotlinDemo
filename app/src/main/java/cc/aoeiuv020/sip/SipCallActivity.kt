@@ -65,7 +65,7 @@ class SipCallActivity : AppCompatActivity(), AnkoLogger {
         }
 
         btnClose.setOnClickListener {
-            closeLocal()
+            closeSip(this.me)
             finish()
         }
     }
@@ -79,7 +79,7 @@ class SipCallActivity : AppCompatActivity(), AnkoLogger {
             SipConfigActivity.start(this)
         } else {
             if (this.me != null && !SipHelper.equals(this.me, me)) {
-                closeLocal()
+                closeSip(this.me)
             }
             this.me = me
             etServer.setText(me.sipDomain)
@@ -110,8 +110,8 @@ class SipCallActivity : AppCompatActivity(), AnkoLogger {
         }
     }
 
-    private fun closeLocal() {
-        me?.uriString?.also {
+    private fun closeSip(sipProfile: SipProfile?) {
+        sipProfile?.uriString?.also {
             if (sipManager.isOpened(it)) {
                 sipManager.close(it)
             }
