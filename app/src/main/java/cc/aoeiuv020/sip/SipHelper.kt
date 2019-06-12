@@ -30,6 +30,6 @@ object SipHelper {
     }
 
     fun getSipManager(ctx: Context): SipManager {
-        return SipManager.newInstance(ctx)
+        return SipManager.newInstance(ctx) ?: throw IllegalStateException("设备不支持sip")
     }
 }
