@@ -1,5 +1,6 @@
 package cc.aoeiuv020
 
+import android.Manifest.permission.RECORD_AUDIO
 import android.Manifest.permission.USE_SIP
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -14,7 +15,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         ActivityCompat.requestPermissions(this, arrayOf(
-                USE_SIP
+                USE_SIP,
+                RECORD_AUDIO
         ), 1)
 
         btnSip.setOnClickListener {
