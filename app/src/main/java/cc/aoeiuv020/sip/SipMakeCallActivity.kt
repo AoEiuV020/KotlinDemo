@@ -37,6 +37,7 @@ class SipMakeCallActivity : AppCompatActivity(), AnkoLogger {
 
         sipAudioCall = sipManager.makeAudioCall(mySipProfile.uriString, peerProfile, object : SipAudioCall.Listener() {
             override fun onCallEstablished(call: SipAudioCall) {
+                super.onCallEstablished(call)
                 call.run {
                     startAudio()
                     setSpeakerMode(true)
