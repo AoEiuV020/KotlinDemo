@@ -7,13 +7,11 @@ import android.net.sip.SipRegistrationListener
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import androidx.annotation.WorkerThread
 import androidx.appcompat.app.AppCompatActivity
 import cc.aoeiuv020.R
 import kotlinx.android.synthetic.main.activity_sip_call.*
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.info
-import org.jetbrains.anko.startActivity
-import org.jetbrains.anko.warn
+import org.jetbrains.anko.*
 
 class SipCallActivity : AppCompatActivity(), AnkoLogger {
     companion object {
@@ -24,7 +22,7 @@ class SipCallActivity : AppCompatActivity(), AnkoLogger {
     }
 
     private lateinit var sipManager: SipManager
-    private var me: SipProfile? = null
+    private var mMySipProfile: SipProfile? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,7 +63,11 @@ class SipCallActivity : AppCompatActivity(), AnkoLogger {
         }
 
         btnClose.setOnClickListener {
-            closeSip(this.me)
+            doAsync({ t ->
+                error("关闭sip失败", t)
+            }, {
+                closeSip(mMySipProfile)
+            })
             finish()
         }
     }
@@ -74,42 +76,52 @@ class SipCallActivity : AppCompatActivity(), AnkoLogger {
     override fun onResume() {
         super.onResume()
 
-        val me = SipHelper.getMySipProfile(this)
-        if (me == null) {
-            SipConfigActivity.start(this)
-        } else {
-            if (this.me != null && !SipHelper.equals(this.me, me)) {
-                closeSip(this.me)
-            }
-            this.me = me
-            etServer.setText(me.sipDomain)
-            if (!sipManager.isOpened(me.uriString)) {
-                sipManager.open(me, SipCallingActivity.pendingIntent(this), object : SipRegistrationListener {
-                    override fun onRegistering(localProfileUri: String) {
-                        info { localProfileUri }
-                    }
-
-                    override fun onRegistrationDone(localProfileUri: String, expiryTime: Long) {
-                        info { "localProfileUri: $localProfileUri, expiryTime: $expiryTime" }
-                    }
-
-                    override fun onRegistrationFailed(localProfileUri: String, errorCode: Int, errorMessage: String?) {
-                        info {
-                            "localProfileUri: $localProfileUri, " +
-                                    "errorCode: $errorCode, " +
-                                    "errorMessage: $errorMessage"
-                        }
-                    }
-                })
+        doAsync({ t ->
+            error("注册sip失败", t)
+        }, {
+            val mySipProfile = SipHelper.getMySipProfile(ctx)
+            if (mySipProfile == null) {
+                SipConfigActivity.start(ctx)
             } else {
-                // 这个打开状态应该是记录在系统里的，客户端直接杀掉不关闭的话下次还是已经打开状态，
-                // 但是PendingIntent依然有效，所以没关系，
-                // 甚至客户端杀掉后还能接到电话，所以结束页面时不需要关闭sip,
-                warn { "already opened: ${me.uriString}" }
+                if (mMySipProfile != null && !SipHelper.equals(mMySipProfile, mySipProfile)) {
+                    closeSip(mMySipProfile)
+                }
+                mMySipProfile = mySipProfile
+                uiThread {
+                    etServer.setText(mySipProfile.sipDomain)
+                }
+                if (!sipManager.isOpened(mySipProfile.uriString)) {
+                    sipManager.open(mySipProfile, SipCallingActivity.pendingIntent(ctx), object : SipRegistrationListener {
+                        override fun onRegistering(localProfileUri: String) {
+                            info { localProfileUri }
+                        }
+
+                        override fun onRegistrationDone(localProfileUri: String, expiryTime: Long) {
+                            info { "localProfileUri: $localProfileUri, expiryTime: $expiryTime" }
+                        }
+
+                        override fun onRegistrationFailed(localProfileUri: String, errorCode: Int, errorMessage: String?) {
+                            info {
+                                "localProfileUri: $localProfileUri, " +
+                                        "errorCode: $errorCode, " +
+                                        "errorMessage: $errorMessage"
+                            }
+                        }
+                    })
+                } else {
+                    // 这个打开状态应该是记录在系统里的，客户端直接杀掉不关闭的话下次还是已经打开状态，
+                    // 但是PendingIntent依然有效，所以没关系，
+                    // 甚至客户端杀掉后还能接到电话，所以结束页面时不需要关闭sip,
+                    warn { "already opened: ${mySipProfile.uriString}" }
+                }
             }
-        }
+        })
     }
 
+    /**
+     * 这个关闭真的慢，大概要一秒，
+     */
+    @WorkerThread
     private fun closeSip(sipProfile: SipProfile?) {
         sipProfile?.uriString?.also {
             if (sipManager.isOpened(it)) {
