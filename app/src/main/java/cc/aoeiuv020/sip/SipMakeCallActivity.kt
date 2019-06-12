@@ -47,15 +47,34 @@ class SipMakeCallActivity : AppCompatActivity(), AnkoLogger {
                 }
             }
 
+            // 对方没接直接挂断的情况，
+            override fun onCallBusy(call: SipAudioCall) {
+                super.onCallBusy(call)
+                closeSip()
+            }
+
+            // 接通后对方挂断的情况，
+            override fun onCallEnded(call: SipAudioCall) {
+                super.onCallEnded(call)
+                closeSip()
+            }
+
             override fun onChanged(call: SipAudioCall) {
-                info { "state: ${SipSession.State.toString(call.state)}" }
+                info {
+                    "${Thread.currentThread().stackTrace[3].methodName}, " +
+                            "state: ${SipSession.State.toString(call.state)}"
+                }
             }
         }, 30)
 
         btnHangUp.setOnClickListener {
-            sipAudioCall.endCall()
-            sipAudioCall.close()
-            finish()
+            closeSip()
         }
+    }
+
+    private fun closeSip() {
+        sipAudioCall.endCall()
+        sipAudioCall.close()
+        finish()
     }
 }

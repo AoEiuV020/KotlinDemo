@@ -33,15 +33,23 @@ class SipIncomingCallActivity : AppCompatActivity(), AnkoLogger {
 
         val sipManager = SipHelper.getSipManager(this)
         sipAudioCall = sipManager.takeAudioCall(intent, object : SipAudioCall.Listener() {
+
+            // 接通后对方挂断的情况，
+            override fun onCallEnded(call: SipAudioCall) {
+                super.onCallEnded(call)
+                closeSip()
+            }
+
             override fun onChanged(call: SipAudioCall) {
-                info { "state: ${SipSession.State.toString(call.state)}" }
+                info {
+                    "${Thread.currentThread().stackTrace[3].methodName}, " +
+                            "state: ${SipSession.State.toString(call.state)}"
+                }
             }
         })
 
         btnHangUp.setOnClickListener {
-            sipAudioCall.endCall()
-            sipAudioCall.close()
-            finish()
+            closeSip()
         }
         btnTake.setOnClickListener {
             sipAudioCall.apply {
@@ -54,5 +62,11 @@ class SipIncomingCallActivity : AppCompatActivity(), AnkoLogger {
             }
             btnTake.visibility = View.GONE
         }
+    }
+
+    private fun closeSip() {
+        sipAudioCall.endCall()
+        sipAudioCall.close()
+        finish()
     }
 }
