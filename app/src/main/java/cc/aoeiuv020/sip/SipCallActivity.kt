@@ -91,7 +91,7 @@ class SipCallActivity : AppCompatActivity(), AnkoLogger {
                     etServer.setText(mySipProfile.sipDomain)
                 }
                 if (!sipManager.isOpened(mySipProfile.uriString)) {
-                    sipManager.open(mySipProfile, SipCallingActivity.pendingIntent(ctx), object : SipRegistrationListener {
+                    sipManager.open(mySipProfile, SipIncomingCallActivity.pendingIntent(ctx), object : SipRegistrationListener {
                         override fun onRegistering(localProfileUri: String) {
                             info { localProfileUri }
                         }

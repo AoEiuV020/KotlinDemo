@@ -29,7 +29,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".sip.SipCallingActivity" />
+        <activity android:name=".sip.SipIncomingCallActivity" />
         <activity android:name=".sip.SipCallActivity" />
         <activity android:name=".sip.SipConfigActivity" />
         <activity android:name=".MainActivity">

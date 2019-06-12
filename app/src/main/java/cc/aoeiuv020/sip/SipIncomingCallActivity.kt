@@ -9,15 +9,15 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import cc.aoeiuv020.R
-import kotlinx.android.synthetic.main.activity_sip_calling.*
+import kotlinx.android.synthetic.main.activity_sip_incoming_call.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 import org.jetbrains.anko.intentFor
 
-class SipCallingActivity : AppCompatActivity(), AnkoLogger {
+class SipIncomingCallActivity : AppCompatActivity(), AnkoLogger {
     companion object {
         fun pendingIntent(ctx: Context): PendingIntent {
-            val intent = ctx.intentFor<SipCallingActivity>()
+            val intent = ctx.intentFor<SipIncomingCallActivity>()
             return PendingIntent.getActivity(ctx, 1, intent, Intent.FILL_IN_DATA)
         }
     }
@@ -26,7 +26,7 @@ class SipCallingActivity : AppCompatActivity(), AnkoLogger {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_sip_calling)
+        setContentView(R.layout.activity_sip_incoming_call)
 
         info { "intent: $intent" }
         info { "bundle: ${intent.extras}" }
