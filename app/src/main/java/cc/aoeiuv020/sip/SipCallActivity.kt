@@ -26,6 +26,7 @@ class SipCallActivity : AppCompatActivity(), AnkoLogger {
     }
 
     private lateinit var sipManager: SipManager
+    private var me: SipProfile? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,6 +73,10 @@ class SipCallActivity : AppCompatActivity(), AnkoLogger {
         if (me == null) {
             SipConfigActivity.start(this)
         } else {
+            if (this.me != null) {
+                closeLocal()
+            }
+            this.me = me
             etServer.setText(me.sipDomain)
             if (!sipManager.isOpened(me.uriString)) {
                 val intent = intentFor<SipCallingActivity>()
@@ -93,6 +98,19 @@ class SipCallActivity : AppCompatActivity(), AnkoLogger {
                         }
                     }
                 })
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        closeLocal()
+        super.onDestroy()
+    }
+
+    private fun closeLocal() {
+        me?.uriString?.also {
+            if (sipManager.isOpened(it)) {
+                sipManager.close(it)
             }
         }
     }
