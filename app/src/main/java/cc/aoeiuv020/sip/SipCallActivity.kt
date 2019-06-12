@@ -1,8 +1,11 @@
 package cc.aoeiuv020.sip
 
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.net.sip.SipManager
 import android.net.sip.SipProfile
+import android.net.sip.SipRegistrationListener
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -11,6 +14,7 @@ import cc.aoeiuv020.R
 import kotlinx.android.synthetic.main.activity_sip_call.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
+import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.startActivity
 
 class SipCallActivity : AppCompatActivity(), AnkoLogger {
@@ -50,6 +54,7 @@ class SipCallActivity : AppCompatActivity(), AnkoLogger {
         etServer.addTextChangedListener(textWatcher)
 
         sipManager = SipHelper.getSipManager(this)
+
         btnCall.setOnClickListener {
             val username = etUsername.text.toString()
             val server = etServer.text.toString()
@@ -68,6 +73,27 @@ class SipCallActivity : AppCompatActivity(), AnkoLogger {
             SipConfigActivity.start(this)
         } else {
             etServer.setText(me.sipDomain)
+            if (!sipManager.isOpened(me.uriString)) {
+                val intent = intentFor<SipCallingActivity>()
+                val pi = PendingIntent.getActivity(this, 1, intent, Intent.FILL_IN_DATA)
+                sipManager.open(me, pi, object : SipRegistrationListener {
+                    override fun onRegistering(localProfileUri: String) {
+                        info { localProfileUri }
+                    }
+
+                    override fun onRegistrationDone(localProfileUri: String, expiryTime: Long) {
+                        info { "localProfileUri: $localProfileUri, expiryTime: $expiryTime" }
+                    }
+
+                    override fun onRegistrationFailed(localProfileUri: String, errorCode: Int, errorMessage: String?) {
+                        info {
+                            "localProfileUri: $localProfileUri, " +
+                                    "errorCode: $errorCode, " +
+                                    "errorMessage: $errorMessage"
+                        }
+                    }
+                })
+            }
         }
     }
 }
