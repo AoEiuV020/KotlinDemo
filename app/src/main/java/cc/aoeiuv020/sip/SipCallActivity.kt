@@ -106,6 +106,7 @@ class SipCallActivity : AppCompatActivity(), AnkoLogger {
                                         "errorCode: $errorCode, " +
                                         "errorMessage: $errorMessage"
                             }
+                            // sip关闭时会回调这个失败，是正常情况，
                         }
                     })
                 } else {
