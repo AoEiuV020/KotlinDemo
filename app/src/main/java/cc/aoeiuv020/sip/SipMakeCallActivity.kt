@@ -9,7 +9,11 @@ import androidx.appcompat.app.AppCompatActivity
 import cc.aoeiuv020.R
 import cc.aoeiuv020.anull.notNull
 import kotlinx.android.synthetic.main.activity_sip_make_call.*
-import org.jetbrains.anko.*
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.ctx
+import org.jetbrains.anko.info
+import org.jetbrains.anko.startActivity
+import java.util.*
 
 class SipMakeCallActivity : AppCompatActivity(), AnkoLogger {
     companion object {
@@ -28,8 +32,7 @@ class SipMakeCallActivity : AppCompatActivity(), AnkoLogger {
         setContentView(R.layout.activity_sip_make_call)
 
         info { "intent: $intent" }
-        info { "bundle: ${intent.extras}" }
-        bundleOf()
+        logBundle(intent.extras)
 
         val sipManager = SipHelper.getSipManager(this)
         val mySipProfile = SipHelper.getMySipProfile(ctx).notNull()
@@ -76,5 +79,21 @@ class SipMakeCallActivity : AppCompatActivity(), AnkoLogger {
         sipAudioCall.endCall()
         sipAudioCall.close()
         finish()
+    }
+
+    private fun logBundle(bundle: Bundle?) {
+        val sb = StringBuilder()
+        sb.append("bundle = ")
+        if (bundle == null) {
+            sb.append("null").append('\n')
+        } else {
+            val map = HashMap<String, Any>()
+            for (key in bundle.keySet()) {
+                val value = bundle.get(key)
+                map[key] = value!!
+            }
+            sb.append(map.toString())
+        }
+        info { sb }
     }
 }

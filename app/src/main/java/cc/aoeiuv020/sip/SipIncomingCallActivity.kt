@@ -13,6 +13,7 @@ import kotlinx.android.synthetic.main.activity_sip_incoming_call.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 import org.jetbrains.anko.intentFor
+import java.util.*
 
 class SipIncomingCallActivity : AppCompatActivity(), AnkoLogger {
     companion object {
@@ -29,7 +30,7 @@ class SipIncomingCallActivity : AppCompatActivity(), AnkoLogger {
         setContentView(R.layout.activity_sip_incoming_call)
 
         info { "intent: $intent" }
-        info { "bundle: ${intent.extras}" }
+        logBundle(intent.extras)
 
         val sipManager = SipHelper.getSipManager(this)
         sipAudioCall = sipManager.takeAudioCall(intent, object : SipAudioCall.Listener() {
@@ -68,5 +69,21 @@ class SipIncomingCallActivity : AppCompatActivity(), AnkoLogger {
         sipAudioCall.endCall()
         sipAudioCall.close()
         finish()
+    }
+
+    private fun logBundle(bundle: Bundle?) {
+        val sb = StringBuilder()
+        sb.append("bundle = ")
+        if (bundle == null) {
+            sb.append("null").append('\n')
+        } else {
+            val map = HashMap<String, Any>()
+            for (key in bundle.keySet()) {
+                val value = bundle.get(key)
+                map[key] = value!!
+            }
+            sb.append(map.toString())
+        }
+        info { sb }
     }
 }
