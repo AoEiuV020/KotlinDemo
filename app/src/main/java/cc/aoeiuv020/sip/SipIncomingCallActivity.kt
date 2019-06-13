@@ -65,6 +65,12 @@ class SipIncomingCallActivity : AppCompatActivity(), AnkoLogger {
         }
     }
 
+    override fun onDestroy() {
+        sipAudioCall.endCall()
+        sipAudioCall.close()
+        super.onDestroy()
+    }
+
     private fun closeSip() {
         sipAudioCall.endCall()
         sipAudioCall.close()
