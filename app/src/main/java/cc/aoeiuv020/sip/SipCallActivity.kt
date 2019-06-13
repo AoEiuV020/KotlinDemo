@@ -1,5 +1,6 @@
 package cc.aoeiuv020.sip
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.net.sip.SipManager
 import android.net.sip.SipProfile
@@ -92,7 +93,7 @@ class SipCallActivity : AppCompatActivity(), AnkoLogger {
             if (mySipProfile == null) {
                 SipConfigActivity.start(ctx)
             } else {
-                mMySipProfile?.also { it ->
+                mMySipProfile?.also {
                     if (!SipHelper.equals(it, mySipProfile)) {
                         closeSip(it)
                     }
@@ -100,14 +101,23 @@ class SipCallActivity : AppCompatActivity(), AnkoLogger {
                 mMySipProfile = mySipProfile
                 if (!sipManager.isOpened(mySipProfile.uriString)) {
                     sipManager.open(mySipProfile, SipIncomingCallActivity.pendingIntent(ctx), object : SipRegistrationListener {
+                        @SuppressLint("SetTextI18n")
                         override fun onRegistering(localProfileUri: String) {
                             info { localProfileUri }
+                            uiThread {
+                                tvStatus.text = "onRegistering"
+                            }
                         }
 
+                        @SuppressLint("SetTextI18n")
                         override fun onRegistrationDone(localProfileUri: String, expiryTime: Long) {
                             info { "localProfileUri: $localProfileUri, expiryTime: $expiryTime" }
+                            uiThread {
+                                tvStatus.text = "onRegistrationDone"
+                            }
                         }
 
+                        @SuppressLint("SetTextI18n")
                         override fun onRegistrationFailed(localProfileUri: String, errorCode: Int, errorMessage: String?) {
                             info {
                                 "localProfileUri: $localProfileUri, " +
@@ -115,6 +125,9 @@ class SipCallActivity : AppCompatActivity(), AnkoLogger {
                                         "errorMessage: $errorMessage"
                             }
                             // sip关闭时会回调这个失败，是正常情况，
+                            uiThread {
+                                tvStatus.text = "onRegistrationFailed"
+                            }
                         }
                     })
                 } else {

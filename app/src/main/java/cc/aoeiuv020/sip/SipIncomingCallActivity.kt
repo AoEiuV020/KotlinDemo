@@ -46,6 +46,10 @@ class SipIncomingCallActivity : AppCompatActivity(), AnkoLogger {
                     "${Thread.currentThread().stackTrace[3].methodName}, " +
                             "state: ${SipSession.State.toString(call.state)}"
                 }
+                info { "income onChanged thread: ${Thread.currentThread().name}" }
+                runOnUiThread {
+                    tvStatus.text = SipSession.State.toString(call.state)
+                }
             }
         })
 

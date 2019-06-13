@@ -67,6 +67,9 @@ class SipMakeCallActivity : AppCompatActivity(), AnkoLogger {
                     "${Thread.currentThread().stackTrace[3].methodName}, " +
                             "state: ${SipSession.State.toString(call.state)}"
                 }
+                runOnUiThread {
+                    tvStatus.text = SipSession.State.toString(call.state)
+                }
             }
         }, 30)
 
