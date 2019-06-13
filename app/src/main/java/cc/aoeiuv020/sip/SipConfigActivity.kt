@@ -25,16 +25,19 @@ class SipConfigActivity : AppCompatActivity() {
             val username = etUsername.text.toString()
             val password = etPassword.text.toString()
             val server = etServer.text.toString()
-            SipHelper.save(this, username, password, server)
+            val port = etPort.text.toString().toInt()
+            SipHelper.save(this, username, password, server, port)
             finish()
         }
         val sp = ctx.defaultSharedPreferences
         val username = sp.getString("username", null)
         val password = sp.getString("password", null)
         val server = sp.getString("server", null)
+        val port = sp.getInt("port", 5060)
 
         etUsername.setText(username)
         etPassword.setText(password)
         etServer.setText(server)
+        etPort.setText(port.toString())
     }
 }

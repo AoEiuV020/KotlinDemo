@@ -10,12 +10,14 @@ object SipHelper {
             ctx: Context,
             username: String,
             password: String,
-            server: String
+            server: String,
+            port: Int = 5060
     ) {
         ctx.defaultSharedPreferences.edit()
                 .putString("username", username)
                 .putString("password", password)
                 .putString("server", server)
+                .putInt("port", port)
                 .apply()
     }
 
@@ -24,7 +26,9 @@ object SipHelper {
         val username = sp.getString("username", null) ?: return null
         val password = sp.getString("password", null) ?: return null
         val server = sp.getString("server", null) ?: return null
+        val port = sp.getInt("port", 5060)
         return SipProfile.Builder(username, server)
+                .setPort(port)
                 .setPassword(password)
                 .build()
     }

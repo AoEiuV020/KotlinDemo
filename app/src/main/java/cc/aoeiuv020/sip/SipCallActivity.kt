@@ -10,6 +10,7 @@ import android.text.TextWatcher
 import androidx.annotation.WorkerThread
 import androidx.appcompat.app.AppCompatActivity
 import cc.aoeiuv020.R
+import cc.aoeiuv020.anull.notNull
 import kotlinx.android.synthetic.main.activity_sip_call.*
 import org.jetbrains.anko.*
 
@@ -39,10 +40,11 @@ class SipCallActivity : AppCompatActivity(), AnkoLogger {
             }
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                val mySipProfile = mMySipProfile ?: return
                 val username = etUsername.text.toString()
-                val server = etServer.text.toString()
-                if (username.isNotEmpty() && server.isNotEmpty()) {
-                    val uriString = SipProfile.Builder(username, server)
+                if (username.isNotEmpty()) {
+                    val uriString = SipProfile.Builder(username, mySipProfile.sipDomain)
+                            .setPort(mySipProfile.port)
                             .build()
                             .uriString
                     tvRemoteUrl.text = uriString
@@ -50,7 +52,6 @@ class SipCallActivity : AppCompatActivity(), AnkoLogger {
             }
         }
         etUsername.addTextChangedListener(textWatcher)
-        etServer.addTextChangedListener(textWatcher)
         defaultSharedPreferences.getString("peerUsername", null)?.also {
             etUsername.setText(it)
         }
@@ -59,8 +60,9 @@ class SipCallActivity : AppCompatActivity(), AnkoLogger {
 
         btnCall.setOnClickListener {
             val username = etUsername.text.toString()
-            val server = etServer.text.toString()
-            val peerProfile = SipProfile.Builder(username, server)
+            val mySipProfile = mMySipProfile.notNull()
+            val peerProfile = SipProfile.Builder(username, mySipProfile.sipDomain)
+                    .setPort(mySipProfile.port)
                     .build()
             info { peerProfile.uriString }
             defaultSharedPreferences.edit()
@@ -96,9 +98,6 @@ class SipCallActivity : AppCompatActivity(), AnkoLogger {
                     }
                 }
                 mMySipProfile = mySipProfile
-                uiThread {
-                    etServer.setText(mySipProfile.sipDomain)
-                }
                 if (!sipManager.isOpened(mySipProfile.uriString)) {
                     sipManager.open(mySipProfile, SipIncomingCallActivity.pendingIntent(ctx), object : SipRegistrationListener {
                         override fun onRegistering(localProfileUri: String) {
