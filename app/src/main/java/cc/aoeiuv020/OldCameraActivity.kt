@@ -54,7 +54,9 @@ class OldCameraActivity : AppCompatActivity() {
         btnTakePhoto.setOnClickListener {
             val camera = mCamera ?: return@setOnClickListener
             camera.takePicture(null, null, { data: ByteArray, _: Camera ->
-                val bitmap = BitmapFactory.decodeByteArray(data, 0, data.size)
+                val info = CameraUtils.getCameraInfo(mCameraId)
+                var bitmap = BitmapFactory.decodeByteArray(data, 0, data.size)
+                bitmap = CameraUtils.restoreRotatedImage(info.orientation, bitmap)
                 ivPreview.visibility = View.VISIBLE
                 ivPreview.setImageBitmap(bitmap)
             })
@@ -94,8 +96,6 @@ class OldCameraActivity : AppCompatActivity() {
         Camera.getCameraInfo(0, cameraInfo)
         camera.setDisplayOrientation(getCameraDisplayOrientation(cameraInfo))
         camera.parameters = camera.parameters.apply {
-            // 大部分手机上setRotation可以修正生成照片方向，红米note7无效，
-            setRotation(cameraInfo.orientation)
         }
         camera.startPreview()
     }
