@@ -93,6 +93,10 @@ class OldCameraActivity : AppCompatActivity() {
         val cameraInfo = Camera.CameraInfo()
         Camera.getCameraInfo(0, cameraInfo)
         camera.setDisplayOrientation(getCameraDisplayOrientation(cameraInfo))
+        camera.parameters = camera.parameters.apply {
+            // 大部分手机上setRotation可以修正生成照片方向，红米note7无效，
+            setRotation(cameraInfo.orientation)
+        }
         camera.startPreview()
     }
 
