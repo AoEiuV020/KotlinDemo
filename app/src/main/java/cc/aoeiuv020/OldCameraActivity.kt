@@ -3,11 +3,13 @@
 package cc.aoeiuv020
 
 import android.content.Context
+import android.graphics.BitmapFactory
 import android.graphics.SurfaceTexture
 import android.hardware.Camera
 import android.os.Bundle
 import android.view.Surface
 import android.view.TextureView
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_old_camera.*
 import org.jetbrains.anko.startActivity
@@ -47,6 +49,23 @@ class OldCameraActivity : AppCompatActivity() {
 
         textureView.setOnClickListener {
             switchCamera()
+        }
+
+        btnTakePhoto.setOnClickListener {
+            val camera = mCamera ?: return@setOnClickListener
+            camera.takePicture(null, null, { data: ByteArray, _: Camera ->
+                val bitmap = BitmapFactory.decodeByteArray(data, 0, data.size)
+                ivPreview.visibility = View.VISIBLE
+                ivPreview.setImageBitmap(bitmap)
+            })
+        }
+    }
+
+    override fun onBackPressed() {
+        if (ivPreview.isShown) {
+            ivPreview.visibility = View.GONE
+        } else {
+            super.onBackPressed()
         }
     }
 
