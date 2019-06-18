@@ -12,10 +12,13 @@ import android.view.TextureView
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_old_camera.*
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
 import org.jetbrains.anko.startActivity
+import kotlin.properties.Delegates
 
 
-class OldCameraActivity : AppCompatActivity() {
+class OldCameraActivity : AppCompatActivity(), AnkoLogger {
     companion object {
         fun start(ctx: Context) {
             ctx.startActivity<OldCameraActivity>()
@@ -25,6 +28,9 @@ class OldCameraActivity : AppCompatActivity() {
     private var mCamera: Camera? = null
     private var mCameraId: Int = 0
 
+    private var mWidth: Int by Delegates.notNull()
+    private var mHeight: Int by Delegates.notNull()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_old_camera)
@@ -32,6 +38,8 @@ class OldCameraActivity : AppCompatActivity() {
         textureView.surfaceTextureListener = object : TextureView.SurfaceTextureListener {
 
             override fun onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int) {
+                mWidth = width
+                mHeight = height
                 openCamera()
             }
 
@@ -96,6 +104,12 @@ class OldCameraActivity : AppCompatActivity() {
         Camera.getCameraInfo(0, cameraInfo)
         camera.setDisplayOrientation(getCameraDisplayOrientation(cameraInfo))
         camera.parameters = camera.parameters.apply {
+            val previewSize = CameraUtils.getOptimalPreviewSize(supportedPreviewSizes, mWidth, mHeight)
+            info {
+                "previewSize <${previewSize.width}, ${previewSize.height}>"
+            }
+            setPreviewSize(previewSize.width, previewSize.height)
+            setPictureSize(previewSize.width, previewSize.height)
         }
         camera.startPreview()
     }
