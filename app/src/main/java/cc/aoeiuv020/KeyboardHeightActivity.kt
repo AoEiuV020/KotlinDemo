@@ -3,6 +3,7 @@ package cc.aoeiuv020
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_keyboard_height.*
 import org.jetbrains.anko.AnkoLogger
@@ -49,6 +50,8 @@ class KeyboardHeightActivity : AppCompatActivity(), AnkoLogger {
 
     private fun showBottomView() {
         vBottom.visibility = View.VISIBLE
+        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(editText.windowToken, 0)
         val height = mKeyboardHeight.takeIf { it > 0 }
                 ?: 200
         if (vBottom.height != height) {
