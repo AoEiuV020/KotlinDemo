@@ -27,6 +27,7 @@ class KeyboardHeightActivity : AppCompatActivity(), AnkoLogger {
             override fun keyBoardShow(height: Int) {
                 info { "show $height" }
                 mKeyboardHeight = height
+                hideBottomView()
             }
 
             override fun keyBoardHide(height: Int) {
