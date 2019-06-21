@@ -39,6 +39,7 @@
         android:id="@+id/vBottom"
         android:layout_width="0dp"
         android:layout_height="100dp"
+        android:background="#0f0"
         android:minHeight="100dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
