@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_keyboard_height.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
@@ -43,6 +44,11 @@ class KeyboardHeightActivity : AppCompatActivity(), AnkoLogger {
                 hideBottomView()
             }
         }
+
+        rvContent.layoutManager = LinearLayoutManager(this)
+        val adapter = NumberListAdapter()
+        rvContent.adapter = adapter
+        rvContent.scrollToPosition(adapter.itemCount)
     }
 
     private fun hideBottomView() {
