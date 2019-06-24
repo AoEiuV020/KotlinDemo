@@ -33,5 +33,9 @@ class MainActivity : AppCompatActivity() {
         btnGridItemHeight.setOnClickListener {
             GridItemHeightActivity.start(this)
         }
+
+        btnGridRecycler.setOnClickListener {
+            GridRecyclerActivity.start(this)
+        }
     }
 }
