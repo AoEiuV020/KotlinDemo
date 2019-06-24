@@ -2,7 +2,6 @@ package cc.aoeiuv020
 
 import android.content.Context
 import android.os.Bundle
-import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
@@ -54,13 +53,10 @@ class KeyboardHeightActivity : AppCompatActivity(), AnkoLogger {
                 hideKeyboard()
             }
         }
-        editText.setOnTouchListener { _, event ->
-            if (event.action == MotionEvent.ACTION_UP) {
-                if (isBottomViewShowing()) {
-                    vBottom.postDelayed(hideBottomTalk, 500)
-                }
+        editText.setOnClickListener {
+            if (isBottomViewShowing()) {
+                vBottom.postDelayed(hideBottomTalk, 500)
             }
-            false
         }
 
         rvContent.layoutManager = LinearLayoutManager(this)
