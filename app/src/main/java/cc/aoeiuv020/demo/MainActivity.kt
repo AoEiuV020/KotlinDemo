@@ -29,5 +29,9 @@ class MainActivity : AppCompatActivity() {
         btnCoordinator.setOnClickListener {
             CoordinatorActivity.start(this)
         }
+
+        btnGridItemHeight.setOnClickListener {
+            GridItemHeightActivity.start(this)
+        }
     }
 }
