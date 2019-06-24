@@ -44,7 +44,7 @@ class SoftKeyBoardListener(activity: Activity) {
 
             //可以看作软键盘隐藏了
             if (rootViewFullHeight == visibleHeight) {
-                val keyboardHeight = rootViewFullHeight - visibleHeight
+                val keyboardHeight = rootViewFullHeight - rootViewVisibleHeight
                 onSoftKeyBoardChangeListener?.keyBoardHide(keyboardHeight)
                 rootViewVisibleHeight = visibleHeight
                 return@OnGlobalLayoutListener
