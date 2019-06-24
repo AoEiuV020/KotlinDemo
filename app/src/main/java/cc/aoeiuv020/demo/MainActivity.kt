@@ -38,8 +38,8 @@ class MainActivity : AppCompatActivity() {
             GridRecyclerActivity.start(this)
         }
 
-        btnGridLayout.setOnClickListener {
-            GridLayoutActivity.start(this)
+        btnFitGridView.setOnClickListener {
+            FitGridViewActivity.start(this)
         }
     }
 }

@@ -14,4 +14,5 @@ dependencies {
     implementation 'com.android.support:design:' + support_version
     implementation 'in.srain.cube:grid-view-with-header-footer:1.0.12'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+    implementation 'com.github.ceryle:FitGridView:v1.0.5'
 }
