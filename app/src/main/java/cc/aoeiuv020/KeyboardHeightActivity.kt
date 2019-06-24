@@ -45,7 +45,7 @@ class KeyboardHeightActivity : AppCompatActivity(), AnkoLogger {
         btnToggleView.setOnClickListener {
             if (isBottomViewShowing()) {
                 toggleSoftInput()
-                vBottom.postDelayed(hideBottomTalk, 500)
+                vBottom.postDelayed(hideBottomTalk, 100)
             } else {
                 vBottom.removeCallbacks(hideBottomTalk)
                 updateSoftInputMethod(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
@@ -55,7 +55,7 @@ class KeyboardHeightActivity : AppCompatActivity(), AnkoLogger {
         }
         editText.setOnClickListener {
             if (isBottomViewShowing()) {
-                vBottom.postDelayed(hideBottomTalk, 500)
+                vBottom.postDelayed(hideBottomTalk, 100)
             }
         }
 
