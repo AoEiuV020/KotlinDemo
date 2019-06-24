@@ -34,18 +34,16 @@ class SoftKeyBoardListener(activity: Activity) {
 
             //根视图显示高度变小超过200，可以看作软键盘显示了
             if (rootViewVisibleHeight - visibleHeight > 200) {
-                if (onSoftKeyBoardChangeListener != null) {
-                    onSoftKeyBoardChangeListener!!.keyBoardShow(rootViewVisibleHeight - visibleHeight)
-                }
+                val keyboardHeight = rootViewVisibleHeight - visibleHeight
+                onSoftKeyBoardChangeListener?.keyBoardShow(keyboardHeight)
                 rootViewVisibleHeight = visibleHeight
                 return@OnGlobalLayoutListener
             }
 
             //根视图显示高度变大超过200，可以看作软键盘隐藏了
             if (visibleHeight - rootViewVisibleHeight > 200) {
-                if (onSoftKeyBoardChangeListener != null) {
-                    onSoftKeyBoardChangeListener!!.keyBoardHide(visibleHeight - rootViewVisibleHeight)
-                }
+                val keyboardHeight = visibleHeight - rootViewVisibleHeight
+                onSoftKeyBoardChangeListener?.keyBoardHide(keyboardHeight)
                 rootViewVisibleHeight = visibleHeight
                 return@OnGlobalLayoutListener
             }
