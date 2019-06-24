@@ -19,7 +19,6 @@ class KeyboardHeightActivity : AppCompatActivity(), AnkoLogger {
     }
 
     private var mKeyboardHeight = -1
-    private var keyboardHideCallback: Runnable? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,20 +34,12 @@ class KeyboardHeightActivity : AppCompatActivity(), AnkoLogger {
             override fun keyBoardHide(height: Int) {
                 info { "hide $height" }
                 mKeyboardHeight = height
-                keyboardHideCallback?.also {
-                    keyboardHideCallback = null
-                    runOnUiThread(it)
-                }
             }
         })
 
         btnToggleView.setOnClickListener {
             if (vBottom.visibility == View.GONE) {
-                val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-                imm.hideSoftInputFromWindow(editText.windowToken, 0)
-                keyboardHideCallback = Runnable {
-                    showBottomView()
-                }
+                showBottomView()
             } else {
                 hideBottomView()
             }
@@ -66,6 +57,8 @@ class KeyboardHeightActivity : AppCompatActivity(), AnkoLogger {
 
     private fun showBottomView() {
         vBottom.visibility = View.VISIBLE
+        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(editText.windowToken, 0)
         val height = mKeyboardHeight.takeIf { it > 0 }
                 ?: 200
         if (vBottom.height != height) {
