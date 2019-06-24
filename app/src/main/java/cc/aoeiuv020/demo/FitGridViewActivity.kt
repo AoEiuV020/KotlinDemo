@@ -18,6 +18,6 @@ class FitGridViewActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_fit_grid_view)
 
-        fitGridView.setFitGridAdapter(MyFitGridAdapter(this, 3, 8))
+        fitGridView.setFitGridAdapter(MyFitGridAdapter(this))
     }
 }
