@@ -37,5 +37,9 @@ class MainActivity : AppCompatActivity() {
         btnGridRecycler.setOnClickListener {
             GridRecyclerActivity.start(this)
         }
+
+        btnGridLayout.setOnClickListener {
+            GridLayoutActivity.start(this)
+        }
     }
 }

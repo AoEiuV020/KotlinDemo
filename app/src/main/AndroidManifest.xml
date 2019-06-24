@@ -12,7 +12,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".GridRecyclerActivity"></activity>
+        <activity android:name=".GridLayoutActivity"></activity>
+        <activity android:name=".GridRecyclerActivity" />
         <activity android:name=".GridItemHeightActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
