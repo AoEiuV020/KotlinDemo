@@ -10,6 +10,7 @@ import android.view.ViewTreeObserver
  */
 class SoftKeyBoardListener(activity: Activity) {
     private val rootView: View = activity.window.decorView//activity的根视图
+    private var rootViewFullHeight: Int = 0//纪录根视图的初始化状态完整高度，
     private var rootViewVisibleHeight: Int = 0//纪录根视图的显示高度
     private var onSoftKeyBoardChangeListener: OnSoftKeyBoardChangeListener? = null
 
@@ -23,6 +24,7 @@ class SoftKeyBoardListener(activity: Activity) {
             rootView.getWindowVisibleDisplayFrame(r)
             val visibleHeight = r.height()
             if (rootViewVisibleHeight == 0) {
+                rootViewFullHeight = visibleHeight
                 rootViewVisibleHeight = visibleHeight
                 return@OnGlobalLayoutListener
             }
@@ -32,17 +34,17 @@ class SoftKeyBoardListener(activity: Activity) {
                 return@OnGlobalLayoutListener
             }
 
-            //根视图显示高度变小超过200，可以看作软键盘显示了
-            if (rootViewVisibleHeight - visibleHeight > 0) {
-                val keyboardHeight = rootViewVisibleHeight - visibleHeight
+            //可以看作软键盘显示了
+            if (rootViewFullHeight - visibleHeight > 0) {
+                val keyboardHeight = rootViewFullHeight - visibleHeight
                 onSoftKeyBoardChangeListener?.keyBoardShow(keyboardHeight)
                 rootViewVisibleHeight = visibleHeight
                 return@OnGlobalLayoutListener
             }
 
-            //根视图显示高度变大超过200，可以看作软键盘隐藏了
-            if (visibleHeight - rootViewVisibleHeight > 0) {
-                val keyboardHeight = visibleHeight - rootViewVisibleHeight
+            //可以看作软键盘隐藏了
+            if (rootViewFullHeight == visibleHeight) {
+                val keyboardHeight = rootViewFullHeight - visibleHeight
                 onSoftKeyBoardChangeListener?.keyBoardHide(keyboardHeight)
                 rootViewVisibleHeight = visibleHeight
                 return@OnGlobalLayoutListener
