@@ -2,7 +2,9 @@ package cc.aoeiuv020
 
 import android.content.Context
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.View
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,6 +22,11 @@ class KeyboardHeightActivity : AppCompatActivity(), AnkoLogger {
 
     private var mKeyboardHeight = -1
 
+    private val hideBottomTalk = Runnable {
+        hideBottomView()
+        updateSoftInputMethod(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_keyboard_height)
@@ -28,7 +35,6 @@ class KeyboardHeightActivity : AppCompatActivity(), AnkoLogger {
             override fun keyBoardShow(height: Int) {
                 info { "show $height" }
                 mKeyboardHeight = height
-                hideBottomView()
             }
 
             override fun keyBoardHide(height: Int) {
@@ -38,11 +44,23 @@ class KeyboardHeightActivity : AppCompatActivity(), AnkoLogger {
         })
 
         btnToggleView.setOnClickListener {
-            if (vBottom.visibility == View.GONE) {
-                showBottomView()
+            if (isBottomViewShowing()) {
+                toggleSoftInput()
+                vBottom.postDelayed(hideBottomTalk, 500)
             } else {
-                hideBottomView()
+                vBottom.removeCallbacks(hideBottomTalk)
+                updateSoftInputMethod(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
+                showBottomView()
+                hideKeyboard()
             }
+        }
+        editText.setOnTouchListener { _, event ->
+            if (event.action == MotionEvent.ACTION_UP) {
+                if (isBottomViewShowing()) {
+                    vBottom.postDelayed(hideBottomTalk, 500)
+                }
+            }
+            false
         }
 
         rvContent.layoutManager = LinearLayoutManager(this)
@@ -51,14 +69,16 @@ class KeyboardHeightActivity : AppCompatActivity(), AnkoLogger {
         rvContent.scrollToPosition(adapter.itemCount)
     }
 
+    private fun isBottomViewShowing(): Boolean {
+        return vBottom.visibility == View.VISIBLE
+    }
+
     private fun hideBottomView() {
         vBottom.visibility = View.GONE
     }
 
     private fun showBottomView() {
         vBottom.visibility = View.VISIBLE
-        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(editText.windowToken, 0)
         val height = mKeyboardHeight.takeIf { it > 0 }
                 ?: 200
         if (vBottom.height != height) {
@@ -66,5 +86,29 @@ class KeyboardHeightActivity : AppCompatActivity(), AnkoLogger {
                 it.height = height
             }
         }
+    }
+
+    private fun hideKeyboard() {
+        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(editText.windowToken, 0)
+    }
+
+
+    private fun toggleSoftInput() {
+        val imm = editText.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(editText, InputMethodManager.RESULT_SHOWN)
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY)
+    }
+
+    private fun updateSoftInputMethod(softInputMode: Int) {
+        if (isFinishing) {
+            return
+        }
+        val p = window.attributes
+        if (p.softInputMode == softInputMode) {
+            return
+        }
+        p.softInputMode = softInputMode
+        window.attributes = p
     }
 }
