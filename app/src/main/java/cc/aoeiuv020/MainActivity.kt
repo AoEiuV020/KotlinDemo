@@ -14,5 +14,9 @@ class MainActivity : AppCompatActivity() {
         btnHello.setOnClickListener {
             toast("Hello")
         }
+
+        btnSwipeBackLayout.setOnClickListener {
+            SwipeBackLayoutActivity.start(this, 0)
+        }
     }
 }
