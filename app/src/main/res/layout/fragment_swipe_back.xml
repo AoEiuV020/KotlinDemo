@@ -8,10 +8,11 @@
     tools:context="cc.aoeiuv020.SwipeBackLayoutActivity"
     tools:ignore="HardcodedText,ContentDescription,LabelFor,TextFields">
 
-    <fragment
-        android:id="@+id/fragment"
+    <Button
+        android:id="@+id/btnNewPage"
+        style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="wrap_content"
-        android:name="cc.aoeiuv020.SwipeBackFragment"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="NewPage" />
 
 </LinearLayout>
