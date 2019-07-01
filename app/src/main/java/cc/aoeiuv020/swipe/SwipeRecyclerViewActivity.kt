@@ -19,6 +19,7 @@ import org.jetbrains.anko.ctx
 import org.jetbrains.anko.dip
 import org.jetbrains.anko.startActivity
 import java.util.concurrent.TimeUnit
+import kotlin.random.Random
 
 class SwipeRecyclerViewActivity : AppCompatActivity() {
     companion object {
@@ -43,7 +44,7 @@ class SwipeRecyclerViewActivity : AppCompatActivity() {
             // 添加左侧的，如果不添加，则左侧不会出现菜单。
             run {
                 val addItem = SwipeMenuItem(ctx).setBackgroundColor(0xff00ff00.toInt())
-                        .setImage(R.mipmap.ic_launcher)
+                        .setImage(android.R.drawable.ic_menu_call)
                         .setWidth(width)
                         .setHeight(height)
                 swipeLeftMenu.addMenuItem(addItem) // 添加菜单到左侧。
@@ -57,7 +58,7 @@ class SwipeRecyclerViewActivity : AppCompatActivity() {
             // 添加右侧的，如果不添加，则右侧不会出现菜单。
             run {
                 val deleteItem = SwipeMenuItem(ctx).setBackgroundColor(0xffff0000.toInt())
-                        .setImage(R.mipmap.ic_launcher)
+                        .setImage(android.R.drawable.ic_delete)
                         .setText("删除")
                         .setTextColor(Color.WHITE)
                         .setWidth(width)
@@ -65,6 +66,7 @@ class SwipeRecyclerViewActivity : AppCompatActivity() {
                 swipeRightMenu.addMenuItem(deleteItem)// 添加菜单到右侧。
 
                 val addItem = SwipeMenuItem(ctx).setBackgroundColor(0xff00ff00.toInt())
+                        .setImage(android.R.drawable.ic_input_add)
                         .setText("添加")
                         .setTextColor(Color.WHITE)
                         .setWidth(width)
@@ -148,6 +150,7 @@ class SwipeRecyclerViewActivity : AppCompatActivity() {
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             val item = data[position]
             holder.tvNumber.text = item.number.toString()
+            holder.tvNumber.setBackgroundColor(Random.nextInt())
         }
 
         fun remove(position: Int) {
