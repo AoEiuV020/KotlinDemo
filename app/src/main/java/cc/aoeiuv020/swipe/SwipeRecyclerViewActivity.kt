@@ -18,6 +18,7 @@ import kotlinx.android.synthetic.main.item_swipe_recycler_view.view.*
 import org.jetbrains.anko.ctx
 import org.jetbrains.anko.dip
 import org.jetbrains.anko.startActivity
+import java.util.concurrent.TimeUnit
 
 class SwipeRecyclerViewActivity : AppCompatActivity() {
     companion object {
@@ -111,6 +112,15 @@ class SwipeRecyclerViewActivity : AppCompatActivity() {
                 mAdapter = it
             }
         }
+
+        refreshLayout.setOnRefreshListener {
+            refreshLayout.postDelayed({
+                repeat(4) {
+                    mAdapter.add(0, Item(88 - 1 - mAdapter.itemCount))
+                }
+                it.finishRefresh()
+            }, TimeUnit.SECONDS.toMillis(1))
+        }
     }
 
     class Item(
@@ -143,6 +153,11 @@ class SwipeRecyclerViewActivity : AppCompatActivity() {
         fun remove(position: Int) {
             data.removeAt(position)
             notifyItemRemoved(position)
+        }
+
+        fun add(index: Int, item: Item) {
+            data.add(index, item)
+            notifyItemInserted(index)
         }
     }
 }
