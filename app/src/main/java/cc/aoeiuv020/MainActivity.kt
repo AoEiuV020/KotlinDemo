@@ -2,6 +2,7 @@ package cc.aoeiuv020
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import cc.aoeiuv020.swipe.SwipeRecyclerViewActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.toast
 
@@ -13,6 +14,10 @@ class MainActivity : AppCompatActivity() {
 
         btnHello.setOnClickListener {
             toast("Hello")
+        }
+
+        btnSwipeRecyclerView.setOnClickListener {
+            SwipeRecyclerViewActivity.start(this)
         }
     }
 }
