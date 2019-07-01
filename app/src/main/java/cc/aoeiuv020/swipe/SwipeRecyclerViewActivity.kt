@@ -27,7 +27,7 @@ class SwipeRecyclerViewActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_swipe_recycler_view)
 
-        swipeRecyclerView.run {
+        recyclerView.run {
             layoutManager = LinearLayoutManager(ctx)
             adapter = MyAdapter()
         }
