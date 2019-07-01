@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cc.aoeiuv020.R
+import com.scwang.smartrefresh.layout.header.ClassicsHeader
 import com.yanzhenjie.recyclerview.*
 import kotlinx.android.synthetic.main.activity_swipe_recycler_view.*
 import kotlinx.android.synthetic.main.item_swipe_recycler_view.view.*
@@ -115,6 +116,7 @@ class SwipeRecyclerViewActivity : AppCompatActivity() {
             }
         }
 
+        (refreshLayout.refreshHeader as? ClassicsHeader)?.setEnableLastTime(false)
         refreshLayout.setOnRefreshListener {
             refreshLayout.postDelayed({
                 repeat(4) {
