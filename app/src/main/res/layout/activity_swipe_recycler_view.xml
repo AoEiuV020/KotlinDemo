@@ -20,7 +20,7 @@
             app:srlDrawableArrowSize="20dp"
             app:srlDrawableMarginRight="20dp"
             app:srlDrawableProgressSize="20dp"
-            app:srlEnableLastTime="true"
+            app:srlEnableLastTime="false"
             app:srlFinishDuration="500"
             app:srlTextSizeTime="10dp"
             app:srlTextSizeTitle="16sp"
