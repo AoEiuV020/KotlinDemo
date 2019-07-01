@@ -1,18 +1,22 @@
 package cc.aoeiuv020.swipe
 
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cc.aoeiuv020.R
+import com.yanzhenjie.recyclerview.*
 import kotlinx.android.synthetic.main.activity_swipe_recycler_view.*
 import kotlinx.android.synthetic.main.item_swipe_recycler_view.view.*
 import org.jetbrains.anko.ctx
+import org.jetbrains.anko.dip
 import org.jetbrains.anko.startActivity
 
 class SwipeRecyclerViewActivity : AppCompatActivity() {
@@ -23,10 +27,76 @@ class SwipeRecyclerViewActivity : AppCompatActivity() {
 
     }
 
+    /**
+     * 菜单创建器，在Item要创建菜单的时候调用。
+     */
+    private val swipeMenuCreator = object : SwipeMenuCreator {
+        override fun onCreateMenu(swipeLeftMenu: SwipeMenu, swipeRightMenu: SwipeMenu, position: Int) {
+            val width = dip(70)
+
+            // 1. MATCH_PARENT 自适应高度，保持和Item一样高;
+            // 2. 指定具体的高，比如80;
+            // 3. WRAP_CONTENT，自身高度，不推荐;
+            val height = ViewGroup.LayoutParams.MATCH_PARENT
+
+            // 添加左侧的，如果不添加，则左侧不会出现菜单。
+            run {
+                val addItem = SwipeMenuItem(ctx).setBackgroundColor(0xff00ff00.toInt())
+                        .setImage(R.mipmap.ic_launcher)
+                        .setWidth(width)
+                        .setHeight(height)
+                swipeLeftMenu.addMenuItem(addItem) // 添加菜单到左侧。
+
+                val closeItem = SwipeMenuItem(ctx).setBackgroundColor(0xffff0000.toInt())
+                        .setWidth(width)
+                        .setHeight(height)
+                swipeLeftMenu.addMenuItem(closeItem) // 添加菜单到左侧。
+            }
+
+            // 添加右侧的，如果不添加，则右侧不会出现菜单。
+            run {
+                val deleteItem = SwipeMenuItem(ctx).setBackgroundColor(0xffff0000.toInt())
+                        .setImage(R.mipmap.ic_launcher)
+                        .setText("删除")
+                        .setTextColor(Color.WHITE)
+                        .setWidth(width)
+                        .setHeight(height)
+                swipeRightMenu.addMenuItem(deleteItem)// 添加菜单到右侧。
+
+                val addItem = SwipeMenuItem(ctx).setBackgroundColor(0xff00ff00.toInt())
+                        .setText("添加")
+                        .setTextColor(Color.WHITE)
+                        .setWidth(width)
+                        .setHeight(height)
+                swipeRightMenu.addMenuItem(addItem) // 添加菜单到右侧。
+            }
+        }
+    }
+
+    /**
+     * RecyclerView的Item的Menu点击监听。
+     */
+    private val mMenuItemClickListener = OnItemMenuClickListener { menuBridge, position ->
+        menuBridge.closeMenu()
+
+        val direction = menuBridge.direction // 左侧还是右侧菜单。
+        val menuPosition = menuBridge.position // 菜单在RecyclerView的Item中的Position。
+
+        if (direction == SwipeRecyclerView.RIGHT_DIRECTION) {
+            Toast.makeText(ctx, "list第$position; 右侧菜单第$menuPosition", Toast.LENGTH_SHORT)
+                    .show()
+        } else if (direction == SwipeRecyclerView.LEFT_DIRECTION) {
+            Toast.makeText(ctx, "list第$position; 左侧菜单第$menuPosition", Toast.LENGTH_SHORT)
+                    .show()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_swipe_recycler_view)
 
+        recyclerView.setSwipeMenuCreator(swipeMenuCreator)
+        recyclerView.setOnItemMenuClickListener(mMenuItemClickListener)
         recyclerView.run {
             layoutManager = LinearLayoutManager(ctx)
             adapter = MyAdapter()
