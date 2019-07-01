@@ -88,6 +88,8 @@ class SwipeRecyclerViewActivity : AppCompatActivity() {
             if (menuPosition == 0) {
                 // 删除item,
                 mAdapter.remove(position)
+            } else {
+                refreshLayout.autoRefresh()
             }
         } else if (direction == SwipeRecyclerView.LEFT_DIRECTION) {
             Toast.makeText(ctx, "list第$position; 左侧菜单第$menuPosition", Toast.LENGTH_SHORT)
