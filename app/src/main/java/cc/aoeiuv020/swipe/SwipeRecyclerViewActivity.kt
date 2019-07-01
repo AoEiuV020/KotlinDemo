@@ -85,11 +85,17 @@ class SwipeRecyclerViewActivity : AppCompatActivity() {
         if (direction == SwipeRecyclerView.RIGHT_DIRECTION) {
             Toast.makeText(ctx, "list第$position; 右侧菜单第$menuPosition", Toast.LENGTH_SHORT)
                     .show()
+            if (menuPosition == 0) {
+                // 删除item,
+                mAdapter.remove(position)
+            }
         } else if (direction == SwipeRecyclerView.LEFT_DIRECTION) {
             Toast.makeText(ctx, "list第$position; 左侧菜单第$menuPosition", Toast.LENGTH_SHORT)
                     .show()
         }
     }
+
+    private lateinit var mAdapter: MyAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -99,7 +105,9 @@ class SwipeRecyclerViewActivity : AppCompatActivity() {
         recyclerView.setOnItemMenuClickListener(mMenuItemClickListener)
         recyclerView.run {
             layoutManager = LinearLayoutManager(ctx)
-            adapter = MyAdapter()
+            adapter = MyAdapter().also {
+                mAdapter = it
+            }
         }
     }
 
@@ -128,6 +136,11 @@ class SwipeRecyclerViewActivity : AppCompatActivity() {
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
             val item = data[position]
             holder.tvNumber.text = item.number.toString()
+        }
+
+        fun remove(position: Int) {
+            data.removeAt(position)
+            notifyItemRemoved(position)
         }
     }
 }
