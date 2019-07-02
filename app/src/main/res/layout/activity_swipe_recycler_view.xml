@@ -13,18 +13,15 @@
         app:srlEnableAutoLoadMore="false"
         app:srlEnableLoadMore="false">
 
-        <com.scwang.smartrefresh.layout.header.ClassicsHeader
+        <cc.aoeiuv020.swipe.MyHeader
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:srlClassicsSpinnerStyle="Translate"
-            app:srlDrawableArrowSize="20dp"
-            app:srlDrawableMarginRight="20dp"
-            app:srlDrawableProgressSize="20dp"
             app:srlEnableLastTime="false"
             app:srlFinishDuration="500"
-            app:srlTextSizeTime="10dp"
-            app:srlTextSizeTitle="16sp"
-            app:srlTextTimeMarginTop="2dp" />
+            app:srlTextPulling="下拉刷新"
+            app:srlTextRefreshing="正在刷新"
+            app:srlTextRelease="松开刷新" />
 
         <com.yanzhenjie.recyclerview.SwipeRecyclerView
             android:id="@+id/recyclerView"
