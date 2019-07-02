@@ -10,8 +10,7 @@
         android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:srlEnableAutoLoadMore="false"
-        app:srlEnableLoadMore="false">
+        app:srlEnableAutoLoadMore="false">
 
         <cc.aoeiuv020.swipe.MyHeader
             android:layout_width="match_parent"

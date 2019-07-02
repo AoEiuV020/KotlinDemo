@@ -118,9 +118,18 @@ class SwipeRecyclerViewActivity : AppCompatActivity() {
         refreshLayout.setOnRefreshListener {
             refreshLayout.postDelayed({
                 repeat(4) {
-                    mAdapter.add(0, Item(88 - 1 - mAdapter.itemCount))
+                    mAdapter.add(0, Item(mAdapter.minValue() - 1))
                 }
                 it.finishRefresh()
+            }, TimeUnit.SECONDS.toMillis(1))
+        }
+
+        refreshLayout.setOnLoadMoreListener {
+            refreshLayout.postDelayed({
+                repeat(4) {
+                    mAdapter.add(mAdapter.itemCount, Item(mAdapter.maxValue() + 1))
+                }
+                it.finishLoadMore()
             }, TimeUnit.SECONDS.toMillis(1))
         }
     }
@@ -134,7 +143,7 @@ class SwipeRecyclerViewActivity : AppCompatActivity() {
     }
 
     class MyAdapter : RecyclerView.Adapter<MyViewHolder>() {
-        private var data: MutableList<Item> = MutableList(88) {
+        private var data: MutableList<Item> = MutableList(33) {
             Item(it)
         }
 
@@ -151,6 +160,14 @@ class SwipeRecyclerViewActivity : AppCompatActivity() {
             val item = data[position]
             holder.tvNumber.text = item.number.toString()
             holder.tvNumber.setBackgroundColor(Random.nextInt())
+        }
+
+        fun minValue(): Int {
+            return data.first().number
+        }
+
+        fun maxValue(): Int {
+            return data.last().number
         }
 
         fun remove(position: Int) {
