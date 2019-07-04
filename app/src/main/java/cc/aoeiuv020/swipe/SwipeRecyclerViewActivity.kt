@@ -160,6 +160,11 @@ class SwipeRecyclerViewActivity : AppCompatActivity() {
             val item = data[position]
             holder.tvNumber.text = item.number.toString()
             holder.tvNumber.setBackgroundColor(Random.nextInt())
+            holder.itemView.setOnClickListener {
+                val removeAt = data.removeAt(position)
+                data.add(0, removeAt)
+                notifyItemMoved(position, 0)
+            }
         }
 
         fun minValue(): Int {
