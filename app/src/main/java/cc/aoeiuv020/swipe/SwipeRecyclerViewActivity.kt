@@ -161,9 +161,10 @@ class SwipeRecyclerViewActivity : AppCompatActivity() {
             holder.tvNumber.text = item.number.toString()
             holder.tvNumber.setBackgroundColor(Random.nextInt())
             holder.itemView.setOnClickListener {
-                val removeAt = data.removeAt(position)
-                data.add(0, removeAt)
-                notifyItemMoved(position, 0)
+                val removeAt = data.removeAt(holder.adapterPosition)
+                data.add(0, Item(-removeAt.number))
+                notifyItemMoved(holder.adapterPosition, 0)
+                notifyItemChanged(0)
             }
         }
 
