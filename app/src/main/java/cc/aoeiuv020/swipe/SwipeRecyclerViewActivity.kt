@@ -1,5 +1,6 @@
 package cc.aoeiuv020.swipe
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
@@ -102,6 +103,7 @@ class SwipeRecyclerViewActivity : AppCompatActivity() {
 
     private lateinit var mAdapter: MyAdapter
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_swipe_recycler_view)
@@ -110,6 +112,7 @@ class SwipeRecyclerViewActivity : AppCompatActivity() {
         recyclerView.setOnItemMenuClickListener(mMenuItemClickListener)
         recyclerView.run {
             layoutManager = LinearLayoutManager(ctx)
+            addHeaderView(TextView(ctx).apply { text = "headerView" })
             adapter = MyAdapter().also {
                 mAdapter = it
             }
@@ -157,13 +160,15 @@ class SwipeRecyclerViewActivity : AppCompatActivity() {
         }
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+            val headerCount = holder.adapterPosition - position
             val item = data[position]
             holder.tvNumber.text = item.number.toString()
             holder.tvNumber.setBackgroundColor(Random.nextInt())
             holder.itemView.setOnClickListener {
-                val removeAt = data.removeAt(holder.adapterPosition)
+                val realPosition = holder.adapterPosition - headerCount
+                val removeAt = data.removeAt(realPosition)
                 data.add(0, Item(-removeAt.number))
-                notifyItemMoved(holder.adapterPosition, 0)
+                notifyItemMoved(realPosition, 0)
                 notifyItemChanged(0)
             }
         }
