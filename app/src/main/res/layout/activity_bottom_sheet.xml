@@ -9,17 +9,10 @@
     tools:ignore="HardcodedText,ContentDescription,LabelFor,TextFields">
 
     <Button
-        android:id="@+id/btnHello"
+        android:id="@+id/btnBottomSheetDialog"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello" />
-
-    <Button
-        android:id="@+id/btnBottomSheet"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="BottomSheet" />
+        android:text="BottomSheetDialog" />
 
 </LinearLayout>

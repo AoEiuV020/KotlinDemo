@@ -14,5 +14,9 @@ class MainActivity : AppCompatActivity() {
         btnHello.setOnClickListener {
             toast("Hello")
         }
+
+        btnBottomSheet.setOnClickListener {
+            BottomSheetActivity.start(this)
+        }
     }
 }
