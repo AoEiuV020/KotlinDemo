@@ -197,19 +197,15 @@ public class AudioRecorder {
                             .order(ByteOrder.LITTLE_ENDIAN)
                             .asShortBuffer();
 
+                    int sum = 0;
                     for (int i = 0; i < shorts.limit(); i++) {
                         shorts.put((short) Math.min((shorts.get(i) * 2), Short.MAX_VALUE));
-                    }
-
-                    //get the volumn  1--10
-                    int sum = 0;
-                    for (int i = 0; i < readsize; i++) {
-                        sum += Math.abs(audiodata[i]);
+                        sum += Math.abs(shorts.get(i));
                     }
 
                     if (readsize > 0) {
-                        int raw = sum / readsize;
-                        lastVolumn = raw > 32 ? raw - 32 : 0;
+                        int raw = sum / shorts.limit();
+                        lastVolumn = (int) (Math.log10(1 + raw) * 10);
                         Log.i(TAG, "writeDataTOFile: volumn -- " + raw + " / lastvolumn -- " + lastVolumn);
                     }
 
