@@ -21,7 +21,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         ActivityCompat.requestPermissions(this, arrayOf(
-                Manifest.permission.RECORD_AUDIO
+                Manifest.permission.RECORD_AUDIO,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
         ), 1)
 
         btnHello.setOnClickListener {
@@ -30,6 +32,10 @@ class MainActivity : AppCompatActivity() {
 
         btnAudioRecord.setOnClickListener {
             AudioRecordActivity.start(this)
+        }
+
+        btnAmrAudioRecord.setOnClickListener {
+            AmrAudioRecordActivity.start(this)
         }
     }
 }

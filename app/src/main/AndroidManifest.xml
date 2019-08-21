@@ -4,6 +4,8 @@
     package="cc.aoeiuv020">
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <application
         android:name=".App"
         android:allowBackup="false"
@@ -20,6 +22,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".AudioRecordActivity" />
+        <activity android:name=".AmrAudioRecordActivity" />
     </application>
 
 </manifest>
