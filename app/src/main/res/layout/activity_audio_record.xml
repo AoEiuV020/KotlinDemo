@@ -9,17 +9,17 @@
     tools:ignore="HardcodedText,ContentDescription,LabelFor,TextFields">
 
     <Button
-        android:id="@+id/btnHello"
+        android:id="@+id/btnStart"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello" />
+        android:text="Start" />
 
     <Button
-        android:id="@+id/btnAudioRecord"
+        android:id="@+id/btnStop"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="AudioRecord" />
+        android:text="Stop" />
 
 </LinearLayout>
