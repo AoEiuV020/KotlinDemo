@@ -19,7 +19,7 @@ import java.util.TimerTask;
 public class AudioRecorder {
     private static final String TAG = "AudioRecorder";
     protected String pcmFileName;
-    private int audioInput = MediaRecorder.AudioSource.MIC;
+    private int audioInput = MediaRecorder.AudioSource.VOICE_COMMUNICATION;
     private int audioSampleRate = 8000;
     private int audioChannel = AudioFormat.CHANNEL_IN_MONO;
     private int audioEncode = AudioFormat.ENCODING_PCM_16BIT;
