@@ -199,13 +199,28 @@ public class AudioRecorder {
 
                     int sum = 0;
                     for (int i = 0; i < shorts.limit(); i++) {
-                        shorts.put((short) Math.min((shorts.get(i) * 2), Short.MAX_VALUE));
-                        sum += Math.abs(shorts.get(i));
+                        final short s = shorts.get(i);
+                        int as = Math.abs(s);
+                        double ds = 1.0 * as / 0x8000;
+                        double qs = ds * 4;
+                        if (qs > 0.75) {
+                            // 超过0.75的部分收缩到0.75-1的范围，
+                            qs = (qs - 0.75) / 13 + 0.75;
+                        }
+                        int an = (int) (qs * 0x8000);
+                        int n;
+                        if (s >=0) {
+                            n = an;
+                        } else {
+                            n = -an;
+                        }
+                        shorts.put((short) n);
+                        sum += an;
                     }
 
                     if (readsize > 0) {
                         int raw = sum / shorts.limit();
-                        lastVolumn = (int) (Math.log10(1 + raw) * 10);
+                        lastVolumn = raw;
                         Log.i(TAG, "writeDataTOFile: volumn -- " + raw + " / lastvolumn -- " + lastVolumn);
                     }
 
