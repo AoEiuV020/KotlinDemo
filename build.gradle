@@ -177,9 +177,9 @@ applicationModules.forEach { name ->
 
         dependencies {
             // support-v4,
-            implementation 'androidx.legacy:legacy-support-v4:' + androidx_version
+            implementation 'androidx.legacy:legacy-support-v4:' + legacy_version
             // appcompat-v7,
-            implementation 'androidx.appcompat:appcompat:' + androidx_version
+            implementation 'androidx.appcompat:appcompat:' + appcompat_version
             // 单元测试junit,
             testImplementation 'junit:junit:' + junit_version
             // 单元测试mock，
