@@ -46,8 +46,13 @@ buildscript {
         classpath 'org.jetbrains.dokka:dokka-android-gradle-plugin:' + dokka_version
         // 使用bintray-release上传bintray也就是jcenter，
         classpath 'com.novoda:bintray-release:' + bintray_version
+        // 检查依赖版本更新，
+        //noinspection GradleDynamicVersion
+        classpath "com.github.ben-manes:gradle-versions-plugin:+"
     }
 }
+
+apply plugin: "com.github.ben-manes.versions"
 
 allprojects {
     // 上传仓库的组名优先从publish.properties中拿，
