@@ -1,18 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
+    android:background="@color/white"
+    android:divider="@mipmap/ic_launcher"
     android:orientation="vertical"
-    tools:context="cc.aoeiuv020.MainActivity"
-    tools:ignore="HardcodedText,ContentDescription,LabelFor,TextFields">
+    android:showDividers="middle">
 
-    <Button
-        android:id="@+id/btnHello"
-        style="@style/Widget.AppCompat.Button.Colored"
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello" />
+        android:background="#000"
+        android:text="@string/example_padding_test"
+        android:textColor="#fff" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#000"
+        android:includeFontPadding="false"
+        android:singleLine="true"
+        android:text="@string/example_padding_test"
+        android:textColor="#fff" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#000"
+        android:includeFontPadding="false"
+        android:singleLine="true"
+        android:text="@string/example_padding_test"
+        android:textColor="#fff" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#000"
+        android:includeFontPadding="false"
+        android:lines="1"
+        android:text="@string/example_padding_test"
+        android:textColor="#fff" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#000"
+        android:ellipsize="end"
+        android:includeFontPadding="false"
+        android:lines="1"
+        android:maxEms="3"
+        android:text="@string/example_padding_test"
+        android:textColor="#fff" />
+
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:background="#000"
+        android:includeFontPadding="false"
+        android:maxLines="1"
+        android:text="@string/example_padding_test"
+        android:textColor="#fff" />
+
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:background="#000"
+        android:ellipsize="end"
+        android:includeFontPadding="false"
+        android:maxEms="3"
+        android:maxLines="1"
+        android:text="@string/example_padding_test"
+        android:textColor="#fff" />
 </LinearLayout>
