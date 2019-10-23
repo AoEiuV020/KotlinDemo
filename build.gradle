@@ -155,7 +155,7 @@ applicationModules.forEach { name ->
                 if (variant.buildType.name == 'release') {
                     variant.assembleProvider.get().doLast {
                         copy {
-                            from variant.packageApplicationProvider.get().outputs.files
+                            from variant.packageApplicationProvider.get().outputs.files[1]
                             into "${rootDir}/release"
                         }
                         if (variant.mappingFile != null) {
