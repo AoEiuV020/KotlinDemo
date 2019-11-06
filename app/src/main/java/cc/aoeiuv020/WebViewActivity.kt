@@ -25,6 +25,8 @@ class WebViewActivity : AppCompatActivity() {
         setContentView(R.layout.activity_web_view)
         supportActionBar?.hide()
 
+        AndroidBug5497Workaround.assistActivity(this)
+
         webView.webViewClient = WebViewClient()
         webView.loadUrl("https://www.baidu.com/s?wd=1")
     }
