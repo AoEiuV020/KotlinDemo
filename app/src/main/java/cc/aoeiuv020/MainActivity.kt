@@ -26,5 +26,9 @@ class MainActivity : AppCompatActivity() {
         btnKeyboardHeight.setOnClickListener {
             KeyboardHeightActivity.start(this)
         }
+
+        btnFullscreen.setOnClickListener {
+            WebViewActivity.start(this)
+        }
     }
 }
