@@ -18,7 +18,6 @@ class WebViewActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_web_view)
-        AndroidBug5497Workaround.assistActivity(this)
 
         webView.webViewClient = WebViewClient()
         webView.loadUrl("https://www.baidu.com/s?wd=1")
