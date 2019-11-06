@@ -46,8 +46,13 @@ buildscript {
         classpath 'org.jetbrains.dokka:dokka-android-gradle-plugin:' + dokka_version
         // 使用bintray-release上传bintray也就是jcenter，
         classpath 'com.novoda:bintray-release:' + bintray_version
+        // 检查依赖版本更新，
+        //noinspection GradleDynamicVersion
+        classpath "com.github.ben-manes:gradle-versions-plugin:+"
     }
 }
+
+apply plugin: "com.github.ben-manes.versions"
 
 allprojects {
     // 上传仓库的组名优先从publish.properties中拿，
@@ -140,13 +145,20 @@ applicationModules.forEach { name ->
                 }
             }
 
+            // 高版本as中installRelease不会依赖assembleRelease也就不会复制apk,
+            afterEvaluate {
+                // 没配置签名的话，就没有installRelease，
+                if (tasks.findByName('installRelease')) {
+                    installRelease.dependsOn 'assembleRelease'
+                }
+            }
             // release打包后复制出安装包和混淆映射mapping文件到release目录下，
             // 以便发布上传，
             applicationVariants.all { variant ->
                 if (variant.buildType.name == 'release') {
                     variant.assembleProvider.get().doLast {
                         copy {
-                            from variant.packageApplicationProvider.get().outputs.files
+                            from variant.packageApplicationProvider.get().outputs.files[1]
                             into "${rootDir}/release"
                         }
                         if (variant.mappingFile != null) {
@@ -172,9 +184,9 @@ applicationModules.forEach { name ->
 
         dependencies {
             // support-v4,
-            implementation 'androidx.legacy:legacy-support-v4:' + androidx_version
+            implementation 'androidx.legacy:legacy-support-v4:' + legacy_version
             // appcompat-v7,
-            implementation 'androidx.appcompat:appcompat:' + androidx_version
+            implementation 'androidx.appcompat:appcompat:' + appcompat_version
             // 单元测试junit,
             testImplementation 'junit:junit:' + junit_version
             // 单元测试mock，
