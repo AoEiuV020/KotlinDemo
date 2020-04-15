@@ -3,11 +3,9 @@ package cc.aoeiuv020
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.webkit.WebChromeClient
-import android.webkit.WebViewClient
+import android.webkit.WebView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import kotlinx.android.synthetic.main.activity_web.*
 import org.jetbrains.anko.startActivity
 
 class WebViewActivity : AppCompatActivity() {
@@ -20,15 +18,10 @@ class WebViewActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_web)
+        setContentView(WebView(this))
 
         ActivityCompat.requestPermissions(this, packageManager.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS).requestedPermissions, 1)
 
         setTitle(R.string.title_web_view)
-        webView.apply {
-            webViewClient = WebViewClient()
-            webChromeClient = WebChromeClient()
-        }
-        webView.loadUrl("https://www.baidu.com")
     }
 }
