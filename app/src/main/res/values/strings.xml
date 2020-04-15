@@ -1,4 +1,5 @@
 <resources>
     <!-- app_name in build.gradle -->
     <!--<string name="app_name">Demo</string>-->
+    <string name="title_web_view">浏览器</string>
 </resources>

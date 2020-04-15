@@ -24,6 +24,7 @@ class WebViewActivity : AppCompatActivity() {
 
         ActivityCompat.requestPermissions(this, packageManager.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS).requestedPermissions, 1)
 
+        setTitle(R.string.title_web_view)
         webView.apply {
             webViewClient = WebViewClient()
             webChromeClient = WebChromeClient()
