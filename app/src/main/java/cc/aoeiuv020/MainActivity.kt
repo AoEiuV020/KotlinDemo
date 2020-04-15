@@ -18,6 +18,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        App.initLanguage(this)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -29,6 +30,10 @@ class MainActivity : AppCompatActivity() {
 
         btnWebView.setOnClickListener {
             WebViewActivity.start(this)
+        }
+        btnWebView.setOnLongClickListener {
+            toast(R.string.title_web_view)
+            true
         }
     }
 }
