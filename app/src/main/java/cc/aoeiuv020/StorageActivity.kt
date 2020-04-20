@@ -5,30 +5,35 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_storage.*
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.toast
+import java.io.File
+import java.util.*
 
-class MainActivity : AppCompatActivity() {
+class StorageActivity : AppCompatActivity() {
     companion object {
         @Suppress("unused")
         fun start(ctx: Context) {
-            ctx.startActivity<MainActivity>()
+            ctx.startActivity<StorageActivity>()
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_storage)
 
         ActivityCompat.requestPermissions(this, packageManager.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS).requestedPermissions, 1)
 
-        btnHello.setOnClickListener {
-            toast("Hello")
+        btnRead.setOnClickListener {
+            toast(File(etPath.text.toString()).readText())
         }
 
-        btnStorage.setOnClickListener {
-            StorageActivity.start(this)
+        btnWrite.setOnClickListener {
+            val f = File(etPath.text.toString())
+            f.parentFile?.takeIf { !it.exists() }
+                    ?.mkdirs()
+            f.writeText("android q ${Date()}")
         }
     }
 }
