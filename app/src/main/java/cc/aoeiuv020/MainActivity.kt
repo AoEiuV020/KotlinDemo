@@ -40,5 +40,9 @@ class MainActivity : AppCompatActivity() {
         } else {
             btnDocument.visibility = View.GONE
         }
+
+        btnImage.setOnClickListener {
+            ImageActivity.start(this)
+        }
     }
 }

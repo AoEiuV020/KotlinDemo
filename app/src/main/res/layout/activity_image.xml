@@ -6,34 +6,38 @@
     android:gravity="center"
     android:orientation="vertical"
     tools:context="cc.aoeiuv020.MainActivity"
-    tools:ignore="HardcodedText,ContentDescription,LabelFor,TextFields">
+    tools:ignore="HardcodedText,ContentDescription,LabelFor,TextFields, Autofill">
+
+    <ImageView
+        android:id="@+id/ivImage"
+        android:layout_width="100dp"
+        android:layout_height="100dp" />
+
+    <EditText
+        android:id="@+id/etUrl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="http://img3.imgtn.bdimg.com/it/u=3147328226,3569316785&amp;fm=26&amp;gp=0.jpg" />
 
     <Button
-        android:id="@+id/btnHello"
+        android:id="@+id/btnDownload"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello" />
+        android:text="Download" />
 
     <Button
-        android:id="@+id/btnStorage"
+        android:id="@+id/btnSave"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Storage" />
+        android:text="Save" />
 
     <Button
-        android:id="@+id/btnDocument"
+        android:id="@+id/btnLoad"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Document" />
-
-    <Button
-        android:id="@+id/btnImage"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Image" />
+        android:text="Load" />
 
 </LinearLayout>
