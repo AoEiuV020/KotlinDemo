@@ -1,5 +1,6 @@
 package cc.aoeiuv020
 
+import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Context
 import android.content.pm.PackageManager
@@ -10,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import cc.aoeiuv020.anull.notNull
 import kotlinx.android.synthetic.main.activity_image.*
+import org.jetbrains.anko.alert
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.uiThread
@@ -51,6 +53,38 @@ class ImageActivity : AppCompatActivity() {
                 openFileInput(imageName).use { input ->
                     input.copyTo(output)
                 }
+            }
+        }
+
+        btnLoad.setOnClickListener {
+            val projection = arrayOf(
+                    MediaStore.Images.Media._ID,
+                    MediaStore.Images.Media.DISPLAY_NAME)
+            val selection = ""
+            val selectionArgs = arrayOf<String>()
+            val sortOrder = ""
+
+            applicationContext.contentResolver.query(
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    projection,
+                    selection,
+                    selectionArgs,
+                    sortOrder
+            )?.use { cursor ->
+                val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID)
+                val nameColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME)
+                val idList = mutableListOf<Long>()
+                val nameList = mutableListOf<String>()
+                while (cursor.moveToNext()) {
+                    idList.add(cursor.getLong(idColumn))
+                    nameList.add(cursor.getString(nameColumn))
+                }
+                alert {
+                    items(nameList) { _, index ->
+                        val uri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, idList[index])
+                        ivImage.setImageURI(uri)
+                    }
+                }.show()
             }
         }
     }
