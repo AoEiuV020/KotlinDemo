@@ -2,7 +2,9 @@ package cc.aoeiuv020
 
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import kotlinx.android.synthetic.main.activity_main.*
@@ -29,6 +31,14 @@ class MainActivity : AppCompatActivity() {
 
         btnStorage.setOnClickListener {
             StorageActivity.start(this)
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            btnDocument.setOnClickListener {
+                DocumentActivity.start(this)
+            }
+        } else {
+            btnDocument.visibility = View.GONE
         }
     }
 }
