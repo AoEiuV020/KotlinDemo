@@ -10,6 +10,7 @@ import android.widget.BaseAdapter
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_list_view.*
 import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.dip
 import org.jetbrains.anko.info
 import org.jetbrains.anko.startActivity
 
@@ -20,8 +21,8 @@ class ListViewActivity : AppCompatActivity(), AnkoLogger {
         }
     }
 
-    private val count = 10
-    private val defaultSize = 88
+    private val count = 1
+    private val defaultSize = 3
     private val data: MutableList<Item> = MutableList(defaultSize) {
         Item(it.toString())
     }
@@ -54,7 +55,7 @@ class ListViewActivity : AppCompatActivity(), AnkoLogger {
             info {
                 "first: ${parent.firstVisiblePosition}, last: ${parent.lastVisiblePosition}, selected: ${parent.selectedItemPosition}"
             }
-            addItem()
+            addLastItem()
         }
     }
 
@@ -68,9 +69,20 @@ class ListViewActivity : AppCompatActivity(), AnkoLogger {
         listView.setSelectionFromTop(count + oldPosition, oldTop)
     }
 
+    private fun addLastItem() {
+        repeat(count) {
+            data.add(Item((data.last().text.toInt() + 1).toString()))
+        }
+        (listView.adapter as MyAdapter).notifyDataSetChanged()
+        // 负数就是向下，传个够大的数，又不能是Int.MIN_VALUE，
+        listView.setSelectionFromTop(data.lastIndex, -100000000)
+    }
+
     inner class MyAdapter : BaseAdapter() {
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             return TextView(parent.context).apply {
+                height = (1 * dip(1000))
+                setBackgroundColor((((((Math.random() * 0xffffff).toLong()) + 0xff000000)).toInt()))
                 text = getItem(position).text
             }
         }
