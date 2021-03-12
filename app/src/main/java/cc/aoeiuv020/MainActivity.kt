@@ -21,7 +21,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        ActivityCompat.requestPermissions(this, packageManager.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS).requestedPermissions, 1)
+        packageManager.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS).requestedPermissions?.takeIf {
+            it.isNotEmpty()
+        }?.let {        
+            ActivityCompat.requestPermissions(this, it, 1)
+        }
 
         btnHello.setOnClickListener {
             toast("Hello")
