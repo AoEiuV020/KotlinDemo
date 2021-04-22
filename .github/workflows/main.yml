@@ -50,10 +50,10 @@ jobs:
         echo storePassword=${{ secrets.KEY_STORE_PASSWORD }} >> signing.properties
         echo keyAlias=${{ secrets.ALIAS }} >> signing.properties
         echo keyPassword=${{ secrets.KEY_PASSWORD }} >> signing.properties
-        ./gradlew signingReport
     - name: Build with Gradle
       run: |
         ./gradlew assembleRelease
+        find ./app/build/outputs/
         mv ./app/build/outputs/apk/release/*.apk $BUILD_NAME_WITH_VERSION-android.apk
     - name: Upload APK
       uses: actions/upload-artifact@master
