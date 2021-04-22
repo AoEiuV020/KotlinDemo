@@ -43,7 +43,7 @@ jobs:
         echo keyPassword=${{ secrets.KEY_PASSWORD }} >> signing.properties
         chmod +x gradlew
         ./gradlew assembleRelease
-        mv ./app/build/outputs/apk/release/*.apk $BUILD_NAME_WITH_VERSION.apk
+        mv ./app/build/outputs/apk/release/*.apk $BUILD_NAME_WITH_VERSION-android.apk
     - name: Upload APK
       uses: actions/upload-artifact@master
       with:
