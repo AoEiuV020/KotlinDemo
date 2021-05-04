@@ -6,13 +6,14 @@ on:
   push:
     tags:
       - '*'
+  push:
     paths-ignore:
       - '.github/workflows/*'
-      - '!.github/workflows/*main.yml'
+      - '!.github/workflows/main.yml'
   pull_request:
     paths-ignore:
       - '.github/workflows/*'
-      - '!.github/workflows/*main.yml'
+      - '!.github/workflows/main.yml'
 
 jobs:
   build:
