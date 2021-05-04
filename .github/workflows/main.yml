@@ -62,6 +62,7 @@ jobs:
         ./gradlew assembleRelease
         find ./app/build/outputs/
         mv ./app/build/outputs/apk/release/*.apk $BUILD_NAME_WITH_VERSION-android.apk
+        mv ./app/build/outputs/mapping/r8/release/mapping.txt $BUILD_NAME_WITH_VERSION-android-mapping.txt
     - name: Upload APK
       uses: actions/upload-artifact@master
       with:
@@ -87,6 +88,15 @@ jobs:
         asset_path: ${{ env.BUILD_NAME_WITH_VERSION }}-android.apk
         asset_name: ${{ env.BUILD_NAME_WITH_VERSION }}-android.apk
         asset_content_type: application/zip
+    - name: Upload android mapping
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ${{ env.BUILD_NAME_WITH_VERSION }}-android-mapping.txt
+        asset_name: ${{ env.BUILD_NAME_WITH_VERSION }}-android-mapping.txt
+        asset_content_type: text/plain
     - name: public release
       uses: eregon/publish-release@v1
       env:
