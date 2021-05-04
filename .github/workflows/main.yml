@@ -6,7 +6,8 @@ on:
   push:
     tags:
       - '*'
-  push:
+    branches:
+      - '*'
     paths-ignore:
       - '.github/workflows/*'
       - '!.github/workflows/main.yml'
