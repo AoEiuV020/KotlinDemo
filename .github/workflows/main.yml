@@ -96,8 +96,9 @@ jobs:
         asset_name: ${{ env.BUILD_NAME_WITH_VERSION }}-android-mapping.txt
         asset_content_type: text/plain
     - name: public release
-      uses: eregon/publish-release@v1
+      uses: AoEiuV020/publish-release@v2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         release_id: ${{ steps.create_release.outputs.id }}
+        prerelease: ${{ env.PRE_RELEASE != 'true' }}
