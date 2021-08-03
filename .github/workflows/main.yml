@@ -59,8 +59,8 @@ jobs:
     - name: pick release file
       run: |
         find ./app/build/outputs/
-        mv ./app/build/outputs/apk/release/*.apk $BUILD_NAME_WITH_VERSION-android.apk
-        mv ./app/build/outputs/mapping/r8/release/mapping.txt $BUILD_NAME_WITH_VERSION-android-mapping.txt
+        find ./app/build/outputs -name '*.apk' -exec mv {} $BUILD_NAME_WITH_VERSION-android.apk \;
+        find ./app/build/outputs -name 'mapping.txt' -exec mv {} $BUILD_NAME_WITH_VERSION-android-mapping.txt \;
     - name: Upload APK
       uses: actions/upload-artifact@master
       with:
