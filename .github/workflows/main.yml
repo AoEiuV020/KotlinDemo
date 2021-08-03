@@ -27,8 +27,15 @@ jobs:
           BUILD_NAME="${GITHUB_REPOSITORY#*/}"
           if [[ ${GITHUB_REF} == refs/tags* ]]
           then
+              echo CREATE_RELEASE="true" >> .custom_env
               BUILD_VERSION=${GITHUB_REF#refs/tags/}
+          elif [[ ${GITHUB_REF} == refs/pull* ]]
+          then
+              num=${GITHUB_REF#refs/pull/}
+              num=${num%/merge}
+              BUILD_VERSION=pr-${num}-"$(date +'%Y%m%d%H%M%S')"
           else
+              echo CREATE_RELEASE="true" >> .custom_env
               echo PRE_RELEASE="true" >> .custom_env
               BUILD_VERSION="$(date +'%Y%m%d%H%M%S')"
           fi
@@ -67,6 +74,7 @@ jobs:
         name: android-build
         path: ${{ env.BUILD_NAME_WITH_VERSION }}-android.apk
     - name: create release
+      if: ${{ env.CREATE_RELEASE == 'true' }}
       id: create_release
       uses: actions/create-release@v1
       env:
@@ -78,6 +86,7 @@ jobs:
         draft: true
         prerelease: ${{ env.PRE_RELEASE == 'true' }}
     - name: Upload Release Asset android
+      if: ${{ env.CREATE_RELEASE == 'true' }}
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -87,6 +96,7 @@ jobs:
         asset_name: ${{ env.BUILD_NAME_WITH_VERSION }}-android.apk
         asset_content_type: application/zip
     - name: Upload android mapping
+      if: ${{ env.CREATE_RELEASE == 'true' }}
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -96,6 +106,7 @@ jobs:
         asset_name: ${{ env.BUILD_NAME_WITH_VERSION }}-android-mapping.txt
         asset_content_type: text/plain
     - name: public release
+      if: ${{ env.CREATE_RELEASE == 'true' }}
       uses: eregon/publish-release@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
