@@ -9,10 +9,12 @@ on:
     branches:
       - '*'
     paths-ignore:
+      - '**/README.md'
       - '.github/workflows/*'
       - '!.github/workflows/main.yml'
   pull_request:
     paths-ignore:
+      - '**/README.md'
       - '.github/workflows/*'
       - '!.github/workflows/main.yml'
 
