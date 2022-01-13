@@ -105,8 +105,8 @@ applicationModules.forEach { name ->
             }
             buildTypes {
                 release {
-                    // 禁用混淆，
-                    minifyEnabled false
+                    // 启用混淆，
+                    minifyEnabled true
                     proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
                 }
             }
