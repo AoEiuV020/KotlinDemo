@@ -2,18 +2,19 @@ package cc.aoeiuv020
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import kotlinx.android.synthetic.main.activity_main.*
-import org.jetbrains.anko.startActivity
-import org.jetbrains.anko.toast
 
 class MainActivity : AppCompatActivity() {
     companion object {
         @Suppress("unused")
         fun start(ctx: Context) {
-            ctx.startActivity<MainActivity>()
+            ctx.startActivity(Intent(ctx, MainActivity::class.java))
         }
     }
 
@@ -21,14 +22,18 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        btnHello.setOnClickListener {
-            toast("Hello")
+        packageManager.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS).requestedPermissions?.takeIf {
+            it.isNotEmpty()
+        }?.let {
+            ActivityCompat.requestPermissions(this, it, 1)
         }
 
-        btnOldCamera.setOnClickListener {
+        findViewById<View>(R.id.btnHello).setOnClickListener {
+            Toast.makeText(this, "Hello", Toast.LENGTH_SHORT).show()
+        }
+
+        findViewById<View>(R.id.btnOldCamera).setOnClickListener {
             OldCameraActivity.start(this)
         }
-
-        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), 1)
     }
 }

@@ -3,27 +3,30 @@
 package cc.aoeiuv020
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.BitmapFactory
 import android.graphics.SurfaceTexture
 import android.hardware.Camera
 import android.os.Bundle
+import android.util.Log
 import android.view.Surface
 import android.view.TextureView
 import android.view.View
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_old_camera.*
-import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.info
-import org.jetbrains.anko.startActivity
+import cc.aoeiuv020.anull.notNull
 import kotlin.properties.Delegates
 
 
-class OldCameraActivity : AppCompatActivity(), AnkoLogger {
+class OldCameraActivity : AppCompatActivity() {
     companion object {
+        private const val TAG = "OldCameraActivity"
         fun start(ctx: Context) {
-            ctx.startActivity<OldCameraActivity>()
+            ctx.startActivity(Intent(ctx, OldCameraActivity::class.java))
         }
     }
+    private val ivPreview by lazy { findViewById<ImageView>(R.id.ivPreview) }
+    private val textureView by lazy { findViewById<TextureView>(R.id.textureView) }
 
     private var mCamera: Camera? = null
     private var mCameraId: Int = 0
@@ -59,6 +62,7 @@ class OldCameraActivity : AppCompatActivity(), AnkoLogger {
             switchCamera()
         }
 
+        val btnTakePhoto = findViewById<View>(R.id.btnTakePhoto)
         btnTakePhoto.setOnClickListener {
             val camera = mCamera ?: return@setOnClickListener
             camera.takePicture(null, null, { data: ByteArray, _: Camera ->
@@ -98,16 +102,14 @@ class OldCameraActivity : AppCompatActivity(), AnkoLogger {
 
     private fun initCamera(camera: Camera) {
         mCamera = camera
-        val surface: SurfaceTexture = textureView.surfaceTexture
+        val surface: SurfaceTexture = textureView.surfaceTexture.notNull()
         camera.setPreviewTexture(surface)
         val cameraInfo = Camera.CameraInfo()
         Camera.getCameraInfo(0, cameraInfo)
         camera.setDisplayOrientation(getCameraDisplayOrientation(cameraInfo))
         camera.parameters = camera.parameters.apply {
             val previewSize = CameraUtils.getOptimalPreviewSize(supportedPreviewSizes, mWidth, mHeight)
-            info {
-                "previewSize <${previewSize.width}, ${previewSize.height}>"
-            }
+            Log.i(TAG, "previewSize <${previewSize.width}, ${previewSize.height}>")
             setPreviewSize(previewSize.width, previewSize.height)
             setPictureSize(previewSize.width, previewSize.height)
         }
