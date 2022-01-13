@@ -17,6 +17,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".OldCameraActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:exported="true" />
         <activity
             android:name=".MainActivity"

@@ -106,14 +106,56 @@ class OldCameraActivity : AppCompatActivity() {
         camera.setPreviewTexture(surface)
         val cameraInfo = Camera.CameraInfo()
         Camera.getCameraInfo(0, cameraInfo)
-        camera.setDisplayOrientation(getCameraDisplayOrientation(cameraInfo))
+        val rotation = getCameraDisplayOrientation(cameraInfo);
+        camera.setDisplayOrientation(rotation)
+        Log.i(TAG, "rotation <${rotation}>")
         camera.parameters = camera.parameters.apply {
-            val previewSize = CameraUtils.getOptimalPreviewSize(supportedPreviewSizes, mWidth, mHeight)
+            val previewSize =
+                CameraUtils.getOptimalPreviewSize(supportedPreviewSizes, mWidth, mHeight)
             Log.i(TAG, "previewSize <${previewSize.width}, ${previewSize.height}>")
             setPreviewSize(previewSize.width, previewSize.height)
             setPictureSize(previewSize.width, previewSize.height)
+            calcScale(textureView, rotation % 180 == 90, previewSize)
         }
         camera.startPreview()
+    }
+
+    private fun calcScale(view: View, isPortrait: Boolean, previewSize: Camera.Size) {
+        val width = mWidth
+        val height = mHeight
+        val ratioSurface: Float =
+            if (width > height) width.toFloat() / height else height.toFloat() / width
+        val ratioPreview: Float = previewSize.width.toFloat() / previewSize.height
+
+        var scaledHeight = 0
+        var scaledWidth = 0
+        var scaleX = 1f
+        var scaleY = 1f
+
+        if (isPortrait && ratioPreview > ratioSurface) {
+            scaledWidth = width
+            scaledHeight = (previewSize.width.toFloat() / previewSize.height * width).toInt()
+            scaleX = 1f
+            scaleY = scaledHeight.toFloat() / height
+        } else if (isPortrait && ratioPreview < ratioSurface) {
+            scaledWidth = (height / (previewSize.width.toFloat() / previewSize.height)).toInt()
+            scaledHeight = height
+            scaleX = scaledWidth.toFloat() / width
+            scaleY = 1f
+        } else if (!isPortrait && ratioPreview < ratioSurface) {
+            scaledWidth = width
+            scaledHeight = (width / (previewSize.width.toFloat() / previewSize.height)).toInt()
+            scaleX = 1f
+            scaleY = scaledHeight.toFloat() / height
+        } else if (!isPortrait && ratioPreview > ratioSurface) {
+            scaledWidth = (previewSize.width.toFloat() / previewSize.height * width).toInt()
+            scaledHeight = height
+            scaleX = scaledWidth.toFloat() / width
+            scaleY = 1f
+        }
+        Log.i(TAG, "scale <${scaleX},${scaleY}>")
+        view.scaleX = scaleX
+        view.scaleY = scaleY
     }
 
     private fun releaseCamera() {
