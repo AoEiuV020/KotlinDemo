@@ -21,9 +21,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        packageManager.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS).requestedPermissions?.takeIf {
+        packageManager.getPackageInfo(
+            packageName,
+            PackageManager.GET_PERMISSIONS
+        ).requestedPermissions?.takeIf {
             it.isNotEmpty()
-        }?.let {        
+        }?.let {
             ActivityCompat.requestPermissions(this, it, 1)
         }
 
@@ -33,6 +36,10 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<View>(R.id.btnNotification).setOnClickListener {
             NotificationActivity.start(this)
+        }
+
+        findViewById<View>(R.id.btnFloatNotification).setOnClickListener {
+            FloatNotificationActivity.start(this)
         }
     }
 }
