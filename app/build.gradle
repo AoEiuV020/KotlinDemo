@@ -1,11 +1,11 @@
 android {
     defaultConfig {
-        applicationId "cc.aoeiuv020.demo"
-        applicationIdSuffix ".notification"
-        resValue("string", "app_name", "NotificationDemo")
+        applicationId "cc.aoeiuv020"
+        applicationIdSuffix ".demo"
+        resValue("string", "app_name", "Demo")
     }
 }
 
 dependencies {
-    implementation 'com.android.support.constraint:constraint-layout:' + constraint_layout_version
+    implementation 'androidx.constraintlayout:constraintlayout:' + constraint_layout_version
 }
