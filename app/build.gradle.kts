@@ -5,14 +5,14 @@ plugins {
 
 android {
     namespace = "com.aoeiuv020.kotlindemo"
-    compileSdk = 34
+    compileSdk = AndroidVersions.compileSdk
 
     defaultConfig {
         applicationId = "com.aoeiuv020.kotlindemo"
-        minSdk = 24
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        minSdk = AndroidVersions.minSdk
+        targetSdk = AndroidVersions.targetSdk
+        versionCode = AndroidVersions.versionCode
+        versionName = AndroidVersions.versionName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -30,11 +30,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JvmVersions.javaVersion
+        targetCompatibility = JvmVersions.javaVersion
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = JvmVersions.jvmTarget
     }
     buildFeatures {
         compose = true
