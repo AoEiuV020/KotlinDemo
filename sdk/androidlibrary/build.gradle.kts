@@ -33,7 +33,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":sdk:javalibrary"))
+    api(project(":sdk:javalibrary"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

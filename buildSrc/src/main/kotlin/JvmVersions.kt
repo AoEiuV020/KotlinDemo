@@ -2,7 +2,7 @@ import org.gradle.api.JavaVersion
 import org.gradle.jvm.toolchain.JavaLanguageVersion
 
 object JvmVersions {
-    val javaVersion = JavaVersion.VERSION_1_8
-    const val jvmTarget = "1.8"
-    const val jvmIntTarget = 8
+    val javaVersion = JavaVersion.VERSION_17
+    const val jvmTarget = "17"
+    const val jvmIntTarget = 17
 }
