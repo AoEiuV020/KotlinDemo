@@ -7,3 +7,6 @@ java {
     sourceCompatibility = JvmVersions.javaVersion
     targetCompatibility = JvmVersions.javaVersion
 }
+kotlin {
+    jvmToolchain(JvmVersions.jvmIntTarget)
+}
