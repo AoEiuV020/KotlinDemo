@@ -21,4 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "KotlinDemo"
 include(":app")
-include(":sdk:androidLibrary")
+include(":sdk:androidlibrary")
+include(":sdk:javalibrary")

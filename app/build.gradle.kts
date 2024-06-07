@@ -50,7 +50,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":sdk:androidLibrary"))
+    implementation(project(":sdk:androidlibrary"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
