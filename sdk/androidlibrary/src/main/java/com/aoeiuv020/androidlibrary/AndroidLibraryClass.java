@@ -21,10 +21,10 @@ public class AndroidLibraryClass {
     public JavaLibraryClass javaLibraryClass = new JavaLibraryClass();
 
     public void init() {
+        javaLibraryClass.init();
         getLogger().info("AndroidLibraryClass init");
         getLogger().debug("AndroidLibraryClass debug");
         getLogger().info("androidLibraryBean: {}", androidLibraryBean);
         getLogger().info("javaLibraryBean: {}", javaLibraryBean);
-        javaLibraryClass.init();
     }
 }

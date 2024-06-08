@@ -23,3 +23,4 @@ rootProject.name = "KotlinDemo"
 include(":app")
 include(":sdk:androidlibrary")
 include(":sdk:javalibrary")
+include(":sdk:jarlibrary")
