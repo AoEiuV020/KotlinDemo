@@ -1,0 +1,136 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "com.aoeiuv020",
+    "module": "sdk-jarlibrary",
+    "version": "1.0.0",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "createdBy": {
+    "gradle": {
+      "version": "8.6"
+    }
+  },
+  "variants": [
+    {
+      "name": "apiElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-api",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-jdk8",
+          "version": {
+            "requires": "1.9.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "sdk-jarlibrary-1.0.0.jar",
+          "url": "sdk-jarlibrary-1.0.0.jar",
+          "size": 4737,
+          "sha512": "e6d099832d9ab82fb07ef5c4ed1826986c2cf0eb66e668d63b620b65589157a83265bd236bbc4564b7458c754f2e90127b4c6501b1afdb1babaedf65e7e7a633",
+          "sha256": "b6e46d12f5a57ff94dc742d7242edf977c5abb1fcf8ed83ffe5ad3a50b67774d",
+          "sha1": "5b28bcedabed95b94f06af7a69b00b80af9a9939",
+          "md5": "02eff44308af0f84e5bff50495da73da"
+        }
+      ]
+    },
+    {
+      "name": "runtimeElements",
+      "attributes": {
+        "org.gradle.category": "library",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.jvm.environment": "standard-jvm",
+        "org.gradle.jvm.version": 17,
+        "org.gradle.libraryelements": "jar",
+        "org.gradle.usage": "java-runtime",
+        "org.jetbrains.kotlin.platform.type": "jvm"
+      },
+      "dependencies": [
+        {
+          "group": "org.slf4j",
+          "module": "slf4j-bom",
+          "version": {
+            "requires": "2.0.13"
+          },
+          "attributes": {
+            "org.gradle.category": "platform"
+          }
+        },
+        {
+          "group": "org.slf4j",
+          "module": "slf4j-api"
+        },
+        {
+          "group": "org.jetbrains.kotlin",
+          "module": "kotlin-stdlib-jdk8",
+          "version": {
+            "requires": "1.9.0"
+          }
+        }
+      ],
+      "files": [
+        {
+          "name": "sdk-jarlibrary-1.0.0.jar",
+          "url": "sdk-jarlibrary-1.0.0.jar",
+          "size": 4737,
+          "sha512": "e6d099832d9ab82fb07ef5c4ed1826986c2cf0eb66e668d63b620b65589157a83265bd236bbc4564b7458c754f2e90127b4c6501b1afdb1babaedf65e7e7a633",
+          "sha256": "b6e46d12f5a57ff94dc742d7242edf977c5abb1fcf8ed83ffe5ad3a50b67774d",
+          "sha1": "5b28bcedabed95b94f06af7a69b00b80af9a9939",
+          "md5": "02eff44308af0f84e5bff50495da73da"
+        }
+      ]
+    },
+    {
+      "name": "javadocElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "javadoc",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "sdk-jarlibrary-1.0.0-javadoc.jar",
+          "url": "sdk-jarlibrary-1.0.0-javadoc.jar",
+          "size": 83361,
+          "sha512": "7b9463eeae38c0d6d1ceb16d4d2536ea676f059066df403573319081cdf80963411d7f3775926c4c491925b5d018fee83a42b83951fb4669e27e46d12169657f",
+          "sha256": "5b559ea2d0f80295e96698261533f660300bce622d30bfb547d06a69cf42037b",
+          "sha1": "8ff55b1da67b18fcfa0d97eca80b7f0be781e01c",
+          "md5": "7a0d1c9be10448a373b7bb9bb07d1261"
+        }
+      ]
+    },
+    {
+      "name": "sourcesElements",
+      "attributes": {
+        "org.gradle.category": "documentation",
+        "org.gradle.dependency.bundling": "external",
+        "org.gradle.docstype": "sources",
+        "org.gradle.usage": "java-runtime"
+      },
+      "files": [
+        {
+          "name": "sdk-jarlibrary-1.0.0-sources.jar",
+          "url": "sdk-jarlibrary-1.0.0-sources.jar",
+          "size": 1304,
+          "sha512": "893f62c8df4e08f95caa10825507b1803aa72d9f7f7a5f7041f28b1e858f71fb0dedcccda5bc4159e76dffb7f87662b741ca139a22dc87f1f5485cf8b6e07762",
+          "sha256": "c8cde42981b7926d25e63efc32c1d4d5b6e32244198fbef7aaa57c937b246321",
+          "sha1": "9c5101ce90397bcb417a80b7d39b6048989b3e4c",
+          "md5": "39738db2ccecc692299913e7c0b793e9"
+        }
+      ]
+    }
+  ]
+}

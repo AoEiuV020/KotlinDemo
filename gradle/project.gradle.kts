@@ -3,6 +3,8 @@ extra.properties.filter {
 }.mapValues {
     it.value as String
 }.filter {
+    it.value.isNotBlank()
+}.filter {
     rootDir.resolve(it.value).isDirectory
 }.mapKeys {
     it.key.removePrefix("module.")

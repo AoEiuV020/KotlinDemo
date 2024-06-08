@@ -11,8 +11,12 @@ kotlin {
     jvmToolchain(JvmVersions.jvmIntTarget)
 }
 dependencies {
-    if (findProject(":sdk:jarlibrary") != null) {
-        implementation(project(":sdk:jarlibrary"))
+    ":sdk:jarlibrary".let {
+        if (findProject(it) != null) {
+            implementation(project(it))
+        } else {
+            implementation(Publish.getDependency(it))
+        }
     }
 
     implementation(platform(libs.slf4j.bom))

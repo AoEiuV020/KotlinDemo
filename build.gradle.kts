@@ -8,4 +8,6 @@ plugins {
 System.setProperty("maven.repo.local", rootProject.file("local").absolutePath)
 allprojects {
     project.layout.buildDirectory.set(rootProject.file("build").resolve(project.path.replace(":", ".")))
+    group = Publish.groupId
+    version = System.getenv("BUILD_VERSION") ?: Publish.version
 }
