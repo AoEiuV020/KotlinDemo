@@ -1,5 +1,3 @@
-import java.util.Properties
-
 pluginManagement {
     repositories {
         google {
@@ -27,5 +25,8 @@ include(":sdk:androidlibrary")
 include(":sdk:javalibrary")
 
 apply("./gradle/props.gradle.kts")
+apply("./gradle/project.gradle.kts")
 
-apply("./gradle/jarlibrary-settings.gradle.kts")
+extra.properties.toSortedMap().forEach { (key, value) ->
+    println("$key => $value")
+}

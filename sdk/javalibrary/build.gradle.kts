@@ -11,7 +11,7 @@ kotlin {
     jvmToolchain(JvmVersions.jvmIntTarget)
 }
 dependencies {
-    if (gradle.extra["module.jarlibraryDebug"] == true) {
+    if (findProject(":sdk:jarlibrary") != null) {
         implementation(project(":sdk:jarlibrary"))
     }
 
