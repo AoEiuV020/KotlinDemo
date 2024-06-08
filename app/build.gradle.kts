@@ -48,6 +48,13 @@ android {
         }
     }
 }
+// pc端的单元测试移除无法使用的slf4j-android，
+// 关键是runtimeOnly依赖不只加入apk中，test也会加上，
+configurations
+    .filter { it.name.startsWith("test") }
+    .forEach { conf ->
+        conf.exclude(module = "slf4j-android")
+    }
 dependencies {
     implementation(project(":sdk:androidlibrary"))
     implementation(platform(libs.slf4j.bom))
