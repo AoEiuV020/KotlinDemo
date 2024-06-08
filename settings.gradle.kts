@@ -13,6 +13,7 @@ pluginManagement {
 }
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    System.setProperty("maven.repo.local", rootDir.resolve("local").absolutePath)
     repositories {
         mavenLocal()
         maven {
