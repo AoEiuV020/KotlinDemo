@@ -1,8 +1,18 @@
 plugins {
     id("java-library")
     alias(libs.plugins.jetbrains.kotlin.jvm)
+    `maven-publish`
 }
-
+publishing {
+    publications {
+        create<MavenPublication>("maven")
+    }
+    repositories {
+        maven {
+            url = uri(rootProject.file("repo"))
+        }
+    }
+}
 java {
     sourceCompatibility = JvmVersions.javaVersion
     targetCompatibility = JvmVersions.javaVersion

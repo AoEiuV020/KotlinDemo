@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.android.library) apply false
     alias(libs.plugins.jetbrains.kotlin.jvm) apply false
 }
+System.setProperty("maven.repo.local", rootProject.file("local").absolutePath)
 allprojects {
     project.layout.buildDirectory.set(rootProject.file("build").resolve(project.path.replace(":", ".")))
 }
