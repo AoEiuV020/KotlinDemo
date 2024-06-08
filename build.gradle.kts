@@ -5,3 +5,7 @@ plugins {
     alias(libs.plugins.android.library) apply false
     alias(libs.plugins.jetbrains.kotlin.jvm) apply false
 }
+allprojects {
+    println("adding project: " + project.path)
+    project.layout.buildDirectory.set(rootProject.file("build").resolve(project.path.replace(":", ".")))
+}

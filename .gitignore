@@ -35,6 +35,7 @@ google-services.json
 
 ###
 /release
+/signing.properties
 /key.properties
 /publish.properties
 class_files.txt
