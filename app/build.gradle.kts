@@ -52,7 +52,7 @@ dependencies {
     implementation(project(":sdk:androidlibrary"))
     implementation(platform(libs.slf4j.bom))
     implementation(libs.slf4j)
-    runtimeOnly(libs.slf4j.android)
+    implementation(libs.slf4j.android)
 
     testImplementation(libs.slf4j.simple)
 
