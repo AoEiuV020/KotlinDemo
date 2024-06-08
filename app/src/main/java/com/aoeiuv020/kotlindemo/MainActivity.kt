@@ -11,7 +11,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.aoeiuv020.androidlibrary.AndroidLibraryBean
 import com.aoeiuv020.androidlibrary.AndroidLibraryClass
 import com.aoeiuv020.kotlindemo.ui.theme.KotlinDemoTheme
 import org.slf4j.LoggerFactory

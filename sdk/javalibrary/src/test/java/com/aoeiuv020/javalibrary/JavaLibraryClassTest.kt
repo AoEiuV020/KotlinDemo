@@ -9,6 +9,7 @@ class JavaLibraryClassTest {
         System.setProperty(SimpleLogger.LOG_KEY_PREFIX + "JarLibrary", "trace")
         System.setProperty(SimpleLogger.LOG_KEY_PREFIX + "JavaLibrary", "trace")
     }
+
     @Test
     fun init() {
         val javaLibraryClass = JavaLibraryClass()
