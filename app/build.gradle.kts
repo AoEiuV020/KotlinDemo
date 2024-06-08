@@ -48,9 +48,13 @@ android {
         }
     }
 }
-
 dependencies {
     implementation(project(":sdk:androidlibrary"))
+    implementation(platform(libs.slf4j.bom))
+    implementation(libs.slf4j)
+    runtimeOnly(libs.slf4j.android)
+
+    testImplementation(libs.slf4j.simple)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

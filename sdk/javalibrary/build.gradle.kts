@@ -10,3 +10,10 @@ java {
 kotlin {
     jvmToolchain(JvmVersions.jvmIntTarget)
 }
+dependencies {
+    implementation(platform(libs.slf4j.bom))
+    implementation(libs.slf4j)
+
+    testImplementation(libs.slf4j.simple)
+    testImplementation(libs.junit)
+}

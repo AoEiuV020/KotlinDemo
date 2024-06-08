@@ -11,18 +11,25 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.aoeiuv020.androidlibrary.AndroidLibraryBean
 import com.aoeiuv020.androidlibrary.AndroidLibraryClass
 import com.aoeiuv020.kotlindemo.ui.theme.KotlinDemoTheme
+import org.slf4j.LoggerFactory
 
 class MainActivity : ComponentActivity() {
+    private val logger = LoggerFactory.getLogger(MainActivity::class.java)
+    private val androidLibraryClass = AndroidLibraryClass()
     override fun onCreate(savedInstanceState: Bundle?) {
+        logger.info("onCreate")
+        logger.debug("debug")
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        androidLibraryClass.init()
         setContent {
             KotlinDemoTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Greeting(
-                        name = AndroidLibraryClass.person.name,
+                        name = AndroidLibraryClass.javaLibraryBean.name,
                         modifier = Modifier.padding(innerPadding)
                     )
                 }

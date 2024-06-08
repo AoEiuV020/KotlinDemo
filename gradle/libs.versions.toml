@@ -1,4 +1,6 @@
 [versions]
+slf4j = "2.0.13"
+slf4j-android = "1.7.36"
 agp = "8.4.1"
 kotlin = "1.9.0"
 coreKtx = "1.10.1"
@@ -13,6 +15,10 @@ material = "1.10.0"
 jetbrainsKotlinJvm = "1.9.0"
 
 [libraries]
+slf4j-bom = { group = "org.slf4j", name = "slf4j-bom", version.ref = "slf4j" }
+slf4j = { group = "org.slf4j", name = "slf4j-api" }
+slf4j-simple = { group = "org.slf4j", name = "slf4j-simple" }
+slf4j-android = { group = "org.slf4j", name = "slf4j-android", version.ref = "slf4j-android" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

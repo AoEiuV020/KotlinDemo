@@ -31,9 +31,12 @@ android {
         jvmTarget = JvmVersions.jvmTarget
     }
 }
-
 dependencies {
     api(project(":sdk:javalibrary"))
+    implementation(platform(libs.slf4j.bom))
+    implementation(libs.slf4j)
+
+    testImplementation(libs.slf4j.simple)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
