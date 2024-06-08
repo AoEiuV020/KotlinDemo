@@ -1,3 +1,5 @@
+import java.util.Properties
+
 pluginManagement {
     repositories {
         google {
@@ -23,4 +25,7 @@ rootProject.name = "KotlinDemo"
 include(":app")
 include(":sdk:androidlibrary")
 include(":sdk:javalibrary")
-include(":sdk:jarlibrary")
+
+apply("./gradle/props.gradle.kts")
+
+apply("./gradle/jarlibrary-settings.gradle.kts")
