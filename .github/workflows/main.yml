@@ -1,0 +1,117 @@
+name: Android CI
+env:
+    TZ: Asia/Shanghai
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - '*'
+    branches:
+      - '*'
+    paths-ignore:
+      - '**/README.md'
+      - '.github/workflows/*'
+      - '!.github/workflows/main.yml'
+  pull_request:
+    paths-ignore:
+      - '**/README.md'
+      - '.github/workflows/*'
+      - '!.github/workflows/main.yml'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: init custom env
+      run: |
+          BUILD_NAME="${GITHUB_REPOSITORY#*/}"
+          if [[ ${GITHUB_REF} == refs/tags* ]]
+          then
+              echo CREATE_RELEASE="true" >> .custom_env
+              BUILD_VERSION=${GITHUB_REF#refs/tags/}
+          elif [[ ${GITHUB_REF} == refs/pull* ]]
+          then
+              num=${GITHUB_REF#refs/pull/}
+              num=${num%/merge}
+              BUILD_VERSION=pr-${num}-"$(date +'%Y%m%d%H%M%S')"
+          else
+              echo CREATE_RELEASE="true" >> .custom_env
+              echo PRE_RELEASE="true" >> .custom_env
+              BUILD_VERSION="$(date +'%Y%m%d%H%M%S')"
+          fi
+          BUILD_NAME_WITH_VERSION="$BUILD_NAME-$BUILD_VERSION"
+          echo BUILD_NAME="$BUILD_NAME" >> .custom_env
+          echo BUILD_VERSION="$BUILD_VERSION" >> .custom_env
+          echo BUILD_NAME_WITH_VERSION="$BUILD_NAME_WITH_VERSION" >> .custom_env
+          cat .custom_env
+          cat .custom_env >> $GITHUB_ENV
+    - uses: actions/checkout@v4
+    - uses: actions/setup-java@v4
+      with:
+          distribution: 'temurin'
+          java-version: '17'
+    - name: Build with Gradle
+      run: ./gradlew assembleRelease
+    - uses: AoEiuV020/sign-android-release@v2
+      name: Sign app APK
+      env:
+        SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+      if: ${{ env.SIGNING_KEY != '' }}
+      with:
+        releaseDirectory: build/.app/outputs/apk/release
+        signingKeyBase64: ${{ secrets.SIGNING_KEY }}
+        alias: ${{ secrets.ALIAS }}
+        keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
+        keyPassword: ${{ secrets.KEY_PASSWORD }}
+    - name: pick release file
+      run: |
+        find ./build/.app/outputs/
+        find ./build/.app/outputs -name '*.apk' -exec mv {} $BUILD_NAME_WITH_VERSION-android.apk \;
+        find ./build/.app/outputs -name 'mapping.txt' -exec mv {} $BUILD_NAME_WITH_VERSION-android-mapping.txt \;
+    - name: Upload APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: android-build
+        path: ${{ env.BUILD_NAME_WITH_VERSION }}-android.apk
+    - name: create release
+      if: ${{ env.CREATE_RELEASE == 'true' }}
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ env.BUILD_VERSION }}
+        release_name: ${{ env.BUILD_VERSION }}
+        body: ${{ github.event.commits[0].message }}
+        draft: true
+        prerelease: ${{ env.PRE_RELEASE == 'true' }}
+    - name: Upload Release Asset android
+      if: ${{ env.CREATE_RELEASE == 'true' }}
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ${{ env.BUILD_NAME_WITH_VERSION }}-android.apk
+        asset_name: ${{ env.BUILD_NAME_WITH_VERSION }}-android.apk
+        asset_content_type: application/zip
+    - name: Upload android mapping
+      if: ${{ env.CREATE_RELEASE == 'true' }}
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ${{ env.BUILD_NAME_WITH_VERSION }}-android-mapping.txt
+        asset_name: ${{ env.BUILD_NAME_WITH_VERSION }}-android-mapping.txt
+        asset_content_type: text/plain
+    - name: public release
+      if: ${{ env.CREATE_RELEASE == 'true' }}
+      uses: eregon/publish-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        release_id: ${{ steps.create_release.outputs.id }}
