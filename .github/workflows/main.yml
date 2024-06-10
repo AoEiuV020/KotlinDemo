@@ -38,8 +38,7 @@ jobs:
               num=${num%/merge}
               BUILD_VERSION=pr-${num}-"$(date +'%Y%m%d%H%M%S')"
           else
-              echo CREATE_RELEASE="true" >> .custom_env
-              echo PRE_RELEASE="true" >> .custom_env
+              echo CREATE_RELEASE="false" >> .custom_env
               BUILD_VERSION="$(date +'%Y%m%d%H%M%S')"
           fi
           BUILD_NAME_WITH_VERSION="$BUILD_NAME-$BUILD_VERSION"
