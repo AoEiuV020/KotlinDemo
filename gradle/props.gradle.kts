@@ -5,7 +5,7 @@ Properties().also { properties ->
         "gradle.properties",
         "local.properties",
     ).forEach { fileName ->
-        rootProject.projectDir.resolve(fileName).takeIf { it.isFile }?.reader().use { input ->
+        rootProject.projectDir.resolve(fileName).takeIf { it.isFile }?.reader()?.use { input ->
             properties.load(input)
         }
     }
