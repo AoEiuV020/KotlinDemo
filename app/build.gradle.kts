@@ -5,14 +5,14 @@ plugins {
 
 android {
     namespace = "com.aoeiuv020.kotlindemo"
-    compileSdk = 34
+    compileSdk = AndroidVersions.compileSdk
 
     defaultConfig {
         applicationId = "com.aoeiuv020.kotlindemo"
-        minSdk = 24
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        minSdk = AndroidVersions.minSdk
+        targetSdk = AndroidVersions.targetSdk
+        versionCode = AndroidVersions.versionCode
+        versionName = AndroidVersions.versionName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -30,11 +30,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JvmVersions.javaVersion
+        targetCompatibility = JvmVersions.javaVersion
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = JvmVersions.jvmTarget
     }
     buildFeatures {
         compose = true
@@ -49,8 +49,19 @@ android {
         }
     }
 }
-
+// pc端的单元测试移除无法使用的slf4j-android，
+// 关键是runtimeOnly依赖不只加入apk中，test也会加上，
+configurations
+    .filter { it.name.startsWith("test") }
+    .forEach { conf ->
+        conf.exclude(module = "slf4j-android")
+    }
 dependencies {
+    implementation(platform(libs.slf4j.bom))
+    implementation(libs.slf4j)
+    implementation(libs.slf4j.android)
+
+    testImplementation(libs.slf4j.simple)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
