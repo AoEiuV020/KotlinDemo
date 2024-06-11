@@ -57,6 +57,9 @@ configurations
         conf.exclude(module = "slf4j-android")
     }
 dependencies {
+    implementation(libs.okhttp)
+    implementation(libs.gson)
+
     implementation(platform(libs.slf4j.bom))
     implementation(libs.slf4j)
     implementation(libs.slf4j.android)
