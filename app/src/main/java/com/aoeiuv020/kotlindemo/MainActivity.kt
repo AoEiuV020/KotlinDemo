@@ -31,6 +31,7 @@ import com.aoeiuv020.kotlindemo.ui.theme.KotlinDemoTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.slf4j.LoggerFactory
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,6 +55,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun LoginScreen() {
+    val logger = LoggerFactory.getLogger("login")
     val scope = rememberCoroutineScope()
     var username by remember { mutableStateOf(UserInfo.username) }
     var password by remember { mutableStateOf(UserInfo.password) }
@@ -89,11 +91,16 @@ fun LoginScreen() {
             onClick = {
                 UserInfo.username = username
                 UserInfo.password = password
+                logger.info("before launch: $username $password")
                 scope.launch {
+                    logger.info("before async call")
                     UserInfo.result = login(username, password).also {
+                        logger.info("login result also: $it")
                         result = it
                     }
+                    logger.info("after async call")
                 }
+                logger.info("after launch")
             },
             modifier = Modifier.fillMaxWidth()
         ) {
