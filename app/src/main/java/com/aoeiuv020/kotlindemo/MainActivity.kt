@@ -31,6 +31,8 @@ import com.aoeiuv020.kotlindemo.ui.theme.KotlinDemoTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import org.slf4j.LoggerFactory
 
 class MainActivity : ComponentActivity() {
@@ -113,12 +115,10 @@ fun LoginScreen() {
     }
 }
 
-private suspend fun login(username: String, password: String) = withContext(Dispatchers.IO) {
-    if (username == "user" && password == "password") {
-        "Login successful!"
-    } else {
-        "Login failed. Try again."
-    }
+private suspend fun login(username: String, password: String): String = withContext(Dispatchers.IO) {
+    return@withContext OkHttpClient().newCall(
+        Request.Builder().url("https://www.baidu.com").build()
+    ).execute().body?.string() ?: "login failed"
 }
 
 @Preview(showBackground = true)
