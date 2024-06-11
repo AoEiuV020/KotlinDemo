@@ -59,7 +59,7 @@ configurations
 dependencies {
     implementation(platform(libs.slf4j.bom))
     implementation(libs.slf4j)
-    implementation(libs.slf4j.android)
+    runtimeOnly(libs.slf4j.android)
 
     testImplementation(libs.slf4j.simple)
 
