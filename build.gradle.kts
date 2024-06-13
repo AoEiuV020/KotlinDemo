@@ -6,7 +6,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.jvm) apply false
 }
 allprojects {
-    project.layout.buildDirectory.set(rootProject.file("build").resolve(project.path.replace(":", ".")))
+    project.layout.buildDirectory.set(rootDir.resolve("build").resolve(project.path.replace(":", ".")))
     group = Publish.groupId
     version = System.getenv("BUILD_VERSION") ?: Publish.version
 }

@@ -29,8 +29,8 @@ include(":app")
 include(":sdk:androidlibrary")
 include(":sdk:javalibrary")
 
-apply("./gradle/props.gradle.kts")
-apply("./gradle/project.gradle.kts")
+apply(rootDir.resolve("gradle/props.gradle.kts"))
+apply(rootDir.resolve("gradle/project.gradle.kts"))
 
 extra.properties.toSortedMap().forEach { (key, value) ->
     println("$key => $value")

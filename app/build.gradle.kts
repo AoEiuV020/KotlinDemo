@@ -18,6 +18,20 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        // 从properties读取字段插入到BuildConfig，
+        // 依赖props.gradle.kts脚本读取properties到extra，
+        // 不过滤空的值，保留空字符串，
+        // 编译时的任务generateDebugBuildConfig之后生效，
+        gradle.extra.properties.filter {
+            it.key.startsWith("field.") && it.value is String
+        }.mapValues {
+            it.value as String
+        }.mapKeys {
+            it.key.removePrefix("field.")
+        }.forEach { (key, value) ->
+            println("BuildConfig.$key = \"$value\"")
+            buildConfigField("String", key, "\"" + value + "\"")
+        }
     }
 
     buildTypes {
@@ -81,4 +95,4 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 }
 
-apply(rootProject.file("gradle/signing.gradle"))
+apply(rootDir.resolve("gradle/signing.gradle"))
