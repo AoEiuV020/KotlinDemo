@@ -6,6 +6,9 @@ import com.aoeiuv020.jarlibrary.JarLibraryClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * aar 模块里的主类，
+ */
 public class AarLibraryClass {
     public static final AarLibraryBean aarLibraryBean = new AarLibraryBean("AarLibrary", "AarLibraryBean");
     public static final JarLibraryBean jarLibraryBean = JarLibraryClass.Companion.getJarLibraryBean();

@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.dokka)
+    `maven-publish`
 }
 
 android {
@@ -30,7 +32,38 @@ android {
     kotlinOptions {
         jvmTarget = JvmVersions.jvmTarget
     }
+    publishing {
+        singleVariant("release") {
+            if (Publish.publishSourcesJar) {
+                withSourcesJar()
+            }
+        }
+    }
 }
+
+val dokkaJavadocJar by tasks.register<Jar>("dokkaJavadocJar") {
+    dependsOn(tasks.dokkaJavadoc)
+    from(tasks.dokkaJavadoc.flatMap { it.outputDirectory })
+    archiveClassifier.set("javadoc")
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            create<MavenPublication>("maven") {
+                artifactId = Publish.getArtifactId(project.path)
+                from(components["release"])
+                artifact(dokkaJavadocJar)
+            }
+        }
+        repositories {
+            maven {
+                url = uri(rootDir.resolve("repo"))
+            }
+        }
+    }
+}
+
 dependencies {
     ":sdk:jarlibrary".let {
         if (findProject(it) != null) {
