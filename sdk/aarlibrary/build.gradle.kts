@@ -32,8 +32,7 @@ android {
     }
 }
 dependencies {
-    api(project(":sdk:javalibrary"))
-    ":sdk:aarlibrary".let {
+    ":sdk:jarlibrary".let {
         if (findProject(it) != null) {
             implementation(project(it))
         } else {
