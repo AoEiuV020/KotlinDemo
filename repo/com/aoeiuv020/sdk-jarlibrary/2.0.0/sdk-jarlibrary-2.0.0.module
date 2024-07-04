@@ -3,7 +3,7 @@
   "component": {
     "group": "com.aoeiuv020",
     "module": "sdk-jarlibrary",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "attributes": {
       "org.gradle.status": "release"
     }
@@ -36,13 +36,13 @@
       ],
       "files": [
         {
-          "name": "sdk-jarlibrary-1.0.0.jar",
-          "url": "sdk-jarlibrary-1.0.0.jar",
+          "name": "sdk-jarlibrary-2.0.0.jar",
+          "url": "sdk-jarlibrary-2.0.0.jar",
           "size": 4737,
-          "sha512": "e6d099832d9ab82fb07ef5c4ed1826986c2cf0eb66e668d63b620b65589157a83265bd236bbc4564b7458c754f2e90127b4c6501b1afdb1babaedf65e7e7a633",
-          "sha256": "b6e46d12f5a57ff94dc742d7242edf977c5abb1fcf8ed83ffe5ad3a50b67774d",
-          "sha1": "5b28bcedabed95b94f06af7a69b00b80af9a9939",
-          "md5": "02eff44308af0f84e5bff50495da73da"
+          "sha512": "8cff548cf94be557c360b27725204166ae595d6465fcb19d22b69b57f4d4386f379b3c29695b2b1be6117b7b4c44f5593a53ea9119caa1daf31bef88714c1e8f",
+          "sha256": "3704aafe89e7eec21afb7d4bfe1580e625ed5abcec1e4ef4c0b6682dbd03244f",
+          "sha1": "187f1e38f4b7183083cef4d27cc1c55900eb1478",
+          "md5": "4d6b95706822c8bf4edf43807c298f23"
         }
       ]
     },
@@ -82,33 +82,13 @@
       ],
       "files": [
         {
-          "name": "sdk-jarlibrary-1.0.0.jar",
-          "url": "sdk-jarlibrary-1.0.0.jar",
+          "name": "sdk-jarlibrary-2.0.0.jar",
+          "url": "sdk-jarlibrary-2.0.0.jar",
           "size": 4737,
-          "sha512": "e6d099832d9ab82fb07ef5c4ed1826986c2cf0eb66e668d63b620b65589157a83265bd236bbc4564b7458c754f2e90127b4c6501b1afdb1babaedf65e7e7a633",
-          "sha256": "b6e46d12f5a57ff94dc742d7242edf977c5abb1fcf8ed83ffe5ad3a50b67774d",
-          "sha1": "5b28bcedabed95b94f06af7a69b00b80af9a9939",
-          "md5": "02eff44308af0f84e5bff50495da73da"
-        }
-      ]
-    },
-    {
-      "name": "javadocElements",
-      "attributes": {
-        "org.gradle.category": "documentation",
-        "org.gradle.dependency.bundling": "external",
-        "org.gradle.docstype": "javadoc",
-        "org.gradle.usage": "java-runtime"
-      },
-      "files": [
-        {
-          "name": "sdk-jarlibrary-1.0.0-javadoc.jar",
-          "url": "sdk-jarlibrary-1.0.0-javadoc.jar",
-          "size": 83361,
-          "sha512": "7b9463eeae38c0d6d1ceb16d4d2536ea676f059066df403573319081cdf80963411d7f3775926c4c491925b5d018fee83a42b83951fb4669e27e46d12169657f",
-          "sha256": "5b559ea2d0f80295e96698261533f660300bce622d30bfb547d06a69cf42037b",
-          "sha1": "8ff55b1da67b18fcfa0d97eca80b7f0be781e01c",
-          "md5": "7a0d1c9be10448a373b7bb9bb07d1261"
+          "sha512": "8cff548cf94be557c360b27725204166ae595d6465fcb19d22b69b57f4d4386f379b3c29695b2b1be6117b7b4c44f5593a53ea9119caa1daf31bef88714c1e8f",
+          "sha256": "3704aafe89e7eec21afb7d4bfe1580e625ed5abcec1e4ef4c0b6682dbd03244f",
+          "sha1": "187f1e38f4b7183083cef4d27cc1c55900eb1478",
+          "md5": "4d6b95706822c8bf4edf43807c298f23"
         }
       ]
     },
@@ -122,13 +102,13 @@
       },
       "files": [
         {
-          "name": "sdk-jarlibrary-1.0.0-sources.jar",
-          "url": "sdk-jarlibrary-1.0.0-sources.jar",
+          "name": "sdk-jarlibrary-2.0.0-sources.jar",
+          "url": "sdk-jarlibrary-2.0.0-sources.jar",
           "size": 1304,
-          "sha512": "893f62c8df4e08f95caa10825507b1803aa72d9f7f7a5f7041f28b1e858f71fb0dedcccda5bc4159e76dffb7f87662b741ca139a22dc87f1f5485cf8b6e07762",
-          "sha256": "c8cde42981b7926d25e63efc32c1d4d5b6e32244198fbef7aaa57c937b246321",
-          "sha1": "9c5101ce90397bcb417a80b7d39b6048989b3e4c",
-          "md5": "39738db2ccecc692299913e7c0b793e9"
+          "sha512": "ac03ef32671a7c5fd84e1ea9aeac02e2d7cce416d6c28c183dd25207d7dbdc3e8367c19eaee8e613786ca8c805a096c229a3d2b7ff7cd0a3664f18c3280bd4c7",
+          "sha256": "7f0f2782d68896e0e1cc2fcc65285b00a0a4a60544e2e95dbd69301e96c26a89",
+          "sha1": "f04f3556027983c3b4fb5ee9704cf63851ea91a5",
+          "md5": "bbd1906434b43cd6d87d601f53a046ca"
         }
       ]
     }
