@@ -32,6 +32,15 @@ android {
             println("BuildConfig.$key = \"$value\"")
             buildConfigField("String", key, "\"" + value + "\"")
         }
+        // 从properties读取字段插入到manifestPlaceholders
+        gradle.extra.properties.filter { (key, value) ->
+            key.startsWith("manifest.") && value is String
+        }.mapKeys { (key, _) ->
+            key.removePrefix("manifest.")
+        }.forEach { (key, value) ->
+            println("manifest.$key = \"$value\"")
+            manifestPlaceholders[key] = value
+        }
     }
 
     buildTypes {

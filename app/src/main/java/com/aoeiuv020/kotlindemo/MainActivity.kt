@@ -40,7 +40,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     Text(
-        text = "${BuildConfig.FROM_GRADLE} $name!",
+        text = "${BuildConfig.AUTHOR_NAME}: $name!",
         modifier = modifier
     )
 }
