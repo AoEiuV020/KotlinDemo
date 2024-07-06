@@ -25,13 +25,23 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "KotlinDemo"
-include(":app")
-include(":sdk:androidlibrary")
-include(":sdk:javalibrary")
+listOf("app")
+    .filter { rootDir.resolve(it).isDirectory }
+    .forEach {
+    include(":$it")
+}
+rootDir.resolve("sdk")
+    .takeIf { it.isDirectory }
+    .let { it?.listFiles() ?: emptyArray() }
+    .filter { it.isDirectory }
+    .map { it.name }
+    .forEach {
+        include(":sdk:$it")
+    }
 
 apply(rootDir.resolve("gradle/props.gradle.kts"))
 apply(rootDir.resolve("gradle/project.gradle.kts"))
 
-extra.properties.toSortedMap().forEach { (key, value) ->
+gradle.extra.properties.toSortedMap().forEach { (key, value) ->
     println("$key => $value")
 }
