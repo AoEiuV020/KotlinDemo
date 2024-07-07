@@ -75,18 +75,18 @@ android {
     }
 }
 project.afterEvaluate {
-    val assetsReplaceMap = mutableMapOf<String, File>()
-    gradle.extra.properties.filter { (key, value) ->
+    val assetsReplaceMap = gradle.extra.properties.filter { (key, value) ->
         key.startsWith("assets.") && value is String
     }.mapValues {
         it.value as String
+    }.mapValues {
+        File(it.value)
     }.mapKeys { (key, _) ->
         key.removePrefix("assets.")
     }.filter {
-        File(it.value).isFile
-    }.forEach { (key, value) ->
+        it.value.isFile
+    }.onEach { (key, value) ->
         println("assets.$key = \"$value\"")
-        assetsReplaceMap[key] = File(value)
     }
     tasks.filter { it.name.matches(Regex("merge.*Assets")) }.forEach { mergeAssetsTask ->
         mergeAssetsTask.doLast {
@@ -96,7 +96,7 @@ project.afterEvaluate {
             assetsReplaceMap.forEach { (fileName, file) ->
                 val to = assetsFolder.resolve(fileName)
                 file.copyTo(to, overwrite = true)
-                println("copy assets $fileName from $file to $to")
+                println("copy assets/$fileName from '$file' to '${to.relativeTo(rootDir)}'")
             }
         }
     }
