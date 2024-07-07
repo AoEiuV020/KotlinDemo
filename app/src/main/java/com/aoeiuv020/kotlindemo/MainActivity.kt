@@ -24,11 +24,12 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         androidLibraryClass.init()
+        val textFromAssets = assets.open("name.txt").reader().readText()
         setContent {
             KotlinDemoTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Greeting(
-                        name = AndroidLibraryClass.javaLibraryBean.name,
+                        name = AndroidLibraryClass.javaLibraryBean.name + textFromAssets,
                         modifier = Modifier.padding(innerPadding)
                     )
                 }

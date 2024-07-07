@@ -35,6 +35,8 @@ android {
         // 从properties读取字段插入到manifestPlaceholders
         gradle.extra.properties.filter { (key, value) ->
             key.startsWith("manifest.") && value is String
+        }.mapValues {
+            it.value as String
         }.mapKeys { (key, _) ->
             key.removePrefix("manifest.")
         }.forEach { (key, value) ->
@@ -72,6 +74,34 @@ android {
         }
     }
 }
+project.afterEvaluate {
+    val assetsReplaceMap = mutableMapOf<String, File>()
+    gradle.extra.properties.filter { (key, value) ->
+        key.startsWith("assets.") && value is String
+    }.mapValues {
+        it.value as String
+    }.mapKeys { (key, _) ->
+        key.removePrefix("assets.")
+    }.filter {
+        File(it.value).isFile
+    }.forEach { (key, value) ->
+        println("assets.$key = \"$value\"")
+        assetsReplaceMap[key] = File(value)
+    }
+    tasks.filter { it.name.matches(Regex("merge.*Assets")) }.forEach { mergeAssetsTask ->
+        mergeAssetsTask.doLast {
+            val outputs = mergeAssetsTask.outputs
+            val files = outputs.files.files
+            val assetsFolder = files.first()
+            assetsReplaceMap.forEach { (fileName, file) ->
+                val to = assetsFolder.resolve(fileName)
+                file.copyTo(to, overwrite = true)
+                println("copy assets $fileName from $file to $to")
+            }
+        }
+    }
+}
+
 // pc端的单元测试移除无法使用的slf4j-android，
 // 关键是runtimeOnly依赖不只加入apk中，test也会加上，
 configurations
