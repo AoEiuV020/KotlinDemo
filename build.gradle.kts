@@ -4,9 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.android.library) apply false
     alias(libs.plugins.jetbrains.kotlin.jvm) apply false
-    id("foo")
 }
-println("from main build script: ${libs.versions.agp.get()}")
 allprojects {
     project.layout.buildDirectory.set(rootDir.resolve("build").resolve(project.path.replace(":", ".")))
     group = Publish.groupId

@@ -6,8 +6,6 @@ repositories {
     mavenCentral()
 }
 
-println("from build-src build script: ${libs.versions.agp.get()}")
-
 dependencies {
     implementation(files(libs.javaClass.superclass.protectionDomain.codeSource.location))
 }
