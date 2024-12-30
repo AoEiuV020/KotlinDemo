@@ -35,6 +35,11 @@ java {
     sourceCompatibility = JvmVersions.javaVersion
     targetCompatibility = JvmVersions.javaVersion
 }
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
+    }
+}
 dependencies {
     implementation(platform(libs.slf4j.bom))
     implementation(libs.slf4j)
