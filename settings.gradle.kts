@@ -16,9 +16,7 @@ dependencyResolutionManagement {
     System.setProperty("maven.repo.local", rootDir.resolve("local").absolutePath)
     repositories {
         mavenLocal()
-        maven {
-            url = uri(rootDir.resolve("repo"))
-        }
+        maven(uri(rootDir.resolve("repo")))
         google()
         mavenCentral()
     }
