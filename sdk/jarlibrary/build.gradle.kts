@@ -35,9 +35,6 @@ java {
     sourceCompatibility = JvmVersions.javaVersion
     targetCompatibility = JvmVersions.javaVersion
 }
-kotlin {
-    jvmToolchain(JvmVersions.jvmIntTarget)
-}
 dependencies {
     implementation(platform(libs.slf4j.bom))
     implementation(libs.slf4j)

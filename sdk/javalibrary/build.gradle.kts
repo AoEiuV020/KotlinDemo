@@ -7,9 +7,6 @@ java {
     sourceCompatibility = JvmVersions.javaVersion
     targetCompatibility = JvmVersions.javaVersion
 }
-kotlin {
-    jvmToolchain(JvmVersions.jvmIntTarget)
-}
 dependencies {
     ":sdk:jarlibrary".let {
         if (findProject(it) != null) {
