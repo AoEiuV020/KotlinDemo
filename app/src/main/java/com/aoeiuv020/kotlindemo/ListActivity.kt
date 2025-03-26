@@ -1,6 +1,5 @@
 package com.aoeiuv020.kotlindemo
 
-import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,51 +8,14 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
-import me.imid.swipebacklayout.lib.SwipeBackLayout
-import me.imid.swipebacklayout.lib.Utils
-import me.imid.swipebacklayout.lib.app.SwipeBackActivityBase
-import me.imid.swipebacklayout.lib.app.SwipeBackActivityHelper
-
-class ListActivity : Activity(), SwipeBackActivityBase {
-    private lateinit var mHelper: SwipeBackActivityHelper
+class ListActivity : SwipeBackActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_list)
-        mHelper = SwipeBackActivityHelper(this)
-        mHelper.onActivityCreate()
-
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)!!
         recyclerView.layoutManager = LinearLayoutManager(this)
         val numbers = (1..100).toList()
         recyclerView.adapter = NumberAdapter(numbers)
-    }
-
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
-            mHelper.onPostCreate()
-    }
-
-    override fun <T : View?> findViewById(id: Int): T? {
-        return realFindViewById(id) as T?
-    }
-
-    fun realFindViewById(id: Int): View? {
-        val v: View = super.findViewById(id)
-        if (v == null && mHelper != null) return mHelper.findViewById(id)
-        return v
-    }
-
-    override fun getSwipeBackLayout(): SwipeBackLayout {
-        return mHelper.getSwipeBackLayout()
-    }
-
-    override fun setSwipeBackEnable(enable: Boolean) {
-        getSwipeBackLayout().setEnableGesture(enable)
-    }
-
-    override fun scrollToFinishActivity() {
-        Utils.convertActivityToTranslucent(this)
-        getSwipeBackLayout().scrollToFinishActivity()
     }
 }
 
