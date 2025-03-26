@@ -11,6 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.KotlinDemo"
+        android:enableOnBackInvokedCallback="false"
         tools:targetApi="31">
         <activity
             android:name=".MainActivity"
@@ -22,7 +23,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.aoeiuv020.kotlindemo.ListActivity" />
+        <activity
+            android:name="com.aoeiuv020.kotlindemo.ListActivity"
+            android:theme="@style/DialogTheme" />
     </application>
 
 </manifest>
