@@ -108,6 +108,7 @@ configurations
         conf.exclude(module = "slf4j-android")
     }
 dependencies {
+    implementation("me.imid.swipebacklayout.lib:library:1.1.0")
     implementation(project(":sdk:androidlibrary"))
     implementation(platform(libs.slf4j.bom))
     implementation(libs.slf4j)
@@ -123,6 +124,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.recyclerview)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

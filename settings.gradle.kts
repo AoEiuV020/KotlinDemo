@@ -19,6 +19,7 @@ dependencyResolutionManagement {
         maven(uri(rootDir.resolve("repo")))
         google()
         mavenCentral()
+        maven("https://maven.aliyun.com/repository/jcenter")
     }
 }
 
