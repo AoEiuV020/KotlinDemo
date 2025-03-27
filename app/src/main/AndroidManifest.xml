@@ -23,9 +23,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.aoeiuv020.kotlindemo.ListActivity"
-            android:theme="@style/DialogTheme" />
+        <activity android:name="com.aoeiuv020.kotlindemo.ListActivity" />
     </application>
 
 </manifest>
